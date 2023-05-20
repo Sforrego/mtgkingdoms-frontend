@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { MagicCard } from "./Components/MtgCard/MagicCard";
+import { RoleCard } from "./Components/RoleCard";
+import { Carousel, Row } from "antd";
+import { sampleRoles } from "./Types/Role";
 
 const SERVER = "http://localhost:9998";
 
@@ -231,25 +234,32 @@ function App() {
           )}
           {!isInRoom && (
             <div className="form-container">
-              <MagicCard
-                cardColor="white"
-                name="The King"
-                manaCost="{2}{G}{U}{W}{R}{B}"
-                descriptions={[
-                  "{tap}: When Oath of Nissa enters the battlefield, look at the top three cards of your library. You may reveal a creature, land, or planeswalker card from among them and put it into your hand. Put the rest on the bottom of your library in any order.",
-                  "You may spend mana as though it were mana of any color to cast planeswalker spells.",
-                ]}
-                expansionSymbol="https://image.ibb.co/kzaLjn/OGW_R.png"
-                artUrl="https://image.ibb.co/fqdLEn/nissa.jpg"
-                type="Legendary Enchantment"
-                flavorText={[
-                  '"For the life of every plane, I will keep watch."',
-                ]}
-                fotterLeftText={["140/184 R", "OGW &#x2022; EN Wesley Burt"]}
-                fotterRightText={[
-                  "&#x99; &amp; &#169; 2016 Wizards of the Coast",
-                ]}
-              />
+              <Row>
+                {sampleRoles.map((role) => (
+                  <RoleCard key={role.RoleName} role={role} />
+                ))}
+                <MagicCard
+                  cardColor="blue"
+                  cardFrame="blue"
+                  cardBackground="blue"
+                  name="The King"
+                  manaCost="{2}{G}{U}{W}{R}{B}"
+                  descriptions={[
+                    "{tap}: When Oath of Nissa enters the battlefield, look at the top three cards of your library. You may reveal a creature, land, or planeswalker card from among them and put it into your hand. Put the rest on the bottom of your library in any order.",
+                    "You may spend mana as though it were mana of any color to cast planeswalker spells.",
+                  ]}
+                  expansionSymbol="https://image.ibb.co/kzaLjn/OGW_R.png"
+                  artUrl="https://image.ibb.co/fqdLEn/nissa.jpg"
+                  type="Role - Monarch"
+                  flavorText={[
+                    '"For the life of every plane, I will keep watch."',
+                  ]}
+                  fotterLeftText={["140/184 R", "OGW &#x2022; EN Wesley Burt"]}
+                  fotterRightText={[
+                    "&#x99; &amp; &#169; 2016 Wizards of the Coast",
+                  ]}
+                />
+              </Row>
               <input
                 className="input-field"
                 type="text"

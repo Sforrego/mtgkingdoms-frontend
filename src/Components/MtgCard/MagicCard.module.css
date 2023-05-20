@@ -3,6 +3,10 @@
     margin: 0;
     padding: 0;
     text-align: left;
+    /* color: #171314; */
+}
+
+.card-container p,div {
     color: #171314;
 }
 
@@ -26,17 +30,44 @@
     border-bottom-left-radius: 8%;
     border-bottom-right-radius: 8%;
     display: flex;
-    background-image: url(https://cdn.midjourney.com/59994b61-4657-46f4-9463-ccf07aee3f2e/0_0.png);
-    background-repeat: unset;
-    background-size: cover;
     background-position: center;
     background-clip: border-box;
     z-index: 0;
 }
 
+.white-background {
+    background-image: url(https://cdn.midjourney.com/16f41794-c5fc-4c2c-a58d-d8d97ac8750c/0_3.png);
+    background-repeat: unset;
+    background-size: cover;
+}
+
+.blue-background {
+    background-image: url(https://cdn.midjourney.com/d8eef5aa-633c-436a-8205-d2104cd1d1bb/0_0.png);
+    background-repeat: unset;
+    background-size: cover;
+}
+
+.black-background {
+    background-image: url(https://cdn.midjourney.com/f942b1e4-e8b0-4597-9d46-a451d9fccc58/0_3.png);
+    background-repeat: unset;
+    background-size: cover;
+}
+
+.red-background {
+    background-image: url(https://cdn.midjourney.com/f2768fe2-4d97-449a-9e02-29f988d0ec60/0_1.png);
+    background-repeat: unset;
+    background-size: cover;
+}
+
 .green-background {
-    background-image: url(https://image.ibb.co/e1XKAS/green_background.jpg);
-    background-repeat: no-repeat;
+    background-image: url(https://cdn.midjourney.com/59994b61-4657-46f4-9463-ccf07aee3f2e/0_0.png);
+    background-repeat: unset;
+    background-size: cover;
+}
+
+.uncolor-background {
+    background-image: url(https://cdn.midjourney.com/59994b61-4657-46f4-9463-ccf07aee3f2e/0_0.png);
+    background-repeat: unset;
     background-size: cover;
 }
 
@@ -272,11 +303,14 @@
 }
 
 .set-icon > i {
-    right: -5px;
-    top: 50%;
-    margin-top: 2px;
-    transform: translateY(-50%);
-    position: absolute;
+    /* right: -5px;
+    top: 50%; */
+    /* margin-top: 2px; */
+    width: 30px;
+    size: 10px;
+    font-size: 28px;
+    /* transform: translateY(-50%); */
+    /* position: absolute; */
 }
 
 .set-icon > img {
