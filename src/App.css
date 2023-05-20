@@ -36,3 +36,35 @@
     transform: rotate(360deg);
   }
 }
+
+/* Form.css */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* Creates some space between the elements */
+}
+
+.input-field {
+  width: 200px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+}
+
+.button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #120069;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #4ec2f7;
+}
+
