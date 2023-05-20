@@ -55,12 +55,14 @@ function App() {
     }
   };
 
-  const handleLogout = async () => {
-    if (window.confirm("Do you really want to sign out?")) {
+// Finally, you can use the leaveRoom() function when handling logout
+const handleLogout = async () => {
+  if (window.confirm("Do you really want to sign out?")) {
+    leaveRoom(); // Leave the room before logging out
     await myMSALObj.logoutRedirect();
     setIsLoggedIn(false);
-    }
-  };
+  }
+};
 
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -89,12 +91,16 @@ function App() {
     };
   }, []);
 
+  const createRoom = () => {
+    socket.emit('create', { userId: user.name }); // Send the 'create' event to the server
+  };
+
   const joinRoom = () => {
     socket.emit('join', { userId: user.name, roomCode }); // Send the room code to the server
   };
 
-  const createRoom = () => {
-    socket.emit('create', { userId: user.name }); // Send the 'create' event to the server
+  const leaveRoom = () => {
+    socket.emit('leave', { userId: user.name, roomCode }); // Send the 'leave' event to the server
   };
 
   useEffect(() => {
@@ -115,6 +121,23 @@ function App() {
         setUsersInRoom(users);
       });
 
+      // Listen for 'leftRoom' event from the server
+      socket.on('leftRoom', () => {
+        console.log(`Left room: ${roomCode}`);
+        setIsInRoom(false);
+        setRoomCode('');
+      });
+
+      socket.on('userJoinedRoom', ({ users }) => {
+        console.log(`A user joined the room. Updated users: ${users}`);
+        setUsersInRoom(users);
+      });
+
+      socket.on('userLeftRoom', ({ users }) => {
+        console.log(`A user left the room. Updated users: ${users}`);
+        setUsersInRoom(users);
+      });
+
       // Listen for 'error' event from the server
       socket.on('error', (message) => {
         console.error(message);
@@ -126,6 +149,9 @@ function App() {
       return () => {
         socket.off('roomCreated');
         socket.off('joinedRoom');
+        socket.off('leftRoom');
+        socket.off('userJoinedRoom');
+        socket.off('userLeftRoom');
         socket.off('error');
       };
     }
@@ -196,6 +222,9 @@ const styles = {
             <ul>
               {usersInRoom.map(user => <li key={user}>{user}</li>)}
             </ul>
+            <button className="button" onClick={leaveRoom}>
+              Leave Room
+            </button>
             </div>
           }
           {!isInRoom && (
