@@ -2,8 +2,9 @@ export const RoleTypes = {
     Monarch: "Monarch",
     Noble: "Noble",
     Renegade: "Renegade",
-    Outlaw: "Outlaw",
+    Bandit: "Bandit",
     Knight: "Knight",
+    SubRole: "SubRole"
 } as const;
 
 export const allRoles: RoleType[] = Object.values(RoleTypes);

@@ -2,10 +2,8 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { PublicClientApplication } from "@azure/msal-browser";
-import { MagicCard } from "./Components/MtgCard/MagicCard";
 import { RoleCard } from "./Components/RoleCard";
-import { Carousel, Row } from "antd";
-import { sampleRoles } from "./Types/Role";
+import { Row } from "antd";
 
 const SERVER = "http://localhost:9998";
 
@@ -30,11 +28,39 @@ const loginRequest = {
 };
 
 function App() {
+  const [isConnected, setIsConnected] = useState(false);
+  const [isInRoom, setIsInRoom] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [roomCode, setRoomCode] = useState("");
-  const [isInRoom, setIsInRoom] = useState(false);
   const [usersInRoom, setUsersInRoom] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const [roomCode, setRoomCode] = useState("");
+  const [socket, setSocket] = useState(null);
+  const [showRoles, setShowRoles] = useState(false);
+
+  useEffect(() => {
+    const newSocket = io(SERVER);
+    setSocket(newSocket);
+
+    newSocket.on("connect", () => {
+      setIsConnected(true);
+    });
+
+    newSocket.on("disconnect", () => {
+      setIsConnected(false);
+    });
+
+    newSocket.on("connect_error", (error) => {
+      console.log("Connection error:", error);
+      setTimeout(() => {
+        newSocket.connect();
+      }, 1000);
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -85,56 +111,43 @@ function App() {
       }
 };
 
-  // Finally, you can use the leaveRoom() function when handling logout
-  const handleLogout = async () => {
-    if (window.confirm("Do you really want to sign out?")) {
-      leaveRoom(); // Leave the room before logging out
-      await myMSALObj.logoutRedirect();
-      setIsLoggedIn(false);
-    }
-  };
 
-  const [socket, setSocket] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
+// Finally, you can use the leaveRoom() function when handling logout
+const handleLogout = async () => {
+  if (window.confirm("Do you really want to sign out?")) {
+    leaveRoom(); // Leave the room before logging out
+    await myMSALObj.logoutRedirect();
+    setIsLoggedIn(false);
+  }
+};
 
-  useEffect(() => {
-    const newSocket = io(SERVER);
-    setSocket(newSocket);
+const getRoles = () => {
+  socket.emit("getRoles"); // Send the 'getRoles' event to the server
+};
 
-    newSocket.on("connect", () => {
-      setIsConnected(true);
-    });
+const createRoom = () => {
+  socket.emit("create", { userId: user.name }); // Send the 'create' event to the server
+};
 
-    newSocket.on("disconnect", () => {
-      setIsConnected(false);
-    });
+const joinRoom = () => {
+  socket.emit("join", { userId: user.name, roomCode }); // Send the room code to the server
+};
 
-    newSocket.on("connect_error", (error) => {
-      console.log("Connection error:", error);
-      setTimeout(() => {
-        newSocket.connect();
-      }, 1000);
-    });
+const leaveRoom = () => {
+  socket.emit("leave", { userId: user.name, roomCode }); // Send the 'leave' event to the server
+};
 
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
-
-  const createRoom = () => {
-    socket.emit("create", { userId: user.name }); // Send the 'create' event to the server
-  };
-
-  const joinRoom = () => {
-    socket.emit("join", { userId: user.name, roomCode }); // Send the room code to the server
-  };
-
-  const leaveRoom = () => {
-    socket.emit("leave", { userId: user.name, roomCode }); // Send the 'leave' event to the server
-  };
+const handleShowRoles = () => {
+  setShowRoles(true);
+  getRoles();
+};
 
   useEffect(() => {
     if (socket) {
+      socket.on('rolesData', (data) => {
+        setRoles(data); // get the first two roles
+      });
+    
       // Listen for 'roomCreated' event from the server
       socket.on("roomCreated", ({ roomCode, users }) => {
         console.log(`Room created with code: ${roomCode}`);
@@ -177,6 +190,7 @@ function App() {
 
       // Cleanup when component unmounts
       return () => {
+        socket.off("rolesData");
         socket.off("roomCreated");
         socket.off("joinedRoom");
         socket.off("leftRoom");
@@ -185,7 +199,7 @@ function App() {
         socket.off("error");
       };
     }
-  }, [socket]);
+  }, [roomCode, socket]);
 
   // Add your styling
   const styles = {
@@ -240,6 +254,16 @@ function App() {
       ) : (
         <p style={styles.connectionStatus}>Disconnected from the server.</p>
       )}
+      <button onClick={handleShowRoles}>Show Roles</button>
+      {showRoles && (
+        <div style={{ height: '700px', overflow: 'auto' }}>
+        <Row>
+          {roles.map((role) => (
+            <RoleCard key={role.Role} role={role} />
+          ))}
+        </Row>
+      </div>
+      )}
       {isLoggedIn ? (
         <>
           <p>Hello, {user.name}!</p>
@@ -259,32 +283,6 @@ function App() {
           )}
           {!isInRoom && (
             <div className="form-container">
-              <Row>
-                {sampleRoles.map((role) => (
-                  <RoleCard key={role.RoleName} role={role} />
-                ))}
-                <MagicCard
-                  cardColor="blue"
-                  cardFrame="blue"
-                  cardBackground="blue"
-                  name="The King"
-                  manaCost="{2}{G}{U}{W}{R}{B}"
-                  descriptions={[
-                    "{tap}: When Oath of Nissa enters the battlefield, look at the top three cards of your library. You may reveal a creature, land, or planeswalker card from among them and put it into your hand. Put the rest on the bottom of your library in any order.",
-                    "You may spend mana as though it were mana of any color to cast planeswalker spells.",
-                  ]}
-                  expansionSymbol="https://image.ibb.co/kzaLjn/OGW_R.png"
-                  artUrl="https://image.ibb.co/fqdLEn/nissa.jpg"
-                  type="Role - Monarch"
-                  flavorText={[
-                    '"For the life of every plane, I will keep watch."',
-                  ]}
-                  fotterLeftText={["140/184 R", "OGW &#x2022; EN Wesley Burt"]}
-                  fotterRightText={[
-                    "&#x99; &amp; &#169; 2016 Wizards of the Coast",
-                  ]}
-                />
-              </Row>
               <input
                 className="input-field"
                 type="text"

@@ -6,29 +6,31 @@ const roleTypeToColorMap: Record<RoleType, CardColor> = {
   Monarch: "white",
   Noble: "blue",
   Renegade: "black",
-  Outlaw: "red",
+  Bandit: "red",
   Knight: "green",
+  SubRole: "uncolor",
 };
 
 const roleTypeToSetMap: Record<RoleType, string> = {
   Monarch: "ss ss-v11 ss-mythic ss-grad",
   Noble: "ss ss-leg ss-mythic ss-grad",
   Renegade: "ss ss-mmq ss-mythic ss-grad",
-  Outlaw: "ss ss-mrd ss-mythic ss-grad",
+  Bandit: "ss ss-mrd ss-mythic ss-grad",
   Knight: "ss ss-5dn ss-mythic ss-grad",
+  SubRole: "ss ss-5dn ss-mythic ss-grad",
 };
 
 export const RoleCard = ({
-  role: { RoleType, RoleName, RoleDescription, RoleImage },
+  role: { Name, Type, Ability, Image },
 }: {
   role: Role;
 }) => (
   <MagicCard
-    artUrl={RoleImage}
-    name={RoleName}
-    cardColor={roleTypeToColorMap[RoleType]}
-    descriptions={RoleDescription.split("\n")}
-    type={`Role - ${RoleType}`}
-    expansionSymbol={roleTypeToSetMap[RoleType]}
+    artUrl={Image}
+    name={Name}
+    cardColor={roleTypeToColorMap[Type]}
+    descriptions={Ability.split("\n")}
+    type={`Role - ${Type}`}
+    expansionSymbol={roleTypeToSetMap[Type]}
   />
 );

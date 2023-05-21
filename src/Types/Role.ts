@@ -2,17 +2,17 @@ import { z } from "zod";
 import { allRoles, RoleType } from "./RoleType";
 
 export type Role = {
-    RoleType: RoleType;
-    RoleName: string;
-    RoleDescription: string;
-    RoleImage: string;
+    Type: RoleType;
+    Name: string;
+    Ability: string;
+    Image: string;
 };
 
 const roleValidator = z.object({
-    RoleType: z.string().refine((roleType) => roleType in allRoles),
-    RoleName: z.string(),
-    RoleDescription: z.string(),
-    RoleImage: z.string(),
+    Name: z.string(),
+    Type: z.string().refine((roleType) => roleType in allRoles),
+    Ability: z.string(),
+    Image: z.string(),
 });
 
 /**
@@ -24,15 +24,15 @@ export const ValidateRole = (role: unknown): role is Role => roleValidator.safeP
 
 export const sampleRoles: Role[] = [
     {
-        RoleType: "Monarch",
-        RoleName: "The King",
-        RoleDescription: "{tap}:The King {W} is the leader of the kingdom. They are the only player who can appoint Knights and grant them the ability to use the Knight's ability. The King can also appoint a new King if they wish to abdicate the throne.\n The King is the only player who can kill the Assassin.",
-        RoleImage: "https://mtgkingdomsstorage.blob.core.windows.net/mtgkingdomsaiimages/King.jpeg",
+        Type: "Monarch",
+        Name: "The King",
+        Ability: "{tap}:The King {W} is the leader of the kingdom. They are the only player who can appoint Knights and grant them the ability to use the Knight's ability. The King can also appoint a new King if they wish to abdicate the throne.\n The King is the only player who can kill the Assassin.",
+        Image: "https://mtgkingdomsstorage.blob.core.windows.net/mtgkingdomsaiimages/King.jpeg",
     },
     {
-        RoleType: "Knight",
-        RoleName: "The Angel",
-        RoleDescription: "The Angel is the King's right hand. They are the only player who can use the Knight's ability. The Angel is the only player who can kill the Assassin.\n The Angel is the only player who can kill the Assassin.",
-        RoleImage: "https://mtgkingdomsstorage.blob.core.windows.net/mtgkingdomsaiimages/Angel.jpeg",
+        Type: "Knight",
+        Name: "The Angel",
+        Ability: "The Angel is the King's right hand. They are the only player who can use the Knight's ability. The Angel is the only player who can kill the Assassin.\n The Angel is the only player who can kill the Assassin.",
+        Image: "https://mtgkingdomsstorage.blob.core.windows.net/mtgkingdomsaiimages/Angel.jpeg",
     },
 ] 
