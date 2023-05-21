@@ -32,28 +32,53 @@ function App() {
   const [usersInRoom, setUsersInRoom] = useState(false);
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error')) {
+      const errorCode = urlParams.get('error');
+      const errorDescription = urlParams.get('error_description');
+      // Handle "AADB2C90091: The user has cancelled entering self-asserted information"
+      if (errorCode === 'access_denied' && errorDescription.includes('AADB2C90091')) {
+        // User cancelled the sign-in or sign-up process.
+        // Redirect the user, show a message, or perform any other action you deem appropriate.
+        window.location.href = '/'; // Redirect to home page as an example
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     const handleRedirect = async () => {
-      await myMSALObj.handleRedirectPromise();
-      const accounts = myMSALObj.getAllAccounts();
-      if (accounts.length !== 0) {
-        setUser(accounts[0]);
-        setIsLoggedIn(true);
+      try {
+        await myMSALObj.handleRedirectPromise();
+        const accounts = myMSALObj.getAllAccounts();
+        if (accounts.length !== 0) {
+          setUser(accounts[0]);
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        if (error.errorCode === 'access_denied' && error.errorMessage.includes('AADB2C90091')) {
+          // User cancelled the sign-in or sign-up process.
+          window.location.href = '/'; // Redirect to home page as an example
+        }
       }
     };
     handleRedirect();
   }, []);
 
-  const handleLogin = async () => {
-    try {
-      await myMSALObj.handleRedirectPromise();
-      const accounts = myMSALObj.getAllAccounts();
-      if (accounts.length === 0) {
-        await myMSALObj.loginRedirect(loginRequest);
+    const handleLogin = async () => {
+      try {
+        await myMSALObj.handleRedirectPromise();
+        const accounts = myMSALObj.getAllAccounts();
+        if (accounts.length === 0) {
+          await myMSALObj.loginRedirect(loginRequest);
+        }
+      } catch (err) {
+        console.log(err)
+        if (err.errorCode === 'access_denied' && err.errorMessage.includes('AADB2C90091')) {
+          // User cancelled the sign-in or sign-up process.
+          window.location.href = '/'; // Redirect to home page as an example
+        }
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+};
 
 // Finally, you can use the leaveRoom() function when handling logout
 const handleLogout = async () => {
