@@ -5,7 +5,7 @@ import styles from "./MagicCard.module.css";
 import { manaCostMatcher, manaCostParser } from "./magicUtils";
 import "./MTGFonts.css";
 
-export interface CardProps {
+export type CardProps = {
   name?: string;
   type?: string;
   manaCost?: string;
@@ -17,44 +17,59 @@ export interface CardProps {
   fotterLeftText?: string[];
   fotterRightText?: string[];
   cardColor?: CardColor;
-}
+  cardFrame?: CardColor;
+  cardBackground?: CardColor;
+};
 
-type CardColor = "green" | "blue" | "black" | "red" | "white" | "uncolor";
+export type CardColor =
+  | "green"
+  | "blue"
+  | "black"
+  | "red"
+  | "white"
+  | "uncolor";
 
-const MagicCard: React.FC<CardProps> = (props) => {
-  const manaIcons: { [key: string]: string } = {
-    G: "ms ms-g ms-cost",
-    R: "ms ms-r ms-cost",
-    U: "ms ms-u ms-cost",
-    B: "ms ms-b ms-cost",
-    W: "ms ms-w ms-cost",
-  };
+const frameClassesMap: Record<CardColor, string> = {
+  green: styles["green-frame"],
+  red: styles["red-frame"],
+  blue: styles["blue-frame"],
+  black: styles["black-frame"],
+  white: styles["white-frame"],
+  uncolor: styles["uncolor-frame"],
+};
 
-  // const manaClassesMap: { [key: string]: string } = {
-  //     'G': 'green-mana',
-  //     'R': 'red-mana',
-  //     'U': 'blue-mana',
-  //     'B': 'black-mana',
-  //     'W': 'white-mana',
-  // }
+const manaIcons: Record<string, string> = {
+  G: "ms ms-g ms-cost",
+  R: "ms ms-r ms-cost",
+  U: "ms ms-u ms-cost",
+  B: "ms ms-b ms-cost",
+  W: "ms ms-w ms-cost",
+};
 
-  const frameClassesMap: { [key in CardColor]: string } = {
-    green: styles["green-frame"],
-    red: styles["red-frame"],
-    blue: styles["blue-frame"],
-    black: styles["black-frame"],
-    white: styles["white-frame"],
-    uncolor: styles["uncolor-frame"],
-  };
+const backgroundClassesMap: Record<CardColor, string> = {
+  green: styles["green-background"],
+  red: styles["red-background"],
+  blue: styles["blue-background"],
+  black: styles["black-background"],
+  white: styles["white-background"],
+  uncolor: styles["uncolor-background"],
+};
 
-  const frameClass = props.cardColor
-    ? frameClassesMap[props.cardColor]
-    : "uncolor-frame";
+const MagicCard = ({
+  cardColor,
+  cardBackground,
+  cardFrame,
+  ...props
+}: CardProps) => {
+  const frameClass = frameClassesMap[cardFrame ?? cardColor ?? "uncolor"];
+  const backgroundClass =
+    backgroundClassesMap[cardBackground ?? cardColor ?? "uncolor"];
+  console.log(props.descriptions);
 
   const manaCostArray = props.manaCost && manaCostParser(props.manaCost);
   return (
     <div className={styles["card-container"]}>
-      <div className={styles["card-background"]}>
+      <div className={`${styles["card-background"]} ${backgroundClass}`}>
         <div className={[styles["card-frame"], frameClass].join(" ")}>
           <div className={styles["frame-header"]}>
             <div className={styles.name}>{props.name}</div>
