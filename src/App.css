@@ -1,5 +1,13 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #282c34;
+  color: white;
+  font-family: '"Lucida Console", Monaco, monospace';
 }
 
 .App-logo {

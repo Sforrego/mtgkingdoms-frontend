@@ -11,7 +11,7 @@ const roleTypeToColorMap: Record<RoleType, CardColor> = {
   SubRole: "uncolor",
 };
 
-const roleTypeToSetMap: Record<RoleType, string> = {
+export const roleTypeToSetMap: Record<RoleType, string> = {
   Monarch: "ss ss-v11 ss-mythic ss-grad",
   Noble: "ss ss-leg ss-mythic ss-grad",
   Renegade: "ss ss-mmq ss-mythic ss-grad",

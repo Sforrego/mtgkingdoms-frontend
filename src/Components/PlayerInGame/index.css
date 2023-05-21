@@ -1,0 +1,34 @@
+.PlayerInGame {
+    padding: 10px;
+    font-family: "Beleren";
+}
+
+.PlayerCardButton {
+    font-size: 100px;
+    width: 80%;
+    height: 60%;
+}
+
+.Unknown {
+    background-color: #000000;
+}
+
+.Monarch {
+    background-color: #faf8e1;
+}
+
+.Noble {
+    background-color: #a9d0f1;
+}
+
+.Renegade {
+    background-color: #2f2b2a;
+}
+
+.Outlaw {
+    background-color: #f5a688;
+}
+
+.Knight {
+    background-color: #ADD3AC;
+}
