@@ -1,6 +1,6 @@
-import { ConfigProvider, theme } from "antd";
 import { PlayerInGame } from "../../Components/PlayerInGame";
 import { sampleRoles } from "../../Types/Role";
+import "./index.css";
 
 type gameRoomProps = {
   roomCode: string;
@@ -9,22 +9,12 @@ type gameRoomProps = {
 };
 export const GameRoom = ({ roomCode, users, leaveRoom }: gameRoomProps) => (
   <div>
-    <ConfigProvider
-      theme={{
-        algorithm: theme.darkAlgorithm,
-        // token: {
-        //   colorPrimary: "#fff",
-        //   backgroundColor: "#aaa",
-        // },
-      }}
-    >
-      <div>
-        {sampleRoles.map((role) => (
-          <PlayerInGame key={role.Name} role={role} />
-        ))}
-        <PlayerInGame />
-      </div>
-    </ConfigProvider>
+    <div className="PlayersIconsHolder">
+      {sampleRoles.map((role) => (
+        <PlayerInGame key={role.Name} role={role} />
+      ))}
+      <PlayerInGame />
+    </div>
     <p>Room: {roomCode}</p>
     <p>Users in this room:</p>
     <ul>

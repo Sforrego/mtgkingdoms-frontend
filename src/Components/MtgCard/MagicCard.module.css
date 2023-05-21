@@ -66,7 +66,7 @@
 }
 
 .uncolor-background {
-    background-image: url(https://cdn.midjourney.com/59994b61-4657-46f4-9463-ccf07aee3f2e/0_0.png);
+    background-image: url(https://cdn.midjourney.com/0ca7d379-602c-4cfa-9758-cad64c46d24e/0_0.png);
     background-repeat: unset;
     background-size: cover;
 }
@@ -137,6 +137,15 @@
         -3px 3px 2px 5px #171314;
 }
 
+.uncolor-frame > .frame-header,
+.uncolor-frame > .frame-art,
+.uncolor-frame > .frame-type-line {
+    box-shadow: 
+        0 0 0 2px #171314,
+        0 0 0 5px #9099a3,
+        -3px 3px 2px 5px #171314;
+}
+
 .frame-text-box {
     flex-grow: 1;
     font-family: "M Plantin";
@@ -172,6 +181,12 @@
 .white-frame > .frame-text-box {
     box-shadow: 
         0 0 0 5px #f7f7f5,
+        -3px 3px 2px 5px #171314;
+}
+
+.uncolor-frame > .frame-text-box {
+    box-shadow: 
+        0 0 0 5px #9099a3,
         -3px 3px 2px 5px #171314;
 }
 
@@ -229,7 +244,6 @@
 .type {
     font-size: 1.3em;
     margin-left: 10px;
-    align-self: end;
     font-weight: 600;
     font-family: 'Beleren';
     margin-right: auto;

@@ -17,7 +17,7 @@ export const roleTypeToSetMap: Record<RoleType, string> = {
   Renegade: "ss ss-mmq ss-mythic ss-grad",
   Bandit: "ss ss-mrd ss-mythic ss-grad",
   Knight: "ss ss-5dn ss-mythic ss-grad",
-  SubRole: "ss ss-5dn ss-mythic ss-grad",
+  SubRole: "ss ss-apc ss-mythic ss-grad",
 };
 
 export const RoleCard = ({

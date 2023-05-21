@@ -35,4 +35,28 @@ export const sampleRoles: Role[] = [
         Ability: "The Angel is the King's right hand. They are the only player who can use the Knight's ability. The Angel is the only player who can kill the Assassin.\n The Angel is the only player who can kill the Assassin.",
         Image: "https://mtgkingdomsstorage.blob.core.windows.net/mtgkingdomsaiimages/Angel.jpeg",
     },
+    {
+        Type: "Bandit",
+        Name: "The Bandit",
+        Ability: "The Bandit is a lone wolf. They are the only player who can use the Bandit's ability. The Bandit is the only player who can kill the Assassin.",
+        Image: "https://mtgkingdomsstorage.blob.core.windows.net/mtgkingdomsaiimages/Bandit.jpeg",
+    },
+    {
+        Type: "Renegade",
+        Name: "The Renegade",
+        Ability: "The Renegade is a lone wolf. They are the only player who can use the Renegade's ability. The Renegade is the only player who can kill the Assassin.",
+        Image: "https://mtgkingdomsstorage.blob.core.windows.net/mtgkingdomsaiimages/Renegade.jpeg",
+    },
+    {
+        Type: "Noble",
+        Name: "The Noble",
+        Ability: "The Noble is a lone wolf. They are the only player who can use the Noble's ability. The Noble is the only player who can kill the Assassin.",
+        Image: "https://mtgkingdomsstorage.blob.core.windows.net/mtgkingdomsaiimages/Noble.jpeg",
+    },
+    {
+        Type: "SubRole",
+        Name: "The SubRole",
+        Ability: "The SubRole is a lone wolf. They are the only player who can use the SubRole's ability. The SubRole is the only player who can kill the Assassin.",
+        Image: "https://mtgkingdomsstorage.blob.core.windows.net/mtgkingdomsaiimages/SubRole.jpeg",
+    },
 ] 

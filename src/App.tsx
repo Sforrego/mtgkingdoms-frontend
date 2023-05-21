@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
 import { RoleCard } from "./Components/RoleCard";
-import { Button, Modal, Carousel, ConfigProvider, Row, theme } from "antd";
+import {
+  Button,
+  Modal,
+  Carousel,
+  ConfigProvider,
+  Row,
+  theme,
+  Drawer,
+} from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { Role, sampleRoles } from "./Types/Role";
 import { PlayerInGame } from "./Components/PlayerInGame";
@@ -12,6 +20,7 @@ import { Landing } from "./Pages/Landing";
 import "./App.css";
 import styles from "./App.module.css";
 import { If, IfElse, OnFalse, OnTrue } from "conditional-jsx";
+import { AppMenu } from "./Components/AppMenu";
 
 const SERVER = process.env.REACT_APP_SERVER as string;
 const clientId = process.env.REACT_APP_MTGKINGDOMS_CLIENT_ID as string;
@@ -230,81 +239,89 @@ function App() {
 
   return (
     <div className="App">
-      <IfElse condition={isConnected}>
-        <OnTrue>
-          <p className={styles.connectionStatus}>Connected to the server.</p>
-        </OnTrue>
-        <OnFalse>
-          <p className={styles.connectionStatus}>
-            Disconnected from the server.
-          </p>
-        </OnFalse>
-      </IfElse>
-
-      <Button
-        onClick={handleShowRoles}
-        style={{ position: "absolute", left: 100, top: 100 }}
+      <ConfigProvider
+        theme={{
+          algorithm: theme.darkAlgorithm,
+          token: { colorBgBase: "#000000" },
+        }}
       >
-        Show Roles
-      </Button>
-      {/* Show the roles in a modal, should be its own component */}
-      <If condition={showRoles}>
-        <div style={{ height: "700px", overflow: "auto" }}>
-          <Modal
-            title="Roles"
-            open={showRoles}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            width={550}
-          >
-            <Carousel
-              autoplay
-              arrows
-              nextArrow={<ArrowRightOutlined />}
-              prevArrow={<ArrowLeftOutlined />}
+        <AppMenu />
+        <IfElse condition={isConnected}>
+          <OnTrue>
+            <p className={styles.connectionStatus}>Connected to the server.</p>
+          </OnTrue>
+          <OnFalse>
+            <p className={styles.connectionStatus}>
+              Disconnected from the server.
+            </p>
+          </OnFalse>
+        </IfElse>
+
+        <Button
+          onClick={handleShowRoles}
+          style={{ position: "absolute", left: 100, top: 100 }}
+        >
+          Show Roles
+        </Button>
+        {/* Show the roles in a modal, should be its own component */}
+        <If condition={showRoles}>
+          <div style={{ height: "700px", overflow: "auto" }}>
+            <Modal
+              title="Roles"
+              open={showRoles}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              width={550}
             >
-              {roles.map((role) => (
-                <RoleCard key={role.Name} role={role} />
-              ))}
-            </Carousel>
-          </Modal>
-        </div>
-      </If>
-
-      <IfElse condition={isLoggedIn}>
-        <OnTrue>
-          <p>Hello, {user?.name}!</p>
-          {/* Connected in a room */}
-          <IfElse condition={isInRoom}>
-            <OnTrue>
-              <GameRoom
-                roomCode={roomCode}
-                users={usersInRoom}
-                leaveRoom={leaveRoom}
-              />
-            </OnTrue>
-            <OnFalse>
-              <Landing
-                createRoom={createRoom}
-                joinRoom={joinRoom}
-                roomCode={roomCode}
-                setRoomCode={setRoomCode}
-              />
-            </OnFalse>
-          </IfElse>
-        </OnTrue>
-        <OnFalse>
-          <Landing handleLogin={handleLogin} />
-        </OnFalse>
-      </IfElse>
-
-      <footer className={styles.footer}>
-        <If condition={isLoggedIn}>
-          <button className={styles.logoutButton} onClick={handleLogout}>
-            Sign Out
-          </button>
+              <Carousel
+                autoplay
+                arrows
+                nextArrow={<ArrowRightOutlined />}
+                prevArrow={<ArrowLeftOutlined />}
+              >
+                {roles.map((role) => (
+                  <RoleCard key={role.Name} role={role} />
+                ))}
+              </Carousel>
+            </Modal>
+          </div>
         </If>
-      </footer>
+
+        <IfElse condition={isLoggedIn}>
+          <OnTrue>
+            <p>Hello, {user?.name}!</p>
+            {/* Connected in a room */}
+            <IfElse condition={isInRoom}>
+              <OnTrue>
+                <GameRoom
+                  roomCode={roomCode}
+                  users={usersInRoom}
+                  leaveRoom={leaveRoom}
+                />
+              </OnTrue>
+              <OnFalse>
+                <Landing
+                  createRoom={createRoom}
+                  joinRoom={joinRoom}
+                  roomCode={roomCode}
+                  setRoomCode={setRoomCode}
+                />
+              </OnFalse>
+            </IfElse>
+          </OnTrue>
+          <OnFalse>
+            <Landing handleLogin={handleLogin} />
+          </OnFalse>
+        </IfElse>
+
+        <footer className={styles.footer}>
+          <If condition={isLoggedIn}>
+            <button className={styles.logoutButton} onClick={handleLogout}>
+              Sign Out
+            </button>
+          </If>
+        </footer>
+      </ConfigProvider>
     </div>
   );
 }
