@@ -1,0 +1,13 @@
+.AppMenuButton {
+    position: absolute;
+    height: 10vmax;
+    width: 10vmax;
+    max-width: 60px;
+    max-height: 60px;
+    top: 20px;
+    right: 20px;
+}
+
+.AppMenuButton > span {
+    font-size: 2em;
+}

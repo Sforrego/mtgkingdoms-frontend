@@ -21,8 +21,8 @@ export const PlayerInGame = ({ role }: { role?: Role }) => {
 
   return (
     <div className="PlayerInGame">
-      <h1>PlayerInGame</h1>
-      <h2>Role: {role?.Name ?? "Unknown"}</h2>
+      <h2>PlayerInGame</h2>
+      <h3>{role?.Name ?? "Unknown"}</h3>
       <Modal
         open={open}
         onCancel={() => setOpen(false)}

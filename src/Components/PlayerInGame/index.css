@@ -1,12 +1,22 @@
 .PlayerInGame {
     padding: 10px;
+    width: 100%;
+    max-width: 40vw;
+    aspect-ratio: 2/3;
     font-family: "Beleren";
+    font-size: medium;
+    margin: 1vw;
+    flex-basis: 21%;
+    color: white;
 }
 
 .PlayerCardButton {
-    font-size: 100px;
     width: 80%;
     height: 60%;
+}
+
+.PlayerCardButton > i {
+    font-size: calc(10vw + 30px);
 }
 
 .Unknown {
@@ -25,10 +35,14 @@
     background-color: #2f2b2a;
 }
 
-.Outlaw {
+.Bandit {
     background-color: #f5a688;
 }
 
 .Knight {
     background-color: #ADD3AC;
+}
+
+.SubRole {
+    background-color: #d3caac;
 }
