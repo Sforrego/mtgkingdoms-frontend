@@ -6,8 +6,7 @@ import { RoleCard } from "./Components/RoleCard";
 import { Button, Modal, Carousel } from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 
-const SERVER = "http://localhost:9998";
-
+const SERVER = process.env.REACT_APP_SERVER;;
 const clientId = process.env.REACT_APP_MTGKINGDOMS_CLIENT_ID;
 
 // Initialize the MSAL application object
