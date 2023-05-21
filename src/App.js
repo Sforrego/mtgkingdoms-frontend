@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { RoleCard } from "./Components/RoleCard";
-import { Row } from "antd";
+import { Button, Modal, Carousel } from "antd";
+import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 
 const SERVER = "http://localhost:9998";
 
@@ -247,6 +248,14 @@ const handleShowRoles = () => {
     },
   };
 
+  const handleOk = () => {
+    setShowRoles(false);
+  };
+
+  const handleCancel = () => {
+    setShowRoles(false);
+  };
+
   return (
     <div className="App" style={styles.app}>
       {isConnected ? (
@@ -254,14 +263,16 @@ const handleShowRoles = () => {
       ) : (
         <p style={styles.connectionStatus}>Disconnected from the server.</p>
       )}
-      <button onClick={handleShowRoles}>Show Roles</button>
+      <Button onClick={handleShowRoles} style={{ position: 'absolute', left: 100, top: 100 }}>Show Roles</Button>
       {showRoles && (
         <div style={{ height: '700px', overflow: 'auto' }}>
-        <Row>
+        <Modal title="Roles" open={showRoles} onOk={handleOk} onCancel={handleCancel} width={550}>
+        <Carousel autoplay arrows nextArrow={<ArrowRightOutlined />} prevArrow={<ArrowLeftOutlined/>}>
           {roles.map((role) => (
-            <RoleCard key={role.Role} role={role} />
+            <RoleCard key={role.Name} role={role} />
           ))}
-        </Row>
+        </Carousel>
+      </Modal>
       </div>
       )}
       {isLoggedIn ? (
