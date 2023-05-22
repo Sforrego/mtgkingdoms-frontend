@@ -7,13 +7,10 @@ import {
   Modal,
   Carousel,
   ConfigProvider,
-  Row,
   theme,
-  Drawer,
 } from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
-import { Role, sampleRoles } from "./Types/Role";
-import { PlayerInGame } from "./Components/PlayerInGame";
+import { Role } from "./Types/Role";
 import { GameRoom } from "./Pages/GameRoom";
 import { Landing } from "./Pages/Landing";
 
@@ -252,7 +249,7 @@ function App() {
           </OnTrue>
           <OnFalse>
             <p className={styles.connectionStatus}>
-              Disconnected from the ust server.
+              Disconnected from the ust Yserver.
             </p>
           </OnFalse>
         </IfElse>
