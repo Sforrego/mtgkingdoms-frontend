@@ -31,7 +31,7 @@ const msalConfig = {
     authority:
       "https://MTGKingdoms.b2clogin.com/MTGKingdoms.onmicrosoft.com/B2C_1_signupsignin",
     knownAuthorities: ["MTGKingdoms.b2clogin.com"],
-    postLogoutRedirectUri: "https://agreeable-river-08f60e510.3.azurestaticapps.net/Y",
+    postLogoutRedirectUri: "https://agreeable-river-08f60e510.3.azurestaticapps.net/",
   },
 };
 
