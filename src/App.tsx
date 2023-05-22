@@ -22,6 +22,8 @@ import { AppMenu } from "./Components/AppMenu";
 const SERVER = process.env.REACT_APP_SERVER as string;
 const clientId = process.env.REACT_APP_MTGKINGDOMS_CLIENT_ID as string;
 
+console.log(SERVER);
+
 // Initialize the MSAL application object
 const msalConfig = {
   auth: {
