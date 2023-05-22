@@ -21,6 +21,9 @@ jobs:
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
+        env:
+          REACT_APP_SERVER: ${{ secrets.REACT_APP_SERVER }}
+          REACT_APP_MTGKINGDOMS_CLIENT_ID: ${{ secrest.REACT_APP_MTGKINGDOMS_CLIENT_ID }}
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_RIVER_08F60E510 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
