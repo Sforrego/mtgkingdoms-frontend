@@ -252,7 +252,7 @@ function App() {
           </OnTrue>
           <OnFalse>
             <p className={styles.connectionStatus}>
-              Disconnected from the server.
+              Disconnected from the ust server.
             </p>
           </OnFalse>
         </IfElse>
