@@ -51,6 +51,9 @@ function App() {
   const [roomCode, setRoomCode] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [showRoles, setShowRoles] = useState(false);
+  const [myRole, setMyRole] = useState<Role | null>(null);
+  const [teammates, setTeammates] = useState<User[]>([]);
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
 
   useEffect(() => {
     const newSocket = io(SERVER);
@@ -173,6 +176,14 @@ function App() {
       console.log("User is not logged in yet");
     }
   };
+  
+  const startGame = () => {
+    if (socket) {
+      socket.emit("startGame", { roomCode }); // Send the 'leave' event to the server
+    } else {
+      console.log("Connection not established");
+    }
+  };
 
   const leaveRoom = () => {
     if (user) {
@@ -180,6 +191,20 @@ function App() {
     } else {
       console.log("User is not logged in yet");
     }
+  };
+
+  const revealRole = () => {
+      Modal.confirm({
+        title: 'Do you want to reveal your role?',
+        content: 'Once you reveal your role, all players in the room will see it.',
+        onOk() {
+          if (user) {
+            socket && socket.emit("revealRole", { userId: user.homeAccountId, roomCode }); // Send the 'leave' event to the server
+          } else {
+            console.log("User is not logged in yet");
+          }
+        },
+      });
   };
 
   const handleShowRoles = () => {
@@ -196,6 +221,7 @@ function App() {
       // Listen for 'roomCreated' event from the server
       socket.on("roomCreated", ({ roomCode, users }) => {
         console.log(`Room created with code: ${roomCode}`);
+        console.log(users);
         setRoomCode(roomCode);
         setIsInRoom(true);
         setUsersInRoom(users);
@@ -226,6 +252,21 @@ function App() {
         setUsersInRoom(users);
       });
 
+      socket.on("gameStarted", ({ userRole, teammates }) => {
+        console.log("Game started. Role assigned.");
+        setMyRole(userRole);
+        console.log(userRole);
+        console.log(myRole);
+        setTeammates(teammates);
+        setGameStarted(true);
+      });
+
+      socket.on("gameUpdated", ({ users }) => {
+        console.log("Game Updated.");
+        console.log(users);
+        setUsersInRoom(users);
+      });
+
       // Listen for 'error' event from the server
       socket.on("error", (message) => {
         console.error(message);
@@ -241,10 +282,11 @@ function App() {
         socket.off("leftRoom");
         socket.off("userJoinedRoom");
         socket.off("userLeftRoom");
+        socket.off("startGame");
         socket.off("error");
       };
     }
-  }, [roomCode, socket]);
+  }, [roomCode, myRole, socket]);
 
   const handleOk = () => {
     setShowRoles(false);
@@ -306,7 +348,12 @@ function App() {
                 <GameRoom
                   roomCode={roomCode}
                   users={usersInRoom}
+                  gameStarted={gameStarted}
+                  myRole={myRole}
+                  teammates={teammates}
+                  startGame={startGame}
                   leaveRoom={leaveRoom}
+                  revealRole={revealRole}
                 />
               </OnTrue>
               <OnFalse key="notInRoom">
