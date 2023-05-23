@@ -7,6 +7,7 @@ type gameRoomProps = {
   users: string[];
   leaveRoom: () => void;
 };
+
 export const GameRoom = ({ roomCode, users, leaveRoom }: gameRoomProps) => (
   <div>
     <div className="PlayersIconsHolder">

@@ -31,7 +31,7 @@ const msalConfig = {
     authority:
       "https://MTGKingdoms.b2clogin.com/MTGKingdoms.onmicrosoft.com/B2C_1_signupsignin",
     knownAuthorities: ["MTGKingdoms.b2clogin.com"],
-    postLogoutRedirectUri: "https://agreeable-river-08f60e510.3.azurestaticapps.net/",
+    postLogoutRedirectUri: window.location.origin,
   },
 };
 
@@ -102,6 +102,7 @@ function App() {
         if (accounts.length !== 0) {
           setUser(accounts[0]);
           setIsLoggedIn(true);
+          sendLoggedIn();
         }
       } catch (error) {
         if (
@@ -116,7 +117,7 @@ function App() {
       }
     };
     handleRedirect();
-  }, []);
+  }, [setIsLoggedIn]);
 
   const handleLogin = async () => {
     try {
@@ -152,16 +153,36 @@ function App() {
     socket && socket.emit("getRoles"); // Send the 'getRoles' event to the server
   };
 
+  const sendLoggedIn = () => {
+    if (user) {
+      socket && socket.emit("login", { userId: user.homeAccountId, username: user.name});
+    } else {
+      console.log("User is not logged in yet");
+    }
+  };
+
   const createRoom = () => {
-    socket && socket.emit("create", { userId: user?.name ?? "" }); // Send the 'create' event to the server
+    if (user) {
+      socket && socket.emit("create", { userId: user.homeAccountId, username: user.name});
+    } else {
+      console.log("User is not logged in yet");
+    }
   };
 
   const joinRoom = () => {
-    socket && socket.emit("join", { userId: user?.name ?? "", roomCode }); // Send the room code to the server
+    if (user) {
+      socket && socket.emit("join", { userId: user.homeAccountId, username: user.name, roomCode }); // Send the room code to the server
+    } else {
+      console.log("User is not logged in yet");
+    }
   };
 
   const leaveRoom = () => {
-    socket && socket.emit("leave", { userId: user?.name ?? "", roomCode }); // Send the 'leave' event to the server
+    if (user) {
+      socket && socket.emit("leave", { userId: user.homeAccountId, username: user.name, roomCode }); // Send the 'leave' event to the server
+    } else {
+      console.log("User is not logged in yet");
+    }
   };
 
   const handleShowRoles = () => {
