@@ -4,10 +4,33 @@ import { useState } from "react";
 
 import styles from "./index.module.css";
 
-const Item = Menu.Item;
+type AppMenuProps = {
+  handleLogout: () => void; // assuming handleLogout is a function that takes no arguments and returns void
+  handleShowRoles: () => void; // the same for handleShowRoles
+};
 
-export const AppMenu = () => {
+export const AppMenu = ({ handleLogout, handleShowRoles }: AppMenuProps) => {
   const [open, setOpen] = useState(false);
+
+  const items = [
+    { 
+      label: 'Rules', 
+      key: 'Rules', 
+      //onClick: func,
+      //className: class1,
+    },
+    {
+      label: 'Show Roles',
+      key: 'ShowRoles',
+      onClick: handleShowRoles,
+    },
+    {
+      label: 'Logout',
+      key: 'Logout',
+      onClick: handleLogout,
+    },
+  ]
+
   return (
     <>
       <Button onClick={() => setOpen(true)} className={styles.AppMenuButton}>
@@ -20,14 +43,10 @@ export const AppMenu = () => {
         destroyOnClose
         className={styles.AppMenuDrawer}
       >
-        <Menu>
-          <Item>Base Rules</Item>
-          <Item>Base Rules</Item>
-          <Item>Base Rules</Item>
-          <Item>Base Rules</Item>
-          <Item>Base Rules</Item>
-        </Menu>
+        <Menu items={items}/>
       </Drawer>
     </>
   );
 };
+
+

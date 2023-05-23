@@ -1,15 +1,20 @@
 import { Button, Modal } from "antd";
 import { useState } from "react";
-import { Role } from "../../Types/Role";
+import { User } from "../../Types/User";
 import { RoleCard, roleTypeToSetMap } from "../RoleCard";
 import "./index.css";
 
-export const PlayerInGame = ({ role }: { role?: Role }) => {
+type PlayerProps = {
+  user?: User | null;
+};
+
+export const PlayerInGame = ({ user }: PlayerProps) => {
   const [open, setOpen] = useState(false);
-  if (role === undefined)
+
+  if (!user?.role)
     return (
       <div className="PlayerInGame">
-        <h1>PlayerInGame</h1>
+        <h1>{user?.username}</h1>
         <h2>Role: {"Unknown"}</h2>
 
         <Button disabled className="PlayerCardButton Unknown">
@@ -17,12 +22,13 @@ export const PlayerInGame = ({ role }: { role?: Role }) => {
         </Button>
       </div>
     );
-  const logo = roleTypeToSetMap[role.Type];
+
+  const logo = roleTypeToSetMap[user.role.Type];
 
   return (
     <div className="PlayerInGame">
-      <h2>PlayerInGame</h2>
-      <h3>{role?.Name ?? "Unknown"}</h3>
+      <h2>{user.username}</h2>
+      <h3>{user.role.Name ?? "Unknown"}</h3>
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
@@ -30,11 +36,11 @@ export const PlayerInGame = ({ role }: { role?: Role }) => {
         footer
         title
       >
-        <RoleCard role={role} />
+        <RoleCard role={user.role} />
       </Modal>
       <Button
         onClick={() => setOpen(true)}
-        className={`PlayerCardButton ${role.Type}`}
+        className={`PlayerCardButton ${user.role.Type}`}
       >
         <i className={logo}></i>
       </Button>

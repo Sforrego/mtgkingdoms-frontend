@@ -1,3 +1,5 @@
+import { Button } from "antd";
+
 type LandingProps =
   | {
       roomCode: string;
@@ -16,11 +18,11 @@ type LandingProps =
 
 export const Landing = (props: LandingProps) => {
   return "handleLogin" in props ? (
-    <button className="button" onClick={props?.handleLogin}>
+    <Button onClick={props?.handleLogin}>
       Get Started
-    </button>
+    </Button>
   ) : (
-    <div className="form-container">
+    <div key="formContainer" className="form-container">
       <input
         className="input-field"
         type="text"
@@ -28,12 +30,12 @@ export const Landing = (props: LandingProps) => {
         onChange={(e) => props.setRoomCode(e.target.value)}
         placeholder="Enter room code"
       />
-      <button className="button" onClick={props.joinRoom}>
+      <Button onClick={props.joinRoom}>
         Join Room
-      </button>
-      <button className="button" onClick={props.createRoom}>
+      </Button>
+      <Button onClick={props.createRoom}>
         Create Room
-      </button>
+      </Button>
     </div>
   );
 };

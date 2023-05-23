@@ -3,7 +3,6 @@ import { io, Socket } from "socket.io-client";
 import { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
 import { RoleCard } from "./Components/RoleCard";
 import {
-  Button,
   Modal,
   Carousel,
   ConfigProvider,
@@ -11,11 +10,11 @@ import {
 } from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { Role } from "./Types/Role";
+import { User } from "./Types/User";
 import { GameRoom } from "./Pages/GameRoom";
 import { Landing } from "./Pages/Landing";
 
 import "./App.css";
-import styles from "./App.module.css";
 import { If, IfElse, OnFalse, OnTrue } from "conditional-jsx";
 import { AppMenu } from "./Components/AppMenu";
 
@@ -47,7 +46,7 @@ function App() {
   const [isInRoom, setIsInRoom] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<AccountInfo | null>(null);
-  const [usersInRoom, setUsersInRoom] = useState<string[]>([]);
+  const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [roomCode, setRoomCode] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -75,7 +74,13 @@ function App() {
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, [user]);
+
+  useEffect(() => {
+    if (isConnected && user && socket) {
+      socket.emit("login", { userId: user.homeAccountId, username: user.name });
+    }
+  }, [isConnected, user, socket]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -102,7 +107,6 @@ function App() {
         if (accounts.length !== 0) {
           setUser(accounts[0]);
           setIsLoggedIn(true);
-          sendLoggedIn();
         }
       } catch (error) {
         if (
@@ -153,13 +157,6 @@ function App() {
     socket && socket.emit("getRoles"); // Send the 'getRoles' event to the server
   };
 
-  const sendLoggedIn = () => {
-    if (user) {
-      socket && socket.emit("login", { userId: user.homeAccountId, username: user.name});
-    } else {
-      console.log("User is not logged in yet");
-    }
-  };
 
   const createRoom = () => {
     if (user) {
@@ -265,24 +262,18 @@ function App() {
           token: { colorBgBase: "#000000" },
         }}
       >
-        <AppMenu />
+        <AppMenu handleLogout={handleLogout} handleShowRoles={handleShowRoles}/>
         <IfElse condition={isConnected}>
-          <OnTrue>
-            <p className={styles.connectionStatus}>Connected to the server.</p>
+          <OnTrue key="Connected">
+            <p className="connectionStatus">Connected to the server.</p>
           </OnTrue>
-          <OnFalse>
-            <p className={styles.connectionStatus}>
+          <OnFalse key="notConnected">
+            <p className="connectionStatus">
               Disconnected from the ust Yserver.
             </p>
           </OnFalse>
         </IfElse>
 
-        <Button
-          onClick={handleShowRoles}
-          style={{ position: "absolute", left: 100, top: 100 }}
-        >
-          Show Roles
-        </Button>
         {/* Show the roles in a modal, should be its own component */}
         <If condition={showRoles}>
           <div style={{ height: "700px", overflow: "auto" }}>
@@ -296,7 +287,7 @@ function App() {
               <Carousel
                 autoplay
                 arrows
-                nextArrow={<ArrowRightOutlined />}
+                nextArrow={<ArrowRightOutlined/>}
                 prevArrow={<ArrowLeftOutlined />}
               >
                 {roles.map((role) => (
@@ -306,20 +297,19 @@ function App() {
             </Modal>
           </div>
         </If>
-
         <IfElse condition={isLoggedIn}>
-          <OnTrue>
+          <OnTrue key="loggedIn">
             <p>Hello, {user?.name}!</p>
             {/* Connected in a room */}
             <IfElse condition={isInRoom}>
-              <OnTrue>
+              <OnTrue key="inRoom">
                 <GameRoom
                   roomCode={roomCode}
                   users={usersInRoom}
                   leaveRoom={leaveRoom}
                 />
               </OnTrue>
-              <OnFalse>
+              <OnFalse key="notInRoom">
                 <Landing
                   createRoom={createRoom}
                   joinRoom={joinRoom}
@@ -329,18 +319,10 @@ function App() {
               </OnFalse>
             </IfElse>
           </OnTrue>
-          <OnFalse>
+          <OnFalse key="notLoggedIn">
             <Landing handleLogin={handleLogin} />
           </OnFalse>
         </IfElse>
-
-        <footer className={styles.footer}>
-          <If condition={isLoggedIn}>
-            <button className={styles.logoutButton} onClick={handleLogout}>
-              Sign Out
-            </button>
-          </If>
-        </footer>
       </ConfigProvider>
     </div>
   );

@@ -79,13 +79,40 @@
 
 .ant-carousel .slick-prev,
 .ant-carousel .slick-next {
-  color: unset;
-  font-size: unset;
+  color: white;
+  font-size: 20px;
 }
 
 .ant-carousel .slick-prev:hover,
 .ant-carousel .slick-next:hover,
 .ant-carousel .slick-prev:focus,
 .ant-carousel .slick-next:focus {
-  color: unset;
+  color: grey;
+}
+
+.ant-carousel .slick-dots li button {
+  width: 3px;
+  height: 3px;
+  border-radius: 100%;
+  background: white;
+}
+
+.ant-carousel .slick-dots li.slick-active button{
+  width: 6px;
+  height: 6px;
+  border-radius: 100%;
+  background: black;
+}
+
+.logoutButton {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 1em;
+}
+.connectionStatus {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 1em;
 }

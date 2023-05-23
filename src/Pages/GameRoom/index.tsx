@@ -1,30 +1,24 @@
 import { PlayerInGame } from "../../Components/PlayerInGame";
-import { sampleRoles } from "../../Types/Role";
+import { User } from "../../Types/User";
+import { Button } from "antd";
 import "./index.css";
 
-type gameRoomProps = {
+type GameRoomProps = {
   roomCode: string;
-  users: string[];
+  users: User[];
   leaveRoom: () => void;
 };
 
-export const GameRoom = ({ roomCode, users, leaveRoom }: gameRoomProps) => (
+export const GameRoom = ({ roomCode, users, leaveRoom }: GameRoomProps) => (
   <div>
+    <p style={{color: "white"}}>Room: {roomCode}</p>
     <div className="PlayersIconsHolder">
-      {sampleRoles.map((role) => (
-        <PlayerInGame key={role.Name} role={role} />
+      {Object.values(users).map((user, index) => (
+        <PlayerInGame key={index} user={user} />
       ))}
-      <PlayerInGame />
     </div>
-    <p>Room: {roomCode}</p>
-    <p>Users in this room:</p>
-    <ul>
-      {users.map((user) => (
-        <li key={user}>{user}</li>
-      ))}
-    </ul>
-    <button className="button" onClick={leaveRoom}>
+    <Button onClick={leaveRoom}>
       Leave Room
-    </button>
+    </Button>
   </div>
 );
