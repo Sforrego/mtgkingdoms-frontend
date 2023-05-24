@@ -13,17 +13,18 @@ type GameRoomProps = {
   gameStarted: boolean;
   myRole: Role | null;
   teammates: User[];
+  isRevealed: boolean;
   startGame: () => void;
   leaveRoom: () => void;
   revealRole: () => void;
-  endGame: () => void;
+  endGame: (users: User[]) => void; // update the type here
 };
 
-export const GameRoom = ({ roomCode, users, gameStarted, myRole, teammates, startGame, leaveRoom, revealRole, endGame }: GameRoomProps) => {
-  console.log(myRole);
+export const GameRoom = ({ roomCode, users, gameStarted, myRole, isRevealed, teammates, startGame, leaveRoom, revealRole, endGame }: GameRoomProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(users);
-
+  const handleEndGame = () => {
+    endGame(users); // Call endGame with usersInRoom
+  };
   const showRole = () => {
     setIsModalOpen(true);
   };
@@ -38,10 +39,10 @@ export const GameRoom = ({ roomCode, users, gameStarted, myRole, teammates, star
       </div>
       {gameStarted ? (
         <>
-          <Button onClick={showRole}>Show Role</Button>
-          <Button onClick={revealRole}>Reveal Role</Button>
+          <Button onClick={showRole}>See My Role</Button>
+          {!isRevealed && <Button onClick={revealRole}>Reveal Role</Button>}
           <Button onClick={leaveRoom}>Leave Room</Button>
-          <Button onClick={endGame}>End Game</Button>
+          <Button onClick={handleEndGame}>End Game</Button>
         </>
       ) : (
         <>

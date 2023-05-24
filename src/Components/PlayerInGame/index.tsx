@@ -15,7 +15,7 @@ export const PlayerInGame = ({ user }: PlayerProps) => {
     return (
       <div className="PlayerInGame">
         <h1>{user?.username}</h1>
-        <h2>Role: {"Unknown"}</h2>
+        <h2>{"Unknown"}</h2>
 
         <Button disabled className="PlayerCardButton Unknown">
           <i className="ss ss-bcore ss-mythic ss-grad"></i>
@@ -27,8 +27,8 @@ export const PlayerInGame = ({ user }: PlayerProps) => {
 
   return (
     <div className="PlayerInGame">
-      <h2>{user.username}</h2>
-      <h3>{user.role.name ?? "Unknown"}</h3>
+      <h1>{user.username}</h1>
+      <h2>The {user.role.name}</h2>
       <Modal
         open={open}
         onCancel={() => setOpen(false)}

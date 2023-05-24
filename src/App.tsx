@@ -6,6 +6,7 @@ import {
   Modal,
   Carousel,
   ConfigProvider,
+  Checkbox,
   theme,
 } from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
@@ -54,6 +55,8 @@ function App() {
   const [myRole, setMyRole] = useState<Role | null>(null);
   const [teammates, setTeammates] = useState<User[]>([]);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [selectedWinnersIds, setSelectedWinnersIds] = useState<string[]>([]);
+  const [isRevealed, setIsRevealed] = useState<boolean>(false);
 
   useEffect(() => {
     const newSocket = io(SERVER);
@@ -207,18 +210,29 @@ function App() {
       });
   };
 
-  const endGame = () => {
-      Modal.confirm({
-        title: 'Select winners',
-        content: 'select winners',
-        onOk() {
-          if (user) {
-            socket && socket.emit("endGame", { roomCode }); // Send the 'leave' event to the server
-          } else {
-            console.log("User is not logged in yet");
-          }
-        },
-      });
+  const endGame = (users: User[] = []) => {
+    const handleCheckChange = (checkedValues: any[]) => {
+      setSelectedWinnersIds(checkedValues); // type cast assuming all values are strings
+      console.log(checkedValues);
+    };
+  
+    console.log(users);
+    Modal.confirm({
+      title: 'Select winners',
+      content: (
+        <Checkbox.Group style={{ width: '100%' }} onChange={handleCheckChange}>
+          {users.map((user) => (
+            <div key={user.userId}>
+              <Checkbox value={user.userId}>{user.username}</Checkbox>
+            </div>
+          ))}
+        </Checkbox.Group>
+      ),
+      onOk() {
+        socket && socket.emit("endGame", { roomCode, winnersIds: selectedWinnersIds });
+        setSelectedWinnersIds([]);
+      },
+    });
   };
 
   const handleShowRoles = () => {
@@ -276,6 +290,13 @@ function App() {
       socket.on("gameUpdated", ({ users }) => {
         console.log("Game Updated.");
         setUsersInRoom(users);
+        if(user){
+          const myUser: User = users.find((u: User) => u.userId === user.homeAccountId);
+          if (myUser && myUser.isRevealed !== isRevealed){
+            setIsRevealed(myUser.isRevealed);
+          }
+        }
+
       });
 
       socket.on("reconnectedToRoom", ({ user, usersInRoom, activeGame, roomCode }) => {
@@ -286,6 +307,7 @@ function App() {
           setUsersInRoom(usersInRoom);
           setGameStarted(activeGame);
           setMyRole(user.role);
+          setIsRevealed(user.isRevealed);
         }
       });
 
@@ -308,11 +330,14 @@ function App() {
         socket.off("leftRoom");
         socket.off("userJoinedRoom");
         socket.off("userLeftRoom");
-        socket.off("startGame");
+        socket.off("gameStarted");
+        socket.off("gameUpdated");
+        socket.off("reconnectedToRoom");
+        socket.off("gameEnded");
         socket.off("error");
       };
     }
-  }, [user, roomCode, myRole, socket, gameStarted]);
+  }, [isRevealed, roomCode, socket, user]);
 
   const handleOk = () => {
     setShowRoles(false);
@@ -377,6 +402,7 @@ function App() {
                   gameStarted={gameStarted}
                   myRole={myRole}
                   teammates={teammates}
+                  isRevealed={isRevealed}
                   startGame={startGame}
                   leaveRoom={leaveRoom}
                   revealRole={revealRole}
