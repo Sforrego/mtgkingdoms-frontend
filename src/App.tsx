@@ -207,6 +207,20 @@ function App() {
       });
   };
 
+  const endGame = () => {
+      Modal.confirm({
+        title: 'Select winners',
+        content: 'select winners',
+        onOk() {
+          if (user) {
+            socket && socket.emit("endGame", { roomCode }); // Send the 'leave' event to the server
+          } else {
+            console.log("User is not logged in yet");
+          }
+        },
+      });
+  };
+
   const handleShowRoles = () => {
     setShowRoles(true);
     getRoles();
@@ -273,6 +287,12 @@ function App() {
           setGameStarted(activeGame);
           setMyRole(user.role);
         }
+      });
+
+      socket.on("gameEnded", ({ users }) => {
+        console.log("Game Ended");
+        setUsersInRoom(users);
+        setGameStarted(false);
       });
 
       // Listen for 'error' event from the server
@@ -360,6 +380,7 @@ function App() {
                   startGame={startGame}
                   leaveRoom={leaveRoom}
                   revealRole={revealRole}
+                  endGame={endGame}
                 />
               </OnTrue>
               <OnFalse key="notInRoom">
