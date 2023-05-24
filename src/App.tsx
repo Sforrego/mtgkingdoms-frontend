@@ -77,7 +77,7 @@ function App() {
     return () => {
       newSocket.disconnect();
     };
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     if (isConnected && user && socket) {
@@ -187,7 +187,7 @@ function App() {
 
   const leaveRoom = () => {
     if (user) {
-      socket && socket.emit("leave", { userId: user.homeAccountId, username: user.name, roomCode }); // Send the 'leave' event to the server
+      socket && socket.emit("leaveRoom", { userId: user.homeAccountId, username: user.name, roomCode }); // Send the 'leave' event to the server
     } else {
       console.log("User is not logged in yet");
     }
@@ -215,7 +215,7 @@ function App() {
   useEffect(() => {
     if (socket) {
       socket.on("rolesData", (data) => {
-        setRoles(data); // get the first two roles
+        setRoles(data);
       });
 
       // Listen for 'roomCreated' event from the server
@@ -255,23 +255,29 @@ function App() {
       socket.on("gameStarted", ({ userRole, teammates }) => {
         console.log("Game started. Role assigned.");
         setMyRole(userRole);
-        console.log(userRole);
-        console.log(myRole);
         setTeammates(teammates);
         setGameStarted(true);
       });
 
       socket.on("gameUpdated", ({ users }) => {
         console.log("Game Updated.");
-        console.log(users);
         setUsersInRoom(users);
+      });
+
+      socket.on("reconnectedToRoom", ({ user, usersInRoom, activeGame, roomCode }) => {
+        if(user){
+          console.log("Reconnected to room");
+          setRoomCode(roomCode);
+          setIsInRoom(true);
+          setUsersInRoom(usersInRoom);
+          setGameStarted(activeGame);
+          setMyRole(user.role);
+        }
       });
 
       // Listen for 'error' event from the server
       socket.on("error", (message) => {
-        console.error(message);
-        setIsInRoom(false);
-        setRoomCode("");
+        alert(message)
       });
 
       // Cleanup when component unmounts
@@ -286,7 +292,7 @@ function App() {
         socket.off("error");
       };
     }
-  }, [roomCode, myRole, socket]);
+  }, [user, roomCode, myRole, socket, gameStarted]);
 
   const handleOk = () => {
     setShowRoles(false);
@@ -333,7 +339,7 @@ function App() {
                 prevArrow={<ArrowLeftOutlined />}
               >
                 {roles.map((role) => (
-                  <RoleCard key={role.Name} role={role} />
+                  <RoleCard key={role.name} role={role} />
                 ))}
               </Carousel>
             </Modal>

@@ -21,7 +21,7 @@ export const roleTypeToSetMap: Record<RoleType, string> = {
 };
 
 export const RoleCard = ({
-  role: { Name, Type, Ability, Image },
+  role: { name: Name, type: Type, ability: Ability, image: Image },
 }: {
   role: Role;
 }) => (

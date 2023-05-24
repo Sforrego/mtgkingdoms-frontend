@@ -19,9 +19,10 @@ type GameRoomProps = {
 };
 
 export const GameRoom = ({ roomCode, users, gameStarted, myRole, teammates, startGame, leaveRoom, revealRole }: GameRoomProps) => {
-
+  console.log(myRole);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+  console.log(users);
+
   const showRole = () => {
     setIsModalOpen(true);
   };

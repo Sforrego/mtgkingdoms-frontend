@@ -5,4 +5,5 @@ export type User = {
     username: string;
     role: Role;
     isRevealed: boolean;
+    userId: string;
   };

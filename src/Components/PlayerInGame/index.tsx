@@ -23,12 +23,12 @@ export const PlayerInGame = ({ user }: PlayerProps) => {
       </div>
     );
 
-  const logo = roleTypeToSetMap[user.role.Type];
+  const logo = roleTypeToSetMap[user.role.type];
 
   return (
     <div className="PlayerInGame">
       <h2>{user.username}</h2>
-      <h3>{user.role.Name ?? "Unknown"}</h3>
+      <h3>{user.role.name ?? "Unknown"}</h3>
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
@@ -40,7 +40,7 @@ export const PlayerInGame = ({ user }: PlayerProps) => {
       </Modal>
       <Button
         onClick={() => setOpen(true)}
-        className={`PlayerCardButton ${user.role.Type}`}
+        className={`PlayerCardButton ${user.role.type}`}
       >
         <i className={logo}></i>
       </Button>
