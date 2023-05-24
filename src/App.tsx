@@ -337,7 +337,7 @@ function App() {
           </OnTrue>
           <OnFalse key="notConnected">
             <p className="connectionStatus">
-              Disconnected from the ust Yserver.
+              Disconnected from the server.
             </p>
           </OnFalse>
         </IfElse>
