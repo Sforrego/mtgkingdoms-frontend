@@ -29,7 +29,7 @@ export const RoleCard = ({
     artUrl={Image}
     name={Name}
     cardColor={roleTypeToColorMap[Type]}
-    descriptions={Ability.split("\n")}
+    descriptions={Ability.split(/\\+n/)}
     type={`Role - ${Type}`}
     expansionSymbol={roleTypeToSetMap[Type]}
   />

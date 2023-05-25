@@ -1,7 +1,7 @@
 import { PlayerInGame } from "../../Components/PlayerInGame";
 import { User } from "../../Types/User";
-import { Role } from "../../Types/Role";
-import { Modal, Button } from "antd";
+import { Modal, Button, Carousel } from "antd";
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { useState } from "react";
 import { RoleCard } from "../../Components/RoleCard";
 
@@ -11,8 +11,7 @@ type GameRoomProps = {
   roomCode: string;
   users: User[];
   gameStarted: boolean;
-  myRole: Role | null;
-  teammates: User[];
+  team: User[];
   isRevealed: boolean;
   startGame: () => void;
   leaveRoom: () => void;
@@ -20,8 +19,9 @@ type GameRoomProps = {
   endGame: (users: User[]) => void; // update the type here
 };
 
-export const GameRoom = ({ roomCode, users, gameStarted, myRole, isRevealed, teammates, startGame, leaveRoom, revealRole, endGame }: GameRoomProps) => {
+export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, startGame, leaveRoom, revealRole, endGame }: GameRoomProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleEndGame = () => {
     endGame(users); // Call endGame with usersInRoom
   };
@@ -41,7 +41,6 @@ export const GameRoom = ({ roomCode, users, gameStarted, myRole, isRevealed, tea
         <>
           <Button onClick={showRole}>See My Role</Button>
           {!isRevealed && <Button onClick={revealRole}>Reveal Role</Button>}
-          <Button onClick={leaveRoom}>Leave Room</Button>
           <Button onClick={handleEndGame}>End Game</Button>
         </>
       ) : (
@@ -52,12 +51,24 @@ export const GameRoom = ({ roomCode, users, gameStarted, myRole, isRevealed, tea
       )}
 
       <Modal
-        title="Your Role"
+        title="Known Roles"
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
         >
-        {myRole && <RoleCard role={myRole} />}
+          <Carousel
+        autoplay
+        arrows
+        nextArrow={<ArrowRightOutlined/>}
+        prevArrow={<ArrowLeftOutlined/>}
+      >
+        {team.map((user: User) => (
+          <div>
+          <h1> {user.username}</h1>
+          <RoleCard key={user.role?.name} role={user.role} />
+          </div>
+        ))}
+      </Carousel>
       </Modal>
     </div>
   );

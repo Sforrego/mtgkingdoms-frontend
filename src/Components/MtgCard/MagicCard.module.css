@@ -6,33 +6,38 @@
     /* color: #171314; */
 }
 
-.card-container p,div {
+.card-container p,
+div {
     color: #171314;
 }
 
 .card-container {
     border: 1px solid black;
-    max-width: 500px;
+    max-width: 70vw;
+    width: 100%;
+    /* max-width: 500px; */
     /* width: 40vw; */
     /* width: 500px; */
-    aspect-ratio: 5/7;
+    aspect-ratio: 9/14;
     /* height: 700px; */
-    border-radius: 25px;
+    border-radius: 5vmin;
     box-sizing: border-box;
     /* box-shadow: -8px 9px 16px -3px gray; */
-    background: #171314;  
+    background: #171314;
 }
- .card-background {
-    height: 86%;
-    margin: 20px 20px 0 20px;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    border-bottom-left-radius: 8%;
-    border-bottom-right-radius: 8%;
+
+.card-background {
+    height: 95%;
+    margin: 3vmin;
+    /* margin: 3vmin 3vmin 0 3vmin; */
+    border-top-left-radius: 3vmin;
+    border-top-right-radius: 3vmin;
+    border-bottom-left-radius: 3vmin;
+    border-bottom-right-radius: 3vmin;
     display: flex;
     background-position: center;
-    background-clip: border-box;
-    z-index: 0;
+    /* background-clip: border-box; */
+    /* z-index: 0; */
 }
 
 .white-background {
@@ -80,8 +85,8 @@
 */
 .frame-header,
 .frame-type-line {
-    border-bottom: 4px solid #a9a9a9;
-    border-left: 2px solid #a9a9a9;
+    /* border-bottom: 4px solid #a9a9a9;
+    border-left: 2px solid #a9a9a9; */
     border-top: 1px solid #fff;
     border-right: 1px solid #fff;
 }
@@ -92,55 +97,55 @@
     margin-bottom: 7px;
 }
 
-.green-frame > .frame-header,
-.green-frame > .frame-art,
-.green-frame > .frame-type-line {
-    box-shadow: 
+.green-frame>.frame-header,
+.green-frame>.frame-art,
+.green-frame>.frame-type-line {
+    box-shadow:
         0 0 0 2px #171314,
         0 0 0 5px #26714A,
         -3px 3px 2px 5px #171314;
 }
 
-.blue-frame > .frame-header,
-.blue-frame > .frame-art,
-.blue-frame > .frame-type-line {
-    box-shadow: 
+.blue-frame>.frame-header,
+.blue-frame>.frame-art,
+.blue-frame>.frame-type-line {
+    box-shadow:
         0 0 0 2px #171314,
         0 0 0 5px #3172ce,
         -3px 3px 2px 5px #171314;
 }
 
-.red-frame > .frame-header,
-.red-frame > .frame-art,
-.red-frame > .frame-type-line {
-    box-shadow: 
+.red-frame>.frame-header,
+.red-frame>.frame-art,
+.red-frame>.frame-type-line {
+    box-shadow:
         0 0 0 2px #171314,
         0 0 0 5px #ce4e41,
         -3px 3px 2px 5px #171314;
 }
 
-.black-frame > .frame-header,
-.black-frame > .frame-art,
-.black-frame > .frame-type-line {
-    box-shadow: 
+.black-frame>.frame-header,
+.black-frame>.frame-art,
+.black-frame>.frame-type-line {
+    box-shadow:
         0 0 0 2px #171314,
         0 0 0 5px #2b2821,
         -3px 3px 2px 5px #171314;
 }
 
-.white-frame > .frame-header,
-.white-frame > .frame-art,
-.white-frame > .frame-type-line {
-    box-shadow: 
+.white-frame>.frame-header,
+.white-frame>.frame-art,
+.white-frame>.frame-type-line {
+    box-shadow:
         0 0 0 2px #171314,
         0 0 0 5px #f7f7f5,
         -3px 3px 2px 5px #171314;
 }
 
-.uncolor-frame > .frame-header,
-.uncolor-frame > .frame-art,
-.uncolor-frame > .frame-type-line {
-    box-shadow: 
+.uncolor-frame>.frame-header,
+.uncolor-frame>.frame-art,
+.uncolor-frame>.frame-type-line {
+    box-shadow:
         0 0 0 2px #171314,
         0 0 0 5px #9099a3,
         -3px 3px 2px 5px #171314;
@@ -150,42 +155,39 @@
     flex-grow: 1;
     font-family: "M Plantin";
 }
-.frame-text-box * {
-    margin-bottom: 5px;
-}
 
-.green-frame > .frame-text-box {
-    box-shadow: 
+.green-frame>.frame-text-box {
+    box-shadow:
         0 0 0 5px #26714A,
         -3px 3px 2px 5px #171314;
 }
 
-.blue-frame > .frame-text-box {
-    box-shadow: 
+.blue-frame>.frame-text-box {
+    box-shadow:
         0 0 0 5px #3172ce,
         -3px 3px 2px 5px #171314;
 }
 
-.red-frame > .frame-text-box {
-    box-shadow: 
+.red-frame>.frame-text-box {
+    box-shadow:
         0 0 0 5px #ce4e41,
         -3px 3px 2px 5px #171314;
 }
 
-.black-frame > .frame-text-box {
-    box-shadow: 
+.black-frame>.frame-text-box {
+    box-shadow:
         0 0 0 5px #2b2821,
         -3px 3px 2px 5px #171314;
 }
 
-.white-frame > .frame-text-box {
-    box-shadow: 
+.white-frame>.frame-text-box {
+    box-shadow:
         0 0 0 5px #f7f7f5,
         -3px 3px 2px 5px #171314;
 }
 
-.uncolor-frame > .frame-text-box {
-    box-shadow: 
+.uncolor-frame>.frame-text-box {
+    box-shadow:
         0 0 0 5px #9099a3,
         -3px 3px 2px 5px #171314;
 }
@@ -200,7 +202,8 @@
 .frame-header,
 .frame-type-line,
 .frame-text-box {
-    overflow: hidden;
+    overflow: auto;
+    /* TODO Revisit this */
 }
 
 
@@ -214,7 +217,8 @@
 .card-frame {
     z-index: 1;
     position: relative;
-    height: 648px;
+    /* height: 648px; */
+    height: 100%;
     max-width: 97%;
     left: 1%;
     top: 0.5%;
@@ -227,23 +231,25 @@
 
 .frame-header,
 .frame-type-line {
-    background: 
-        linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ), 
-        url(https://image.ibb.co/jKByZn/tile_bg_1.jpg);     
+    background:
+        linear-gradient(0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3)),
+        url(https://image.ibb.co/jKByZn/tile_bg_1.jpg);
     display: flex;
-    margin-top: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-top: 1vh;
+    margin-left: 1.5vw;
+    margin-right: 1.5vw;
     display: flex;
     border-radius: 18px/40px;
 }
+
 /*
   Tue 27/3
 */
 .name,
 .type {
-    font-size: 1.3em;
-    margin-left: 10px;
+    font-size: 1.6vh;
+    align-self: center;
+    margin-left: 2vw;
     font-weight: 600;
     font-family: 'Beleren';
     margin-right: auto;
@@ -262,7 +268,7 @@
     display: inline-block;
 }
 
-.mana-icon > i {
+.mana-icon>i {
     align-self: center;
     text-align: center;
 }
@@ -297,37 +303,39 @@
 }
 
 .frame-header {
-    min-height: 34px;
-    font-size: 18px;
+    min-height: 2.3vh;
 }
+
 .frame-art {
-    height: 324px;
-    margin: 0 10px; 
+    height: 45%;
+    margin: 0 4vw;
     background-color: #171314;
 }
 
-.frame-art > img {
+.frame-art>img {
     height: 100%;
     width: 100%;
     object-fit: cover;
 }
 
 .set-icon {
-    position: relative;
+    display: flex;
+    /* position: relative; */
 }
 
-.set-icon > i {
+.set-icon>i {
     /* right: -5px;
     top: 50%; */
     /* margin-top: 2px; */
+    align-self: center;
     width: 30px;
     size: 10px;
-    font-size: 28px;
+    font-size: 4vmin;
     /* transform: translateY(-50%); */
     /* position: absolute; */
 }
 
-.set-icon > img {
+.set-icon>img {
     margin-right: 10px;
     height: 100%;
     object-fit: contain;
@@ -336,10 +344,11 @@
 .frame-type-line {
     margin-top: 0;
     font-family: 'Beleren';
-    height: 33px;
+    max-height: 2.2vh;
+    height: 100%;
     font-size: 15px;
     position: relative;
-} 
+}
 
 .frame-text-box {
     margin: 0 10px;
@@ -347,10 +356,16 @@
     background-image: url(https://image.ibb.co/dFcNx7/tile_bg_2.jpg);
     display: flex;
     flex-direction: column;
-    justify-content: space-around;   
-    padding: 50px 6px;
-    height: 202px;
-    font-size: 1.2em;
+    /* justify-content: space-around; */
+    padding: 1vh 1vw;
+    /* max-height: 20vh; */
+    height: 10px;
+    font-size: 3vmin;
+}
+
+.frame-text-box i {
+    font-size: 2vmin;
+    margin: 0%;
 }
 
 .flavour-text {
@@ -376,15 +391,17 @@ p {
     display: flex;
     justify-content: space-between;
     margin: 5px 15px 0 15px;
-    height: 26px;
+    height: 2.3vh;
 }
 
 .fbi-left {
     flex: 1;
-} 
+}
+
 .fbi-left p:first-of-type {
     margin-bottom: 1px;
 }
+
 .fbi-left,
 .fbi-right {
     font-size: 10px;
@@ -392,22 +409,9 @@ p {
     top: 6px;
 }
 
-.fbi-center {
-    border-radius: 60%;
-    flex-basis: 41px;
-    height: 21px;
-    position: relative;
-    bottom: 11px;
-    z-index: 2;
-    background: lightgray;
-    background-image: url(https://image.ibb.co/jyq34n/holofoil_texture_2.jpg);
-    box-shadow: 
-        0 0 0 4px #171314;
-}
 .inner-margins {
     margin-bottom: 10px;
 }
-
 
 .description {
     font-family: 'M Plantin';
@@ -415,7 +419,7 @@ p {
     margin-bottom: 10px;
 }
 
-.description > span * {
+.description>span * {
     padding-left: 2px;
 }
 
@@ -423,7 +427,8 @@ p {
     flex: 1;
     text-align: right;
 }
- .frame-bottom-info img {
+
+.frame-bottom-info img {
     overflow: hidden;
     max-width: 10px;
     position: 'relative';

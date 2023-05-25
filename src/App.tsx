@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
-import { RoleCard } from "./Components/RoleCard";
 import {
   Modal,
-  Carousel,
   ConfigProvider,
   Checkbox,
   theme,
 } from "antd";
-import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { Role } from "./Types/Role";
 import { User } from "./Types/User";
 import { GameRoom } from "./Pages/GameRoom";
@@ -18,6 +15,7 @@ import { Landing } from "./Pages/Landing";
 import "./App.css";
 import { If, IfElse, OnFalse, OnTrue } from "conditional-jsx";
 import { AppMenu } from "./Components/AppMenu";
+import ShowRoles from "./Components/ShowRoles";
 
 const SERVER = process.env.REACT_APP_SERVER as string;
 const clientId = process.env.REACT_APP_MTGKINGDOMS_CLIENT_ID as string;
@@ -52,8 +50,7 @@ function App() {
   const [roomCode, setRoomCode] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [showRoles, setShowRoles] = useState(false);
-  const [myRole, setMyRole] = useState<Role | null>(null);
-  const [teammates, setTeammates] = useState<User[]>([]);
+  const [team, setTeam] = useState<User[]>([]);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [selectedWinnersIds, setSelectedWinnersIds] = useState<string[]>([]);
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
@@ -280,10 +277,9 @@ function App() {
         setUsersInRoom(users);
       });
 
-      socket.on("gameStarted", ({ userRole, teammates }) => {
+      socket.on("gameStarted", ({ team }) => {
         console.log("Game started. Role assigned.");
-        setMyRole(userRole);
-        setTeammates(teammates);
+        setTeam(team);
         setGameStarted(true);
       });
 
@@ -299,15 +295,15 @@ function App() {
 
       });
 
-      socket.on("reconnectedToRoom", ({ user, usersInRoom, activeGame, roomCode }) => {
+      socket.on("reconnectedToRoom", ({ team, usersInRoom, activeGame, roomCode }) => {
         if(user){
           console.log("Reconnected to room");
           setRoomCode(roomCode);
           setIsInRoom(true);
           setUsersInRoom(usersInRoom);
           setGameStarted(activeGame);
-          setMyRole(user.role);
-          setIsRevealed(user.isRevealed);
+          setIsRevealed(team[0].isRevealed);
+          setTeam(team);
         }
       });
 
@@ -377,16 +373,7 @@ function App() {
               onCancel={handleCancel}
               width={550}
             >
-              <Carousel
-                autoplay
-                arrows
-                nextArrow={<ArrowRightOutlined/>}
-                prevArrow={<ArrowLeftOutlined />}
-              >
-                {roles.map((role) => (
-                  <RoleCard key={role.name} role={role} />
-                ))}
-              </Carousel>
+            <ShowRoles roles={roles}></ShowRoles>
             </Modal>
           </div>
         </If>
@@ -400,8 +387,7 @@ function App() {
                   roomCode={roomCode}
                   users={usersInRoom}
                   gameStarted={gameStarted}
-                  myRole={myRole}
-                  teammates={teammates}
+                  team={team}
                   isRevealed={isRevealed}
                   startGame={startGame}
                   leaveRoom={leaveRoom}

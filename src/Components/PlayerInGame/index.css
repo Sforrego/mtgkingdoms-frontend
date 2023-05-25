@@ -6,7 +6,7 @@
     font-family: "Beleren";
     font-size: medium;
     margin: 1vw;
-    flex-basis: 21%;
+    flex-basis: 10%;
     color: white;
 }
 
@@ -19,7 +19,7 @@
 }
 
 .PlayerCardButton > i {
-    font-size: calc(10vw + 30px);
+    font-size: calc(10vw + 5px);
 }
 
 .Unknown {
