@@ -194,17 +194,11 @@ function App() {
   };
 
   const revealRole = () => {
-      Modal.confirm({
-        title: 'Do you want to reveal your role?',
-        content: 'Once you reveal your role, all players in the room will see it.',
-        onOk() {
-          if (user) {
-            socket && socket.emit("revealRole", { userId: user.homeAccountId, roomCode }); // Send the 'leave' event to the server
-          } else {
-            console.log("User is not logged in yet");
-          }
-        },
-      });
+      if (user) {
+        socket && socket.emit("revealRole", { userId: user.homeAccountId, roomCode }); // Send the 'leave' event to the server
+      } else {
+        console.log("User is not logged in yet");
+      }
   };
 
   const endGame = (users: User[] = []) => {
@@ -246,7 +240,6 @@ function App() {
       // Listen for 'roomCreated' event from the server
       socket.on("roomCreated", ({ roomCode, users }) => {
         console.log(`Room created with code: ${roomCode}`);
-        console.log(users);
         setRoomCode(roomCode);
         setIsInRoom(true);
         setUsersInRoom(users);
@@ -365,17 +358,21 @@ function App() {
 
         {/* Show the roles in a modal, should be its own component */}
         <If condition={showRoles}>
-          <div style={{ height: "700px", overflow: "auto" }}>
-            <Modal
-              title="Roles"
-              open={showRoles}
-              onOk={handleOk}
-              onCancel={handleCancel}
-              width={550}
-            >
-            <ShowRoles roles={roles}></ShowRoles>
-            </Modal>
-          </div>
+          <Modal
+            title="Roles"
+            open={showRoles}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            style={{ 
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              margin: '0',
+            }}
+          >
+          <ShowRoles roles={roles}></ShowRoles>
+          </Modal>
         </If>
         <IfElse condition={isLoggedIn}>
           <OnTrue key="loggedIn">

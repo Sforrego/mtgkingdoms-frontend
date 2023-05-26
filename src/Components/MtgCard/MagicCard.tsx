@@ -64,7 +64,6 @@ const MagicCard = ({
   const frameClass = frameClassesMap[cardFrame ?? cardColor ?? "uncolor"];
   const backgroundClass =
     backgroundClassesMap[cardBackground ?? cardColor ?? "uncolor"];
-  console.log(props.descriptions);
 
   const manaCostArray = props.manaCost && manaCostParser(props.manaCost);
   return (

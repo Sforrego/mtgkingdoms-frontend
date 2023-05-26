@@ -21,6 +21,25 @@ type GameRoomProps = {
 
 export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, startGame, leaveRoom, revealRole, endGame }: GameRoomProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRevealRoleModalOpen, setIsRevealRoleModalOpen] = useState(false);
+
+  const openConfirmModal = () => {
+    setIsRevealRoleModalOpen(true);
+  };
+
+  const closeConfirmModal = () => {
+    setIsRevealRoleModalOpen(false);
+  };
+
+  const confirmRevealRole = () => {
+    // Move the contents of the onOk method here...
+    revealRole()
+    closeConfirmModal();
+  };
+
+  const revealRoleModal = () => {
+    openConfirmModal();
+  };
 
   const handleEndGame = () => {
     endGame(users); // Call endGame with usersInRoom
@@ -40,8 +59,16 @@ export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, start
       {gameStarted ? (
         <>
           <Button onClick={showRole}>See My Role</Button>
-          {!isRevealed && <Button onClick={revealRole}>Reveal Role</Button>}
           <Button onClick={handleEndGame}>End Game</Button>
+          <Button onClick={revealRoleModal}>Reveal Role</Button>
+          <Modal
+            title="Do you want to reveal your role?"
+            open={isRevealRoleModalOpen}
+            onOk={confirmRevealRole}
+            onCancel={closeConfirmModal}
+          >
+            <p>Once you reveal your role, all players in the room will see it.</p>
+          </Modal>
         </>
       ) : (
         <>
@@ -62,8 +89,8 @@ export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, start
         nextArrow={<ArrowRightOutlined/>}
         prevArrow={<ArrowLeftOutlined/>}
       >
-        {team.map((user: User) => (
-          <div>
+        {team.map((user: User, index: number) => (
+          <div key={index}>
           <h1> {user.username}</h1>
           <RoleCard key={user.role?.name} role={user.role} />
           </div>

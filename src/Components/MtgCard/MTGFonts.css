@@ -48,7 +48,7 @@
   
   /* Beleren SmallCaps BoldItalic */
   @font-face {
-    font-family: "M Plantin";
+    font-family: "MPlantin";
     src:
       url("./fonts/MPlantin.ttf") format("truetype");
     font-style: normal;
@@ -58,7 +58,7 @@
   
   /* Beleren SmallCaps BoldItalic */
   @font-face {
-    font-family: "M Plantin";
+    font-family: "MPlantin";
     src:
       url("./fonts/MPlantin-Italic.ttf") format("truetype");
     font-style: italic;
@@ -68,7 +68,7 @@
   
   /* Beleren SmallCaps BoldItalic */
   @font-face {
-    font-family: "M Plantin";
+    font-family: "MPlantin";
     src:
       url("./fonts/MPlantin-Bold.ttf") format("truetype");
     font-style: normal;
