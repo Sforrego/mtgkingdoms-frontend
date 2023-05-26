@@ -60,7 +60,7 @@ export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, start
         <>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           <Button onClick={showRole}>See My Role</Button>
-          <Button onClick={revealRoleModal}>Reveal Role</Button>
+          { !isRevealed && <Button onClick={revealRoleModal}>Reveal Role</Button> }
         </div>
           <Button onClick={handleEndGame}>End Game</Button>
           <Modal
@@ -68,8 +68,9 @@ export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, start
             open={isRevealRoleModalOpen}
             onOk={confirmRevealRole}
             onCancel={closeConfirmModal}
+            centered
           >
-            <p>Once you reveal your role, all players in the room will see it.</p>
+            <p style={{color:"white"}}>Once you reveal your role, all players in the room will see it.</p>
           </Modal>
         </>
       ) : (
@@ -86,13 +87,7 @@ export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, start
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
-                    style={{ 
-              position: 'absolute',
-              top: '48%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              margin: '0',
-            }}
+        centered
         >
           <Carousel
         autoplay

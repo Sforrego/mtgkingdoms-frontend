@@ -362,13 +362,7 @@ function App() {
             onOk={handleOk}
             onCancel={handleCancel}
             footer={null}
-            style={{ 
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              margin: '0',
-            }}
+            centered
           >
           <ShowRoles roles={roles}></ShowRoles>
           </Modal>

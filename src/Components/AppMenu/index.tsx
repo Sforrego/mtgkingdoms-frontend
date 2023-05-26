@@ -17,18 +17,27 @@ export const AppMenu = ({ handleLogout, handleShowRoles }: AppMenuProps) => {
     { 
       label: 'Rules', 
       key: 'Rules', 
-      onClick: () => setIsRulesModalOpen(true),
+      onClick: () => {
+        setIsRulesModalOpen(true);
+        setOpen(false);
+      },
       //className: class1,
     },
     {
       label: 'Show Roles',
       key: 'ShowRoles',
-      onClick: handleShowRoles,
+      onClick: () => {
+        handleShowRoles();
+        setOpen(false);
+      }
     },
     {
       label: 'Logout',
       key: 'Logout',
-      onClick: handleLogout,
+      onClick: () => {
+        handleLogout();
+        setOpen(false);
+      },
     },
   ]
 
@@ -52,12 +61,8 @@ export const AppMenu = ({ handleLogout, handleShowRoles }: AppMenuProps) => {
         onOk={() => setIsRulesModalOpen(false)}
         onCancel={() => setIsRulesModalOpen(false)}
         footer={null}
+        centered
         style={{ 
-          position: 'absolute',
-          top: '45%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          margin: '0',
           maxHeight:"85vh",
         }}
         bodyStyle={{ overflowY: 'auto', maxHeight: '75vh' }}  

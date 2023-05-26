@@ -35,6 +35,7 @@ export const PlayerInGame = ({ user }: PlayerProps) => {
         destroyOnClose
         footer
         title
+        centered
       >
         <RoleCard role={user.role} />
       </Modal>
