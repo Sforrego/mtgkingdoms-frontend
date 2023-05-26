@@ -347,12 +347,10 @@ function App() {
         <AppMenu handleLogout={handleLogout} handleShowRoles={handleShowRoles}/>
         <IfElse condition={isConnected}>
           <OnTrue key="Connected">
-            <p className="connectionStatus">Connected to the server.</p>
+            <div className="greenCircle" title="Connected to the server."/>
           </OnTrue>
           <OnFalse key="notConnected">
-            <p className="connectionStatus">
-              Disconnected from the server.
-            </p>
+            <div className="redCircle" title="Disconnected from the server."/>
           </OnFalse>
         </IfElse>
 
@@ -363,6 +361,7 @@ function App() {
             open={showRoles}
             onOk={handleOk}
             onCancel={handleCancel}
+            footer={null}
             style={{ 
               position: 'absolute',
               top: '50%',
@@ -376,7 +375,6 @@ function App() {
         </If>
         <IfElse condition={isLoggedIn}>
           <OnTrue key="loggedIn">
-            <p>Hello, {user?.name}!</p>
             {/* Connected in a room */}
             <IfElse condition={isInRoom}>
               <OnTrue key="inRoom">
@@ -393,6 +391,7 @@ function App() {
                 />
               </OnTrue>
               <OnFalse key="notInRoom">
+              <p>Welcome {user?.name}!</p>
                 <Landing
                   createRoom={createRoom}
                   joinRoom={joinRoom}

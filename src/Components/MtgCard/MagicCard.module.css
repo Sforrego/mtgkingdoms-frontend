@@ -246,8 +246,9 @@ div {
 */
 .name,
 .type {
+    display: flex;
+    align-items: center;
     font-size: 1.6vh;
-    align-self: center;
     margin-left: 2vw;
     font-weight: 600;
     font-family: 'Beleren';

@@ -116,3 +116,22 @@
   right: 0;
   margin: 3em;
 }
+
+.greenCircle {
+  background-color: #008000;
+}
+
+.redCircle {
+  background-color: #FF0000;
+}
+
+.greenCircle, .redCircle {
+  height: 2vmin;
+  width: 2vmin;
+  position: fixed;
+  bottom: 15vmin;
+  right: 0;
+  margin: 3vmin;
+  border-radius: 50%;
+  display: inline-block;
+}

@@ -50,7 +50,7 @@ export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, start
   
   return (
     <div className="game-room">
-      <p style={{color: "white"}}>Room: {roomCode}</p>
+      <p style={{color: "white", marginBottom:"5vmin"}}>Room: {roomCode}</p>
       <div className="PlayersIconsHolder">
         {users.map((user, index) => (
           <PlayerInGame key={index} user={user} />
@@ -58,9 +58,11 @@ export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, start
       </div>
       {gameStarted ? (
         <>
+        <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           <Button onClick={showRole}>See My Role</Button>
-          <Button onClick={handleEndGame}>End Game</Button>
           <Button onClick={revealRoleModal}>Reveal Role</Button>
+        </div>
+          <Button onClick={handleEndGame}>End Game</Button>
           <Modal
             title="Do you want to reveal your role?"
             open={isRevealRoleModalOpen}
@@ -72,8 +74,10 @@ export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, start
         </>
       ) : (
         <>
-          <Button onClick={startGame}>Start Game</Button>
-          <Button onClick={leaveRoom}>Leave Room</Button>
+        <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
+          <Button onClick={startGame} style={{marginRight:"1.5vmin"}}>Start Game</Button>
+          <Button onClick={leaveRoom} style={{marginLeft:"1.5vmin"}}>Leave Room</Button>
+        </div>
         </>
       )}
 
@@ -82,6 +86,13 @@ export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, start
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
+                    style={{ 
+              position: 'absolute',
+              top: '48%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              margin: '0',
+            }}
         >
           <Carousel
         autoplay
@@ -91,7 +102,7 @@ export const GameRoom = ({ roomCode, users, gameStarted, isRevealed, team, start
       >
         {team.map((user: User, index: number) => (
           <div key={index}>
-          <h1> {user.username}</h1>
+          <h1 style={{ marginBottom: '10px', marginTop: '0', color: "white", textAlign: "center" }}> {user.username}</h1>
           <RoleCard key={user.role?.name} role={user.role} />
           </div>
         ))}

@@ -1,4 +1,4 @@
-import { Button, Drawer, Menu } from "antd";
+import { Button, Drawer, Menu, Modal } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
@@ -11,12 +11,13 @@ type AppMenuProps = {
 
 export const AppMenu = ({ handleLogout, handleShowRoles }: AppMenuProps) => {
   const [open, setOpen] = useState(false);
+  const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
 
   const items = [
     { 
       label: 'Rules', 
       key: 'Rules', 
-      //onClick: func,
+      onClick: () => setIsRulesModalOpen(true),
       //className: class1,
     },
     {
@@ -45,6 +46,33 @@ export const AppMenu = ({ handleLogout, handleShowRoles }: AppMenuProps) => {
       >
         <Menu items={items}/>
       </Drawer>
+      <Modal
+        title="Rules"
+        open={isRulesModalOpen}
+        onOk={() => setIsRulesModalOpen(false)}
+        onCancel={() => setIsRulesModalOpen(false)}
+        footer={null}
+        style={{ 
+          position: 'absolute',
+          top: '45%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          margin: '0',
+          maxHeight:"85vh",
+        }}
+        bodyStyle={{ overflowY: 'auto', maxHeight: '75vh' }}  
+      >
+        <p className={styles.rules}>The Monarch starts the game and at 50 life points.</p>
+        <p className={styles.rules}>The Bandits win the game when the Monarch died with at least one Bandit alive.</p>
+        <p className={styles.rules}>All the other roles win the game when they have no opponents alive unless stated otherwise on the role.</p>
+        <p className={styles.rules}>The following face up role cards are teammates (not opponents): Knight & Monarch; Bandits; Nobles. </p>
+        <p className={styles.rules}>While a role card is face down, everyone is considered an opponent.</p>
+        <p className={styles.rules}>Noble roles can turn their role card face down when they cause a player to lose the game.</p>
+        <p className={styles.rules}>Role abilities can't be targeted.</p>
+        <h1 className={styles.rules}>Design Choices</h1>
+        <p className={styles.rules}>A player will not be Monarch in consecutive games.</p>
+        <p className={styles.rules}>Roles will not be repeated in consecutive games if possible.</p>
+      </Modal>
     </>
   );
 };
