@@ -47,6 +47,7 @@ function App() {
   const [user, setUser] = useState<AccountInfo | null>(null);
   const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
+  const [selectedRoles, setSelectedRoles] = useState<Role[]>([]);
   const [roomCode, setRoomCode] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [showRoles, setShowRoles] = useState(false);
@@ -156,11 +157,6 @@ function App() {
     }
   };
 
-  const getRoles = () => {
-    socket && socket.emit("getRoles"); // Send the 'getRoles' event to the server
-  };
-
-
   const createRoom = () => {
     if (user) {
       socket && socket.emit("create", { userId: user.homeAccountId, username: user.name});
@@ -195,10 +191,14 @@ function App() {
 
   const revealRole = () => {
       if (user) {
-        socket && socket.emit("revealRole", { userId: user.homeAccountId, roomCode }); // Send the 'leave' event to the server
+        socket && socket.emit("revealRole", { userId: user.homeAccountId, roomCode }); // Send the 'revealRole' event to the server
       } else {
         console.log("User is not logged in yet");
       }
+  };
+
+  const selectRoles = (selectedRoles: Role[]) => {
+    socket && socket.emit("selectRoles", { roles: selectedRoles, roomCode }); // Send the 'selectRoles' event to the server
   };
 
   const endGame = (users: User[] = []) => {
@@ -226,15 +226,21 @@ function App() {
     });
   };
 
+  
   const handleShowRoles = () => {
     setShowRoles(true);
-    getRoles();
   };
 
   useEffect(() => {
     if (socket) {
+
+      if (roles.length===0){
+        socket && socket.emit("getRoles");
+      }
+
       socket.on("rolesData", (data) => {
         setRoles(data);
+        setSelectedRoles(data);
       });
 
       // Listen for 'roomCreated' event from the server
@@ -246,11 +252,12 @@ function App() {
       });
 
       // Listen for 'joinedRoom' event from the server
-      socket.on("joinedRoom", ({ roomCode, users }) => {
+      socket.on("joinedRoom", ({ roomCode, users, selectedRoles }) => {
         console.log(`Joined room with code: ${roomCode}`);
         setRoomCode(roomCode);
         setIsInRoom(true);
         setUsersInRoom(users);
+        setSelectedRoles(selectedRoles);
       });
 
       // Listen for 'leftRoom' event from the server
@@ -306,6 +313,10 @@ function App() {
         setGameStarted(false);
       });
 
+      socket.on("rolesSelected", ({ roles }) => {
+        setSelectedRoles(roles);
+      });
+
       // Listen for 'error' event from the server
       socket.on("error", (message) => {
         alert(message)
@@ -326,7 +337,7 @@ function App() {
         socket.off("error");
       };
     }
-  }, [isRevealed, roomCode, socket, user]);
+  }, [isRevealed, roomCode, socket, user, roles.length]);
 
   const handleOk = () => {
     setShowRoles(false);
@@ -378,10 +389,14 @@ function App() {
                   gameStarted={gameStarted}
                   team={team}
                   isRevealed={isRevealed}
+                  roles={roles}
+                  selectedRoles={selectedRoles}
                   startGame={startGame}
                   leaveRoom={leaveRoom}
                   revealRole={revealRole}
+                  selectRoles={selectRoles}
                   endGame={endGame}
+                  setSelectedRoles={setSelectedRoles}
                 />
               </OnTrue>
               <OnFalse key="notInRoom">
