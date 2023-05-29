@@ -137,20 +137,23 @@ export const GameRoom = ({ roomCode, users, roles, selectedRoles, gameStarted, i
         centered
       >
         <div className="role-selection-container" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-          {roles.map((role, index) => (
-            <Checkbox
-              key={index}
-              checked={selectedRoles.find((r) => r.name === role.name) !== undefined}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setSelectedRoles([...selectedRoles, role]);
-                } else {
-                  setSelectedRoles(selectedRoles.filter((r) => r.name !== role.name));
-                }
-              }}
-            >
-              {role.name}
-            </Checkbox>
+          {
+          roles
+            .filter(role => role.type !== "SubRole")
+            .map((role, index) => (
+              <Checkbox
+                key={index}
+                checked={selectedRoles.find((r) => r.name === role.name) !== undefined}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedRoles([...selectedRoles, role]);
+                  } else {
+                    setSelectedRoles(selectedRoles.filter((r) => r.name !== role.name));
+                  }
+                }}
+              >
+                {role.name}
+              </Checkbox>
           ))}
         </div>
       </Modal>
