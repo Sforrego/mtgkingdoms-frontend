@@ -53,7 +53,6 @@ function App() {
   const [showRoles, setShowRoles] = useState(false);
   const [team, setTeam] = useState<User[]>([]);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [selectedWinnersIds, setSelectedWinnersIds] = useState<string[]>([]);
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
 
   useEffect(() => {
@@ -202,12 +201,13 @@ function App() {
   };
 
   const endGame = (users: User[] = []) => {
+    let currentWinnersIds: string[] = []; // Add this line
+  
     const handleCheckChange = (checkedValues: any[]) => {
-      setSelectedWinnersIds(checkedValues); // type cast assuming all values are strings
+      currentWinnersIds = checkedValues; // Update this line
       console.log(checkedValues);
     };
-  
-    console.log(users);
+    
     Modal.confirm({
       title: 'Select winners',
       content: (
@@ -220,13 +220,11 @@ function App() {
         </Checkbox.Group>
       ),
       onOk() {
-        socket && socket.emit("endGame", { roomCode, winnersIds: selectedWinnersIds });
-        setSelectedWinnersIds([]);
+        socket && socket.emit("endGame", { roomCode, winnersIds: currentWinnersIds }); // And this line
       },
     });
   };
 
-  
   const handleShowRoles = () => {
     setShowRoles(true);
   };
