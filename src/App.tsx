@@ -1,44 +1,39 @@
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
+import { AccountInfo } from "@azure/msal-browser";
 import {
   Modal,
   ConfigProvider,
-  Checkbox,
   theme,
 } from "antd";
 import { Role } from "./Types/Role";
 import { User } from "./Types/User";
 import { GameRoom } from "./Pages/GameRoom";
 import { Landing } from "./Pages/Landing";
-
 import "./App.css";
 import { If, IfElse, OnFalse, OnTrue } from "conditional-jsx";
 import { AppMenu } from "./Components/AppMenu";
 import ShowRoles from "./Components/ShowRoles";
+import { 
+  handleRedirectEffect,
+  handleAADB2C90091ErrorEffect,
+  handleLogin,
+  handleLogout} from "./authService";
+import { 
+    createRoom, 
+    joinRoom, 
+    startGame, 
+    leaveRoom, 
+    revealRole, 
+    selectRoles,
+    endGame,
+    chosenOneDecision,
+    selectCultists
+  } from "./gameService";
 
 const SERVER = process.env.REACT_APP_SERVER as string;
-const clientId = process.env.REACT_APP_MTGKINGDOMS_CLIENT_ID as string;
 
 console.log(SERVER);
-
-// Initialize the MSAL application object
-const msalConfig = {
-  auth: {
-    clientId: clientId,
-    authority:
-      "https://MTGKingdoms.b2clogin.com/MTGKingdoms.onmicrosoft.com/B2C_1_signupsignin",
-    knownAuthorities: ["MTGKingdoms.b2clogin.com"],
-    postLogoutRedirectUri: window.location.origin,
-  },
-};
-
-const myMSALObj = new PublicClientApplication(msalConfig);
-
-// Login request
-const loginRequest = {
-  scopes: ["openid", "profile"],
-};
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
@@ -53,7 +48,6 @@ function App() {
   const [showRoles, setShowRoles] = useState(false);
   const [team, setTeam] = useState<User[]>([]);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [selectedWinnersIds, setSelectedWinnersIds] = useState<string[]>([]);
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
 
   useEffect(() => {
@@ -87,146 +81,22 @@ function App() {
   }, [isConnected, user, socket]);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has("error")) {
-      const errorCode = urlParams.get("error");
-      const errorDescription = urlParams.get("error_description");
-      // Handle "AADB2C90091: The user has cancelled entering self-asserted information"
-      if (
-        errorCode === "access_denied" &&
-        errorDescription?.includes("AADB2C90091")
-      ) {
-        // User cancelled the sign-in or sign-up process.
-        // Redirect the user, show a message, or perform any other action you deem appropriate.
-        window.location.href = "/"; // Redirect to home page as an example
-      }
-    }
+    handleAADB2C90091ErrorEffect();
   }, []);
 
   useEffect(() => {
-    const handleRedirect = async () => {
-      try {
-        await myMSALObj.handleRedirectPromise();
-        const accounts = myMSALObj.getAllAccounts();
-        if (accounts.length !== 0) {
-          setUser(accounts[0]);
-          setIsLoggedIn(true);
-        }
-      } catch (error) {
-        if (
-          // @ts-ignore
-          error?.errorCode === "access_denied" &&
-          // @ts-ignore
-          error?.errorMessage?.includes("AADB2C90091")
-        ) {
-          // User cancelled the sign-in or sign-up process.
-          window.location.href = "/"; // Redirect to home page as an example
-        }
-      }
-    };
-    handleRedirect();
+    handleRedirectEffect(setUser, setIsLoggedIn)
   }, [setIsLoggedIn]);
 
-  const handleLogin = async () => {
-    try {
-      await myMSALObj.handleRedirectPromise();
-      const accounts = myMSALObj.getAllAccounts();
-      if (accounts.length === 0) {
-        await myMSALObj.loginRedirect(loginRequest);
-      }
-    } catch (err) {
-      console.log(err);
-      if (
-        // @ts-ignore
-        err.errorCode === "access_denied" &&
-        // @ts-ignore
-        err.errorMessage.includes("AADB2C90091")
-      ) {
-        // User cancelled the sign-in or sign-up process.
-        window.location.href = "/"; // Redirect to home page as an example
-      }
-    }
+  const loginHandler = async () => {
+    await handleLogin(setUser, setIsLoggedIn)
   };
 
   // Finally, you can use the leaveRoom() function when handling logout
-  const handleLogout = async () => {
-    if (window.confirm("Do you really want to sign out?")) {
-      leaveRoom(); // Leave the room before logging out
-      await myMSALObj.logoutRedirect();
-      setIsLoggedIn(false);
-    }
+  const logoutHandler = async () => {
+    await handleLogout(setIsLoggedIn, () => leaveRoom(user, socket, roomCode))
   };
 
-  const createRoom = () => {
-    if (user) {
-      socket && socket.emit("create", { userId: user.homeAccountId, username: user.name});
-    } else {
-      console.log("User is not logged in yet");
-    }
-  };
-
-  const joinRoom = () => {
-    if (user) {
-      socket && socket.emit("join", { userId: user.homeAccountId, username: user.name, roomCode }); // Send the room code to the server
-    } else {
-      console.log("User is not logged in yet");
-    }
-  };
-  
-  const startGame = () => {
-    if (socket) {
-      socket.emit("startGame", { roomCode }); // Send the 'leave' event to the server
-    } else {
-      console.log("Connection not established");
-    }
-  };
-
-  const leaveRoom = () => {
-    if (user) {
-      socket && socket.emit("leaveRoom", { userId: user.homeAccountId, username: user.name, roomCode }); // Send the 'leave' event to the server
-    } else {
-      console.log("User is not logged in yet");
-    }
-  };
-
-  const revealRole = () => {
-      if (user) {
-        socket && socket.emit("revealRole", { userId: user.homeAccountId, roomCode }); // Send the 'revealRole' event to the server
-      } else {
-        console.log("User is not logged in yet");
-      }
-  };
-
-  const selectRoles = (selectedRoles: Role[]) => {
-    socket && socket.emit("selectRoles", { roles: selectedRoles, roomCode }); // Send the 'selectRoles' event to the server
-  };
-
-  const endGame = (users: User[] = []) => {
-    const handleCheckChange = (checkedValues: any[]) => {
-      setSelectedWinnersIds(checkedValues); // type cast assuming all values are strings
-      console.log(checkedValues);
-    };
-  
-    console.log(users);
-    Modal.confirm({
-      title: 'Select winners',
-      content: (
-        <Checkbox.Group style={{ width: '100%' }} onChange={handleCheckChange}>
-          {users.map((user) => (
-            <div key={user.userId}>
-              <Checkbox value={user.userId}>{user.username}</Checkbox>
-            </div>
-          ))}
-        </Checkbox.Group>
-      ),
-      onOk() {
-        socket && socket.emit("endGame", { roomCode, winnersIds: selectedWinnersIds });
-        setSelectedWinnersIds([]);
-      },
-    });
-  };
-
-  
   const handleShowRoles = () => {
     setShowRoles(true);
   };
@@ -355,7 +225,7 @@ function App() {
           token: { colorBgBase: "#000000" },
         }}
       >
-        <AppMenu handleLogout={handleLogout} handleShowRoles={handleShowRoles}/>
+        <AppMenu handleLogout={logoutHandler} handleShowRoles={handleShowRoles}/>
         <IfElse condition={isConnected}>
           <OnTrue key="Connected">
             <div className="greenCircle" title="Connected to the server."/>
@@ -391,19 +261,21 @@ function App() {
                   isRevealed={isRevealed}
                   roles={roles}
                   selectedRoles={selectedRoles}
-                  startGame={startGame}
-                  leaveRoom={leaveRoom}
-                  revealRole={revealRole}
-                  selectRoles={selectRoles}
-                  endGame={endGame}
+                  startGame={() => startGame(socket, roomCode)}
+                  leaveRoom={() => leaveRoom(user, socket, roomCode)}
+                  revealRole={() => revealRole(user, socket, roomCode)}
+                  selectRoles={(selectedRoles) => selectRoles(selectedRoles, socket, roomCode)}
+                  endGame={() => endGame(socket, usersInRoom, roomCode)}
                   setSelectedRoles={setSelectedRoles}
+                  chosenOneDecision={() => chosenOneDecision(socket, user?.homeAccountId, roomCode)}
+                  selectCultists={() => selectCultists(socket, user?.homeAccountId, usersInRoom, roomCode)}
                 />
               </OnTrue>
               <OnFalse key="notInRoom">
               <p>Welcome {user?.name}!</p>
                 <Landing
-                  createRoom={createRoom}
-                  joinRoom={joinRoom}
+                  createRoom={() => createRoom(user, socket)}
+                  joinRoom={() => joinRoom(user, socket, roomCode)}
                   roomCode={roomCode}
                   setRoomCode={setRoomCode}
                 />
@@ -411,7 +283,7 @@ function App() {
             </IfElse>
           </OnTrue>
           <OnFalse key="notLoggedIn">
-            <Landing handleLogin={handleLogin} />
+            <Landing handleLogin={loginHandler} />
           </OnFalse>
         </IfElse>
       </ConfigProvider>
