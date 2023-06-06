@@ -60,6 +60,7 @@ function App() {
 
     newSocket.on("disconnect", () => {
       setIsConnected(false);
+      setIsInRoom(false);
     });
 
     newSocket.on("connect_error", (error) => {

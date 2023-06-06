@@ -107,8 +107,8 @@ export const selectCultists = (socket: Socket | null, userId: string | undefined
 export const chosenOneDecision = (socket: Socket | null, userId: string | undefined, roomCode: string) => {
   if(socket){
     let decision: string = "";
-    const handleCheckChange = (checkedValues: any) => {
-      decision = checkedValues;
+    const handleCheckChange = (event: any) => {
+      decision = event.target.value;
     };
     
     Modal.confirm({
@@ -120,6 +120,7 @@ export const chosenOneDecision = (socket: Socket | null, userId: string | undefi
         </Radio.Group>
       ),
       onOk() {
+        console.log(decision);
         socket && socket.emit("chosenOneDecision", { userId, roomCode, decision: decision });
       },
     });
