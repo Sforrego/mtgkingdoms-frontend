@@ -273,13 +273,20 @@ function App() {
                 />
               </OnTrue>
               <OnFalse key="notInRoom">
-              <p>Welcome {user?.name}!</p>
-                <Landing
-                  createRoom={() => createRoom(user, socket)}
-                  joinRoom={() => joinRoom(user, socket, roomCode)}
-                  roomCode={roomCode}
-                  setRoomCode={setRoomCode}
-                />
+                <IfElse condition={isConnected}>
+                  <OnTrue key="Connected">
+                    <p>Welcome {user?.name}!</p>
+                    <Landing
+                      createRoom={() => createRoom(user, socket)}
+                      joinRoom={() => joinRoom(user, socket, roomCode)}
+                      roomCode={roomCode}
+                      setRoomCode={setRoomCode}
+                    />
+                  </OnTrue>
+                  <OnFalse key="notConnected">
+                  <p> Loading... </p>
+                  </OnFalse>
+                </IfElse>
               </OnFalse>
             </IfElse>
           </OnTrue>
