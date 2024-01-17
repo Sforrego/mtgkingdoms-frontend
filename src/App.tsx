@@ -30,6 +30,7 @@ import {
     chosenOneDecision,
     selectCultists
   } from "./gameService";
+import { set } from "zod";
 
 const SERVER = process.env.REACT_APP_SERVER as string;
 
@@ -47,6 +48,7 @@ function App() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [showRoles, setShowRoles] = useState(false);
   const [team, setTeam] = useState<User[]>([]);
+  const [nobles, setNobles] = useState<Role[]>([]);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
 
@@ -148,9 +150,12 @@ function App() {
         setUsersInRoom(users);
       });
 
-      socket.on("gameStarted", ({ team }) => {
+      socket.on("gameStarted", ({ team, nobles }) => {
         console.log("Game started. Role assigned.");
         setTeam(team);
+        if (nobles.length > 0){
+          setNobles(nobles)
+        }
         setGameStarted(true);
       });
 
@@ -181,6 +186,7 @@ function App() {
       socket.on("gameEnded", ({ users }) => {
         console.log("Game Ended");
         setUsersInRoom(users);
+        setNobles([]);
         setGameStarted(false);
       });
 
@@ -259,6 +265,7 @@ function App() {
                   users={usersInRoom}
                   gameStarted={gameStarted}
                   team={team}
+                  nobles={nobles}
                   isRevealed={isRevealed}
                   roles={roles}
                   selectedRoles={selectedRoles}

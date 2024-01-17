@@ -15,6 +15,7 @@ type GameRoomProps = {
   selectedRoles: Role[];
   gameStarted: boolean;
   team: User[];
+  nobles: Role[];
   isRevealed: boolean;
   startGame: () => void;
   leaveRoom: () => void;
@@ -26,8 +27,9 @@ type GameRoomProps = {
   chosenOneDecision: () => void;
 };
 
-export const GameRoom = ({ roomCode, users, roles, selectedRoles, gameStarted, isRevealed, team, startGame, leaveRoom, revealRole, selectRoles, endGame, setSelectedRoles, selectCultists, chosenOneDecision }: GameRoomProps) => {
+export const GameRoom = ({ roomCode, users, roles, selectedRoles, gameStarted, isRevealed, team, nobles, startGame, leaveRoom, revealRole, selectRoles, endGame, setSelectedRoles, selectCultists, chosenOneDecision }: GameRoomProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNoblesModalOpen, setIsNoblesModalOpen] = useState(false);
   const [isRevealRoleModalOpen, setIsRevealRoleModalOpen] = useState(false);
   const [isRoleSelectionModalOpen, setIsRoleSelectionModalOpen] = useState(false);
   const userRoleName = team.length > 0 ? users.find(u => u.userId === team[0].userId)?.role?.name || "" : "";
@@ -84,7 +86,6 @@ export const GameRoom = ({ roomCode, users, roles, selectedRoles, gameStarted, i
   };
 
   const confirmRevealRole = () => {
-    // Move the contents of the onOk method here...
     revealRole()
     closeConfirmModal();
   };
@@ -97,6 +98,10 @@ export const GameRoom = ({ roomCode, users, roles, selectedRoles, gameStarted, i
     setIsModalOpen(true);
   };
 
+  const showNobles = () => {
+    setIsNoblesModalOpen(true);
+  };
+
   return (
     <div className="game-room">
       <p style={{color: "white", marginBottom:"5vmin"}}>Room: {roomCode}</p>
@@ -107,9 +112,21 @@ export const GameRoom = ({ roomCode, users, roles, selectedRoles, gameStarted, i
       </div>
       {gameStarted ? (
         <>
-        <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
-          <Button onClick={showRole}>See My Role</Button>
-          { !isRevealed && <Button onClick={revealRoleModal}>Reveal Role</Button> }
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2vmin", marginTop: "4vmin" }}>
+          <div style={{ flex: 1 }}> {/* Empty div for spacing */} </div>
+
+          <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+            <Button onClick={showRole}>See My Role</Button>
+            {!isRevealed && <Button onClick={revealRoleModal}>Reveal Role</Button>}
+          </div>
+          {nobles.length > 0 && (
+            <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+              <Button onClick={showNobles}>See Nobles</Button>
+            </div>
+          )}
+          {nobles.length == 0 && (
+            <div style={{ flex: 1 }}> {/* Empty div for spacing if nobles is null */} </div>
+          )}
         </div>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           {isCultLeader && (
@@ -187,6 +204,27 @@ export const GameRoom = ({ roomCode, users, roles, selectedRoles, gameStarted, i
         <div key={index}>
         <h1 style={{ marginBottom: '10px', marginTop: '0', color: "white", textAlign: "center" }}> {user.username}</h1>
         <RoleCard key={user.role?.name} role={user.role} />
+        </div>
+      ))}
+    </Carousel>
+    </Modal>
+
+    <Modal
+      title="Nobles Roles"
+      open={isNoblesModalOpen}
+      onOk={() => setIsNoblesModalOpen(false)}
+      onCancel={() => setIsNoblesModalOpen(false)}
+      centered
+      >
+        <Carousel
+      autoplay
+      arrows
+      nextArrow={<ArrowRightOutlined/>}
+      prevArrow={<ArrowLeftOutlined/>}
+    >
+      {nobles.map((noble: Role, index: number) => (
+        <div key={index}>
+        <RoleCard key={noble.name} role={noble} />
         </div>
       ))}
     </Carousel>

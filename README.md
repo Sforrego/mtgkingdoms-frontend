@@ -4,3 +4,5 @@ For app Id go to https://portal.azure.com/#view/Microsoft_AAD_B2CAdmin/TenantMan
  directory, in app registrations you should find the dev and production apps.
 npm install
 npm start
+
+Pushing to master will begin github actions that will deploy to production
