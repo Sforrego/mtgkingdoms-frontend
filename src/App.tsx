@@ -323,7 +323,7 @@ function App() {
                     />
                   </OnTrue>
                   <OnFalse key="notConnected">
-                  <p> Loading... </p>
+                  <p> Connecting to server... </p>
                   </OnFalse>
                 </IfElse>
               </OnFalse>

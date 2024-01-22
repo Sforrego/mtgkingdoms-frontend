@@ -76,16 +76,18 @@ export const AppMenu = ({ handleLogout, handleShowRoles, handleProfile, isLogged
         }}
         bodyStyle={{ overflowY: 'auto', maxHeight: '75vh' }}  
       >
-        <p className={styles.rules}>The Monarch starts the game and at 50 life points.</p>
-        <p className={styles.rules}>The Bandits win the game when the Monarch died with at least one Bandit alive.</p>
-        <p className={styles.rules}>All the other roles win the game when they have no opponents alive unless stated otherwise on the role.</p>
-        <p className={styles.rules}>The following face up role cards are teammates (not opponents): Knight & Monarch; Bandits; Nobles. </p>
-        <p className={styles.rules}>While a role card is face down, everyone is considered an opponent.</p>
-        <p className={styles.rules}>Noble roles can turn their role card face down when they cause a player to lose the game.</p>
-        <p className={styles.rules}>Role abilities can't be targeted.</p>
-        <h1 className={styles.rules}>Design Choices</h1>
-        <p className={styles.rules}>A player will not be Monarch in consecutive games.</p>
-        <p className={styles.rules}>Roles will not be repeated in consecutive games if possible.</p>
+        <p className={styles.rules}>The Monarch begins the game with 50 life points and is the first player to take a turn.</p>
+        <p className={styles.rules}>Bandits win if the Monarch is defeated while at least one Bandit remains alive.</p>
+        <p className={styles.rules}>Other roles win by eliminating all their opponents, unless their role card specifies otherwise.</p>
+        <p className={styles.rules}>Revealed roles form teams as follows: Knights and Monarchs; Bandits; Nobles. These teammates are not considered opponents.</p>
+        <p className={styles.rules}>"Reveal" means showing your role to all players and activating its ability.</p>
+        <p className={styles.rules}>"Conceal" involves hiding your role from other players, allowing for potential re-Reveal of your role.</p>
+        <p className={styles.rules}>When a role is concealed, all players are considered opponents.</p>
+        <p className={styles.rules}>Noble roles may Conceal their identity after causing a player's defeat.</p>
+        <p className={styles.rules}>Role abilities cannot be targeted.</p>
+        <h1 className={styles.rules}>Game Design Principles</h1>
+        <p className={styles.rules}>A player will not assume the role of Monarch in consecutive games.</p>
+        <p className={styles.rules}>Efforts are made to avoid assigning the same role to a player in consecutive games, where possible.</p>
       </Modal>
     </>
   );
