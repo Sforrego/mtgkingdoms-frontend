@@ -8,7 +8,7 @@ import {
 } from "antd";
 import { Role } from "./Types/Role";
 import { User } from "./Types/User";
-import { UserData, userDataExample } from "./Types/UserData";
+import { UserData } from "./Types/UserData";
 import { GameRoom } from "./Pages/GameRoom";
 import { Landing } from "./Pages/Landing";
 import "./App.css";
@@ -79,21 +79,6 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    if (isConnected && user && socket) {
-      socket.emit("login", { userId: user.homeAccountId, username: user.name });
-      getUserData();
-    }
-  }, [isConnected, user, socket]);
-
-  useEffect(() => {
-    handleAADB2C90091ErrorEffect();
-  }, []);
-
-  useEffect(() => {
-    handleRedirectEffect(setUser, setIsLoggedIn)
-  }, [setIsLoggedIn]);
-
   const getUserData = () => {
     if (socket && user) {
       console.log("RequestingUserData");
@@ -105,6 +90,21 @@ function App() {
       });
     }
   };
+
+  useEffect(() => {
+    if (isConnected && user && socket) {
+      socket.emit("login", { userId: user.homeAccountId, username: user.name });
+      getUserData();
+    }
+  }, [isConnected, user, socket, getUserData]);
+
+  useEffect(() => {
+    handleAADB2C90091ErrorEffect();
+  }, []);
+
+  useEffect(() => {
+    handleRedirectEffect(setUser, setIsLoggedIn)
+  }, [setIsLoggedIn]);
 
   const loginHandler = async () => {
     await handleLogin(setUser, setIsLoggedIn)

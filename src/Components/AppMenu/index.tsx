@@ -12,7 +12,6 @@ type AppMenuProps = {
 
 export const AppMenu = ({ handleLogout, handleShowRoles, handleProfile }: AppMenuProps) => {
   const [open, setOpen] = useState(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
 
   const items = [
@@ -23,7 +22,6 @@ export const AppMenu = ({ handleLogout, handleShowRoles, handleProfile }: AppMen
         handleProfile();
         setOpen(false);
       },
-      //className: class1,
     },
     { 
       label: 'Rules', 
@@ -32,7 +30,6 @@ export const AppMenu = ({ handleLogout, handleShowRoles, handleProfile }: AppMen
         setIsRulesModalOpen(true);
         setOpen(false);
       },
-      //className: class1,
     },
     {
       label: 'Show Roles',
