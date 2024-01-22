@@ -5,24 +5,25 @@ import { useState } from "react";
 import styles from "./index.module.css";
 
 type AppMenuProps = {
-  handleLogout: () => void; // assuming handleLogout is a function that takes no arguments and returns void
-  handleShowRoles: () => void; // the same for handleShowRoles
-  handleProfile: () => void; // the same for handleShowRoles
+  handleLogout: () => void; 
+  handleShowRoles: () => void;
+  handleProfile: () => void;
+  isLoggedIn: boolean;
 };
 
-export const AppMenu = ({ handleLogout, handleShowRoles, handleProfile }: AppMenuProps) => {
+export const AppMenu = ({ handleLogout, handleShowRoles, handleProfile, isLoggedIn }: AppMenuProps) => {
   const [open, setOpen] = useState(false);
   const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
 
   const items = [
-    { 
+    ...(isLoggedIn ? [{
       label: 'Profile', 
       key: 'Profile', 
       onClick: () => {
         handleProfile();
         setOpen(false);
       },
-    },
+    }] : []),
     { 
       label: 'Rules', 
       key: 'Rules', 

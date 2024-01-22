@@ -255,7 +255,7 @@ function App() {
           token: { colorBgBase: "#000000" },
         }}
       >
-        <AppMenu handleLogout={logoutHandler} handleShowRoles={handleShowRoles} handleProfile={handleProfile}/>
+        <AppMenu handleLogout={logoutHandler} handleShowRoles={handleShowRoles} handleProfile={handleProfile} isLoggedIn={isLoggedIn}/>
         <IfElse condition={isConnected}>
           <OnTrue key="Connected">
             <div className="greenCircle" title="Connected to the server."/>

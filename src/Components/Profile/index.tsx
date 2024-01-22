@@ -50,7 +50,11 @@ const Profile = ({ username, userData }: { username: string | undefined, userDat
             <ul>
               {Object.entries(selectedStats.rolesPlayed).map(([role, count]) => (
                 <li key={role}>
-                  {role}: {selectedStats.winsPerRole[role]} | {count} ({calculateWinRate(selectedStats.winsPerRole[role], count)}%)
+                  {
+                    count === 0 
+                    ? `${role}: 0 games`
+                    : `${role}: ${selectedStats.winsPerRole[role]} | ${count} (${calculateWinRate(selectedStats.winsPerRole[role], count)}%)`
+                  }
                 </li>
               ))}
             </ul>
