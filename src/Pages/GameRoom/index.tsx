@@ -124,7 +124,7 @@ export const GameRoom = ({ roomCode, users, roles, selectedRoles, gameStarted, i
               <Button onClick={showNobles}>See Nobles</Button>
             </div>
           )}
-          {nobles.length == 0 && (
+          {nobles.length === 0 && (
             <div style={{ flex: 1 }}> {/* Empty div for spacing if nobles is null */} </div>
           )}
         </div>
