@@ -1,0 +1,97 @@
+.profile-container {
+    background-color: #121212;
+    color: #e0e0e0;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .profile-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #fff;
+  }
+  
+  .stats-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .stats-card {
+    background: #242424;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    color: #e0e0e0;
+  }
+  
+  .stats-card h3 {
+    font-size: 1.2em;
+    font-weight: normal;
+    color: #aaa; 
+    margin-bottom: 15px;
+  }
+  
+  .stats-info p, .roles-stats h4, .roles-stats ul {
+    color: #e0e0e0;
+  }
+  
+  /* Styling for dropdown */
+  .stats-period-dropdown {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 5px;
+    border: 1px solid #444;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    appearance: none; /* Remove default styling */
+    outline: none; /* Remove focus outline */
+  }
+  
+  .stats-period-dropdown option {
+    background: #242424;
+    color: #ddd;
+  }
+  
+  /* Optional: Custom arrow for dropdown */
+  .stats-period-dropdown {
+    background-image: linear-gradient(45deg, transparent 50%, #ddd 50%),
+                      linear-gradient(135deg, #ddd 50%, transparent 50%);
+    background-position: right 15px top 50%, right 10px top 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5em;
+    cursor: pointer;
+  }
+
+  .stats-card > div:not(:last-child) {
+    margin-bottom: 20px;
+  }
+
+  .stats-period-dropdown:-ms-expand {
+    display: none; /* Hide the default arrow in IE */
+  }
+
+  .modal-content {
+    position: relative; /* For absolute positioning of the close button */
+    padding: 20px;
+    border-radius: 10px;
+    background: #1a1a1a; /* Dark background for the modal */
+    color: #fff; /* White text for readability */
+  }
+  

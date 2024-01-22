@@ -8,12 +8,15 @@ import {
 } from "antd";
 import { Role } from "./Types/Role";
 import { User } from "./Types/User";
+import { UserData, userDataExample } from "./Types/UserData";
 import { GameRoom } from "./Pages/GameRoom";
 import { Landing } from "./Pages/Landing";
 import "./App.css";
 import { If, IfElse, OnFalse, OnTrue } from "conditional-jsx";
 import { AppMenu } from "./Components/AppMenu";
 import ShowRoles from "./Components/ShowRoles";
+import Profile from "./Components/Profile";
+
 import { 
   handleRedirectEffect,
   handleAADB2C90091ErrorEffect,
@@ -30,23 +33,22 @@ import {
     chosenOneDecision,
     selectCultists
   } from "./gameService";
-import { set } from "zod";
 
 const SERVER = process.env.REACT_APP_SERVER as string;
-
-console.log(SERVER);
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
   const [isInRoom, setIsInRoom] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<AccountInfo | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [selectedRoles, setSelectedRoles] = useState<Role[]>([]);
   const [roomCode, setRoomCode] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [showRoles, setShowRoles] = useState(false);
+  const [profile, setProfile] = useState(false);
   const [team, setTeam] = useState<User[]>([]);
   const [nobles, setNobles] = useState<Role[]>([]);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
@@ -80,6 +82,7 @@ function App() {
   useEffect(() => {
     if (isConnected && user && socket) {
       socket.emit("login", { userId: user.homeAccountId, username: user.name });
+      getUserData();
     }
   }, [isConnected, user, socket]);
 
@@ -90,6 +93,18 @@ function App() {
   useEffect(() => {
     handleRedirectEffect(setUser, setIsLoggedIn)
   }, [setIsLoggedIn]);
+
+  const getUserData = () => {
+    if (socket && user) {
+      console.log("RequestingUserData");
+      socket.emit("requestUserData", { userId: user.homeAccountId });
+  
+      socket.on("receiveUserData", (updatedUserData: UserData) => {
+        setUserData(updatedUserData);
+        socket.off("receiveUserData");
+      });
+    }
+  };
 
   const loginHandler = async () => {
     await handleLogin(setUser, setIsLoggedIn)
@@ -102,6 +117,10 @@ function App() {
 
   const handleShowRoles = () => {
     setShowRoles(true);
+  };
+
+  const handleProfile = () => {
+    setProfile(true);
   };
 
   useEffect(() => {
@@ -216,12 +235,16 @@ function App() {
     }
   }, [isRevealed, roomCode, socket, user, roles.length]);
 
-  const handleOk = () => {
+  const handleOkRoles = () => {
     setShowRoles(false);
   };
 
-  const handleCancel = () => {
+  const handleCancelRoles = () => {
     setShowRoles(false);
+  };
+
+  const handleCancelProfile = () => {
+    setProfile(false);
   };
 
   return (
@@ -232,7 +255,7 @@ function App() {
           token: { colorBgBase: "#000000" },
         }}
       >
-        <AppMenu handleLogout={logoutHandler} handleShowRoles={handleShowRoles}/>
+        <AppMenu handleLogout={logoutHandler} handleShowRoles={handleShowRoles} handleProfile={handleProfile}/>
         <IfElse condition={isConnected}>
           <OnTrue key="Connected">
             <div className="greenCircle" title="Connected to the server."/>
@@ -242,22 +265,31 @@ function App() {
           </OnFalse>
         </IfElse>
 
-        {/* Show the roles in a modal, should be its own component */}
         <If condition={showRoles}>
           <Modal
             title="Roles"
             open={showRoles}
-            onOk={handleOk}
-            onCancel={handleCancel}
+            onOk={handleOkRoles}
+            onCancel={handleCancelRoles}
             footer={null}
             centered
           >
           <ShowRoles roles={roles}></ShowRoles>
           </Modal>
         </If>
+        <If condition={profile}>
+          <Modal
+            title="Profile"
+            open={profile}
+            onCancel={handleCancelProfile}
+            footer={null}
+            centered
+          >
+          <Profile username={user?.name} userData={userData}></Profile>
+          </Modal>
+        </If>
         <IfElse condition={isLoggedIn}>
           <OnTrue key="loggedIn">
-            {/* Connected in a room */}
             <IfElse condition={isInRoom}>
               <OnTrue key="inRoom">
                 <GameRoom

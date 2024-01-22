@@ -7,13 +7,24 @@ import styles from "./index.module.css";
 type AppMenuProps = {
   handleLogout: () => void; // assuming handleLogout is a function that takes no arguments and returns void
   handleShowRoles: () => void; // the same for handleShowRoles
+  handleProfile: () => void; // the same for handleShowRoles
 };
 
-export const AppMenu = ({ handleLogout, handleShowRoles }: AppMenuProps) => {
+export const AppMenu = ({ handleLogout, handleShowRoles, handleProfile }: AppMenuProps) => {
   const [open, setOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
 
   const items = [
+    { 
+      label: 'Profile', 
+      key: 'Profile', 
+      onClick: () => {
+        handleProfile();
+        setOpen(false);
+      },
+      //className: class1,
+    },
     { 
       label: 'Rules', 
       key: 'Rules', 
@@ -49,7 +60,7 @@ export const AppMenu = ({ handleLogout, handleShowRoles }: AppMenuProps) => {
       <Drawer
         open={open}
         onClose={() => setOpen(false)}
-        title="AppMenu"
+        title="Menu"
         destroyOnClose
         className={styles.AppMenuDrawer}
       >
