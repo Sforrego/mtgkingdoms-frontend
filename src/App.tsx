@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
 import { AccountInfo } from "@azure/msal-browser";
 import {
@@ -79,7 +79,7 @@ function App() {
     };
   }, []);
 
-  const getUserData = () => {
+  const getUserData = useCallback(() => {
     if (socket && user) {
       console.log("RequestingUserData");
       socket.emit("requestUserData", { userId: user.homeAccountId });
@@ -89,7 +89,7 @@ function App() {
         socket.off("receiveUserData");
       });
     }
-  };
+  }, [socket, user]);
 
   useEffect(() => {
     if (isConnected && user && socket) {
