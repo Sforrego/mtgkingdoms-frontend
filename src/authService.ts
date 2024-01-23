@@ -46,7 +46,7 @@ export const handleLoginEffect = async (
   socket: Socket | null
 ) => {
   if (isConnected && user && socket) {
-    socket.emit("login", { userId: user.homeAccountId, username: user.name });
+    socket.emit("login", { userId: user.localAccountId, username: user.name });
   }
 };
 
@@ -73,7 +73,11 @@ export const handleRedirectEffect = async (
     await handleRedirectPromise();
     const accounts = getAllAccounts();
     if (accounts.length !== 0) {
-      setUser(accounts[0]);
+      if(accounts.length > 1 && accounts[1].homeAccountId.includes("profileediting")){
+        setUser(accounts[1]);
+      } else {
+        setUser(accounts[0])
+      }
       setIsLoggedIn(true);
     }
   } catch (error) {
@@ -141,5 +145,21 @@ export const handleLogout = async (setIsLoggedIn: Dispatch<SetStateAction<boolea
     leaveRoom(); // Leave the room before logging out
     await logout();
     setIsLoggedIn(false);
+  }
+};
+
+// Add a new function for editing the user profile
+export const editProfile = async () => {
+  const editProfileAuthority = "https://MTGKingdoms.b2clogin.com/MTGKingdoms.onmicrosoft.com/B2C_1_profileediting"; // Replace with your actual edit profile authority
+  try {
+    await myMSALObj.loginRedirect({
+      ...loginRequest,
+      authority: editProfileAuthority,
+      prompt: "login",
+      state: "editProfile",
+      redirectUri: "http://localhost:3000", // This is where you expect to be redirected after edit
+    });
+  } catch (error) {
+    console.error('Error during profile edit redirection:', error);
   }
 };

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { UserData } from '../../Types/UserData';
 import "./index.css";
-import {FaSyncAlt} from 'react-icons/fa';
+import {FaSyncAlt, FaEdit} from 'react-icons/fa';
+import { editProfile } from '../../authService'; // Adjust the path as necessary
 
 const Profile = ({ username, userData, getUserData }: { username: string | undefined, userData: UserData | null, getUserData: () => void }) => {
   const [selectedStatsPeriod, setSelectedStatsPeriod] = useState(userData?.statsPeriod);
@@ -29,6 +30,9 @@ const Profile = ({ username, userData, getUserData }: { username: string | undef
     <div className="profile-container">
       <div className="profile-header">
         <h2>{username}'s Profile</h2>
+        <button onClick={editProfile} className="edit-profile-button" title="Edit Profile">
+          <FaEdit size={20} />
+        </button>
         <button onClick={getUserData} className="update-data-icon" title="Update Data">
           <FaSyncAlt size={20} /> {/* Adjust size as needed */}
         </button>

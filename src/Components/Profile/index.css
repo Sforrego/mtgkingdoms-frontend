@@ -99,9 +99,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px; /* Space between header and content */
+    margin-bottom: 10px; /* Space between header and content */
   }
   
+  .profile-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust the gap to your preference */
+  }
+
   .update-data-icon {
     background-color: transparent;
     border: none;
@@ -121,4 +127,38 @@
     color: #3e8e41; /* Even darker green when clicked */
   }
   
+  .edit-profile-button {
+    background: #444; /* Or another suitable color */
+    color: #fff;
+    border: 1px solid #555; /* Or use a color that fits the theme */
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
+    margin-bottom: 0%;
+  }
   
+  .edit-profile-button:hover,
+  .edit-profile-button:focus {
+    background: #555; /* Slightly lighter to indicate hover */
+    border-color: #666;
+  }
+
+  .update-data-icon,
+  .edit-profile-button {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .edit-profile-button span {
+    display: none; /* Hide the text by default */
+  }
+  
+  .edit-profile-button:hover span,
+  .edit-profile-button:focus span {
+    display: inline; /* Show text on hover/focus for clarity */
+  }
