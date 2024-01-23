@@ -6,7 +6,7 @@ import { Socket } from "socket.io-client";
 
 export const createRoom = (user: AccountInfo | null, socket: Socket | null) => {
   if (user && socket) {
-    socket.emit("create", { userId: user.homeAccountId, username: user.name });
+    socket.emit("create", { userId: user.localAccountId, username: user.name });
   } else {
     console.log("User is not logged in or Connection not established");
   }
@@ -14,7 +14,7 @@ export const createRoom = (user: AccountInfo | null, socket: Socket | null) => {
 
 export const joinRoom = (user: AccountInfo | null, socket: Socket | null, roomCode: string) => {
   if (user && socket) {
-    socket.emit("join", { userId: user.homeAccountId, username: user.name, roomCode });
+    socket.emit("join", { userId: user.localAccountId, username: user.name, roomCode });
   } else {
     console.log("User is not logged in or Connection not established");
   }
@@ -30,7 +30,7 @@ export const startGame = (socket: Socket | null, roomCode: string) => {
 
 export const leaveRoom = (user: AccountInfo | null, socket: Socket | null, roomCode: string) => {
   if (user && socket) {
-    socket.emit("leaveRoom", { userId: user.homeAccountId, username: user.name, roomCode });
+    socket.emit("leaveRoom", { userId: user.localAccountId, username: user.name, roomCode });
   } else {
     console.log("User is not logged in or Connection not established");
   }
@@ -38,7 +38,7 @@ export const leaveRoom = (user: AccountInfo | null, socket: Socket | null, roomC
 
 export const revealRole = (user: AccountInfo | null, socket: Socket | null, roomCode: string) => {
   if (user && socket) {
-    socket.emit("revealRole", { userId: user.homeAccountId, roomCode });
+    socket.emit("revealRole", { userId: user.localAccountId, roomCode });
   } else {
     console.log("User is not logged in or Connection not established");
   }

@@ -82,7 +82,7 @@ function App() {
   const getUserData = useCallback(() => {
     if (socket && user) {
       console.log("RequestingUserData");
-      socket.emit("requestUserData", { userId: user.homeAccountId });
+      socket.emit("requestUserData", { userId: user.localAccountId });
   
       socket.on("receiveUserData", (updatedUserData: UserData) => {
         setUserData(updatedUserData);
@@ -93,7 +93,7 @@ function App() {
 
   useEffect(() => {
     if (isConnected && user && socket) {
-      socket.emit("login", { userId: user.homeAccountId, username: user.name });
+      socket.emit("login", { userId: user.localAccountId, username: user.name });
       getUserData();
     }
   }, [isConnected, user, socket, getUserData]);
@@ -182,7 +182,7 @@ function App() {
         console.log("Game Updated.");
         setUsersInRoom(users);
         if(user){
-          const myUser: User = users.find((u: User) => u.userId === user.homeAccountId);
+          const myUser: User = users.find((u: User) => u.userId === user.localAccountId);
           if (myUser && myUser.isRevealed !== isRevealed){
             setIsRevealed(myUser.isRevealed);
           }
@@ -307,8 +307,8 @@ function App() {
                   selectRoles={(selectedRoles) => selectRoles(selectedRoles, socket, roomCode)}
                   endGame={() => endGame(socket, usersInRoom, roomCode)}
                   setSelectedRoles={setSelectedRoles}
-                  chosenOneDecision={() => chosenOneDecision(socket, user?.homeAccountId, roomCode)}
-                  selectCultists={() => selectCultists(socket, user?.homeAccountId, usersInRoom, roomCode)}
+                  chosenOneDecision={() => chosenOneDecision(socket, user?.localAccountId, roomCode)}
+                  selectCultists={() => selectCultists(socket, user?.localAccountId, usersInRoom, roomCode)}
                 />
               </OnTrue>
               <OnFalse key="notInRoom">
