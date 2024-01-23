@@ -157,7 +157,6 @@ export const editProfile = async () => {
       authority: editProfileAuthority,
       prompt: "login",
       state: "editProfile",
-      redirectUri: "http://localhost:3000", // This is where you expect to be redirected after edit
     });
   } catch (error) {
     console.error('Error during profile edit redirection:', error);
