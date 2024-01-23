@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { UserData } from '../../Types/UserData';
 import "./index.css";
+import {FaSyncAlt} from 'react-icons/fa';
 
-const Profile = ({ username, userData }: { username: string | undefined, userData: UserData | null}) => {
+const Profile = ({ username, userData, getUserData }: { username: string | undefined, userData: UserData | null, getUserData: () => void }) => {
   const [selectedStatsPeriod, setSelectedStatsPeriod] = useState(userData?.statsPeriod);
 
   const calculateWinRate = (wins: number, games: number) => {
@@ -26,7 +27,12 @@ const Profile = ({ username, userData }: { username: string | undefined, userDat
 
   return (
     <div className="profile-container">
-      <h2>{username}'s Profile</h2>
+      <div className="profile-header">
+        <h2>{username}'s Profile</h2>
+        <button onClick={getUserData} className="update-data-icon" title="Update Data">
+          <FaSyncAlt size={20} /> {/* Adjust size as needed */}
+        </button>
+      </div>
       <select
         value={selectedStatsPeriod}
         onChange={(e) => setSelectedStatsPeriod(e.target.value as 'All time' | 'Last 10' | 'Last 5')}

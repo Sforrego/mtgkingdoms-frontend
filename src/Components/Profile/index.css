@@ -95,3 +95,30 @@
     color: #fff; /* White text for readability */
   }
   
+  .profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px; /* Space between header and content */
+  }
+  
+  .update-data-icon {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #4CAF50; /* Green color to match the theme */
+    padding: 5px;
+    border-radius: 50%; /* Circular button */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+  }
+  
+  .update-data-icon:hover {
+    color: #45a049; /* Darker green on hover */
+  }
+  
+  .update-data-icon:active {
+    color: #3e8e41; /* Even darker green when clicked */
+  }
+  
+  

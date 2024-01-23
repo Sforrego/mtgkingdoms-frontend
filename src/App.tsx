@@ -285,7 +285,7 @@ function App() {
             footer={null}
             centered
           >
-          <Profile username={user?.name} userData={userData}></Profile>
+          <Profile username={user?.name} userData={userData} getUserData={getUserData}></Profile>
           </Modal>
         </If>
         <IfElse condition={isLoggedIn}>
