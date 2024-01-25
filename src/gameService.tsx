@@ -44,9 +44,18 @@ export const revealRole = (user: AccountInfo | null, socket: Socket | null, room
   }
 };
 
-export const selectRoles = (selectedRoles: Role[], socket: Socket | null, roomCode: string) => {
+export const selectRolesPool = (selectedRoles: Role[], socket: Socket | null, roomCode: string) => {
   if (socket) {
-    socket.emit("selectRoles", { roles: selectedRoles, roomCode });
+    socket.emit("selectRolesPool", { roles: selectedRoles, roomCode });
+  } else {
+    console.log("Connection not established");
+  }
+};
+
+export const selectRole = (socket: Socket | null, userId: string | undefined, roomCode: string | undefined, selectedRole: Role | null) => {
+  console.log("Role selected")
+  if (socket) {
+    socket.emit("selectRole", { userId, roomCode, selectedRole});
   } else {
     console.log("Connection not established");
   }
@@ -57,7 +66,6 @@ export const endGame = (socket: Socket | null, users: User[] = [], roomCode: str
     let currentWinnersIds: string[] = [];
     const handleCheckChange = (checkedValues: any[]) => {
       currentWinnersIds = checkedValues;
-      console.log(checkedValues);
     };
     
     Modal.confirm({
@@ -83,7 +91,6 @@ export const selectCultists = (socket: Socket | null, userId: string | undefined
     let cultistsIds: string[] = [];
     const handleCheckChange = (checkedValues: any[]) => {
       cultistsIds = checkedValues;
-      console.log(cultistsIds);
     };
     
     Modal.confirm({
@@ -120,7 +127,6 @@ export const chosenOneDecision = (socket: Socket | null, userId: string | undefi
         </Radio.Group>
       ),
       onOk() {
-        console.log(decision);
         socket && socket.emit("chosenOneDecision", { userId, roomCode, decision: decision });
       },
     });

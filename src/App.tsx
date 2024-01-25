@@ -28,8 +28,9 @@ import {
     startGame, 
     leaveRoom, 
     revealRole, 
-    selectRoles,
+    selectRolesPool,
     endGame,
+    selectRole,
     chosenOneDecision,
     selectCultists
   } from "./gameService";
@@ -44,7 +45,8 @@ function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
-  const [selectedRoles, setSelectedRoles] = useState<Role[]>([]);
+  const [potentialRoles, setPotentialRoles] = useState<Role[]>([]);
+  const [selectedRolesPool, setSelectedRolesPool] = useState<Role[]>([]);
   const [roomCode, setRoomCode] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [showRoles, setShowRoles] = useState(false);
@@ -53,6 +55,8 @@ function App() {
   const [nobles, setNobles] = useState<Role[]>([]);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const [selectingRole, setSelectingRole] = useState<boolean>(false);
 
   useEffect(() => {
     const newSocket = io(SERVER);
@@ -132,7 +136,7 @@ function App() {
 
       socket.on("rolesData", (data) => {
         setRoles(data);
-        setSelectedRoles(data);
+        setSelectedRolesPool(data);
       });
 
       // Listen for 'roomCreated' event from the server
@@ -149,7 +153,7 @@ function App() {
         setRoomCode(roomCode);
         setIsInRoom(true);
         setUsersInRoom(users);
-        setSelectedRoles(selectedRoles);
+        setSelectedRolesPool(selectedRoles);
       });
 
       // Listen for 'leftRoom' event from the server
@@ -178,11 +182,11 @@ function App() {
         setGameStarted(true);
       });
 
-      socket.on("gameUpdated", ({ users }) => {
+      socket.on("gameUpdated", ({ usersInRoom }) => {
         console.log("Game Updated.");
-        setUsersInRoom(users);
+        setUsersInRoom(usersInRoom);
         if(user){
-          const myUser: User = users.find((u: User) => u.userId === user.localAccountId);
+          const myUser: User = usersInRoom.find((u: User) => u.userId === user.localAccountId);
           if (myUser && myUser.isRevealed !== isRevealed){
             setIsRevealed(myUser.isRevealed);
           }
@@ -199,6 +203,9 @@ function App() {
           setGameStarted(activeGame);
           setIsRevealed(team[0].isRevealed);
           setTeam(team);
+          const myUser: User = usersInRoom.find((u: User) => u.userId === user.localAccountId);
+          setSelectingRole(!myUser.hasSelectedRole)
+          setPotentialRoles(myUser.potentialRoles);
         }
       });
 
@@ -207,16 +214,25 @@ function App() {
         setUsersInRoom(users);
         setNobles([]);
         setGameStarted(false);
+        setPotentialRoles([]);
       });
 
       socket.on("rolesSelected", ({ roles }) => {
-        setSelectedRoles(roles);
+        setSelectedRolesPool(roles);
       });
+
+      socket.on("selectRole", ({ potentialRoles }) =>{
+        console.log("Selecting role")
+        setSelectingRole(true);
+        setPotentialRoles(potentialRoles);
+        setSelectedRole(potentialRoles[0]);
+      })
 
       // Listen for 'error' event from the server
       socket.on("error", (message) => {
         alert(message)
       });
+
 
       // Cleanup when component unmounts
       return () => {
@@ -230,6 +246,7 @@ function App() {
         socket.off("gameUpdated");
         socket.off("reconnectedToRoom");
         socket.off("gameEnded");
+        socket.off("selectCharacter")
         socket.off("error");
       };
     }
@@ -252,7 +269,7 @@ function App() {
       <ConfigProvider
         theme={{
           algorithm: theme.darkAlgorithm,
-          token: { colorBgBase: "#000000" },
+          token: { colorBgMask: "#000000" },
         }}
       >
         <AppMenu handleLogout={logoutHandler} handleShowRoles={handleShowRoles} handleProfile={handleProfile} isLoggedIn={isLoggedIn}/>
@@ -300,15 +317,21 @@ function App() {
                   nobles={nobles}
                   isRevealed={isRevealed}
                   roles={roles}
-                  selectedRoles={selectedRoles}
+                  selectedRolesPool={selectedRolesPool}
+                  selectedRole={selectedRole}
+                  selectingRole={selectingRole}
                   startGame={() => startGame(socket, roomCode)}
                   leaveRoom={() => leaveRoom(user, socket, roomCode)}
                   revealRole={() => revealRole(user, socket, roomCode)}
-                  selectRoles={(selectedRoles) => selectRoles(selectedRoles, socket, roomCode)}
+                  selectRolesPool={(selectedRolesPool) => selectRolesPool(selectedRolesPool, socket, roomCode)}
                   endGame={() => endGame(socket, usersInRoom, roomCode)}
-                  setSelectedRoles={setSelectedRoles}
+                  setSelectingRole={setSelectingRole}
+                  setSelectedRolesPool={setSelectedRolesPool}
+                  setSelectedRole={setSelectedRole} 
+                  selectRole={() => selectRole(socket, user?.localAccountId, roomCode, selectedRole)}
                   chosenOneDecision={() => chosenOneDecision(socket, user?.localAccountId, roomCode)}
                   selectCultists={() => selectCultists(socket, user?.localAccountId, usersInRoom, roomCode)}
+                  potentialRoles={potentialRoles}
                 />
               </OnTrue>
               <OnFalse key="notInRoom">

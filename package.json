@@ -7,7 +7,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "antd": "^5.5.0",
+    "antd": "^5.13.2",
     "antd-icons": "^0.1.0-alpha.1",
     "conditional-jsx": "^1.0.6",
     "jwt-decode": "^3.1.2",

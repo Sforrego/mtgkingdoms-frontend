@@ -6,4 +6,6 @@ export type User = {
     role: Role;
     isRevealed: boolean;
     userId: string;
+    hasSelectedRole: boolean;
+    potentialRoles: Role[];
   };

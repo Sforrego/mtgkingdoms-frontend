@@ -12,3 +12,10 @@
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }
+
+.radio-button {
+    display: flex;
+    align-items: center; /* This centers the items vertically */
+    justify-content: center; /* This centers the items horizontally */
+    margin: 5%  0; /* This adds a top and bottom margin of 10px */
+}
