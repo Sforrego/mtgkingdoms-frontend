@@ -28,7 +28,7 @@ import {
     startGame, 
     leaveRoom, 
     revealRole, 
-    selectRolesPool,
+    updateRolesPool,
     endGame,
     selectRole,
     chosenOneDecision,
@@ -217,7 +217,7 @@ function App() {
         setPotentialRoles([]);
       });
 
-      socket.on("rolesSelected", ({ roles }) => {
+      socket.on("rolesPoolUpdated", ({ roles }) => {
         setSelectedRolesPool(roles);
       });
 
@@ -323,7 +323,7 @@ function App() {
                   startGame={() => startGame(socket, roomCode)}
                   leaveRoom={() => leaveRoom(user, socket, roomCode)}
                   revealRole={() => revealRole(user, socket, roomCode)}
-                  selectRolesPool={(selectedRolesPool) => selectRolesPool(selectedRolesPool, socket, roomCode)}
+                  updateRolesPool={(updatedRolesPool) => updateRolesPool(updatedRolesPool, socket, roomCode)}
                   endGame={() => endGame(socket, usersInRoom, roomCode)}
                   setSelectingRole={setSelectingRole}
                   setSelectedRolesPool={setSelectedRolesPool}

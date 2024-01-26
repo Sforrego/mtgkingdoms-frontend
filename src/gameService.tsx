@@ -44,9 +44,9 @@ export const revealRole = (user: AccountInfo | null, socket: Socket | null, room
   }
 };
 
-export const selectRolesPool = (selectedRoles: Role[], socket: Socket | null, roomCode: string) => {
+export const updateRolesPool = (selectedRoles: Role[], socket: Socket | null, roomCode: string) => {
   if (socket) {
-    socket.emit("selectRolesPool", { roles: selectedRoles, roomCode });
+    socket.emit("updateRolesPool", { roles: selectedRoles, roomCode });
   } else {
     console.log("Connection not established");
   }

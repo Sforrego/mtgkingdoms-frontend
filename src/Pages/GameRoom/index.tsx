@@ -23,7 +23,7 @@ type GameRoomProps = {
   startGame: () => void;
   leaveRoom: () => void;
   revealRole: () => void;
-  selectRolesPool: (selectedRoles: Role[]) => void;
+  updateRolesPool: (selectedRoles: Role[]) => void;
   selectRole: () => void;
   endGame: () => void; 
   setSelectedRole: (roles: Role) => void; 
@@ -32,7 +32,7 @@ type GameRoomProps = {
   chosenOneDecision: () => void;
 };
 
-export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRole, selectingRole, gameStarted, isRevealed, team, nobles, potentialRoles, setSelectingRole, startGame, leaveRoom, revealRole, selectRolesPool, selectRole, endGame, setSelectedRole, setSelectedRolesPool, selectCultists, chosenOneDecision }: GameRoomProps) => {
+export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRole, selectingRole, gameStarted, isRevealed, team, nobles, potentialRoles, setSelectingRole, startGame, leaveRoom, revealRole, updateRolesPool, selectRole, endGame, setSelectedRole, setSelectedRolesPool, selectCultists, chosenOneDecision }: GameRoomProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNoblesModalOpen, setIsNoblesModalOpen] = useState(false);
   const [isRevealRoleModalOpen, setIsRevealRoleModalOpen] = useState(false);
@@ -92,7 +92,7 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
 }
   const handleRoleSelection = () => {
     if(validateRolesBeforeStart()){
-      selectRolesPool(selectedRolesPool);
+      updateRolesPool(selectedRolesPool);
       closeRoleSelectionModal();
     }
   };
