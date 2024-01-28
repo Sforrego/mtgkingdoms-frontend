@@ -126,9 +126,6 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
 <div className="game-room" style={{ position: "relative", height: "100%" }}>
   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "5vmin" }}>
     <p style={{ color: "white", margin: "0", flex: 1, textAlign: "center" }}>Room: {roomCode}</p>
-    {nobles.length > 0 && gameStarted && (
-      <Button onClick={showNobles} style={{ marginRight: "10px", position: "absolute", right: 0 }}>See Nobles</Button>
-    )}
   </div>
       <div className="PlayersIconsHolder">
         {users.map((user, index) => (
@@ -166,7 +163,14 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
             <Button onClick={() => chosenOneDecision()}>Decision</Button>
             )}
         </div>
-            <Button onClick={() => endGame()}>End Game</Button>
+        <div style={{marginBottom:"4vmin"}}>
+          {nobles.length > 0 && gameStarted && (
+            <Button onClick={showNobles}>See Nobles</Button>
+          )}
+        </div>
+        <div>
+          <Button onClick={() => endGame()}>End Game</Button>
+        </div>
         </>
       ) : (
         <>
