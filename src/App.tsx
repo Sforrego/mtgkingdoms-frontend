@@ -215,6 +215,7 @@ function App() {
         setNobles([]);
         setGameStarted(false);
         setPotentialRoles([]);
+        setSelectedRole(null);
       });
 
       socket.on("rolesPoolUpdated", ({ roles }) => {
@@ -225,7 +226,6 @@ function App() {
         console.log("Selecting role")
         setSelectingRole(true);
         setPotentialRoles(potentialRoles);
-        setSelectedRole(potentialRoles[0]);
       })
 
       // Listen for 'error' event from the server

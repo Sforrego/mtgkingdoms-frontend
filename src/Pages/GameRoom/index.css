@@ -19,3 +19,17 @@
     justify-content: center; /* This centers the items horizontally */
     margin: 5%  0; /* This adds a top and bottom margin of 10px */
 }
+
+.role-select-button {
+  margin-top: 10px; /* Adjust top margin */
+  width: 100%; /* Full width of the container */
+  text-align: center;
+}
+
+.selected-role-button {
+  margin-top: 10px; /* Adjust top margin */
+  width: 100%; /* Full width of the container */
+  text-align: center;
+  background-color: #555; /* Change to your preferred blue color */
+  color: white; /* Text color for better contrast */
+}

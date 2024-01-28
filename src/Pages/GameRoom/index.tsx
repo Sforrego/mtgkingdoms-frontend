@@ -1,6 +1,6 @@
 import { PlayerInGame } from "../../Components/PlayerInGame";
 import { User } from "../../Types/User";
-import { Modal, Button, Carousel, Checkbox, Radio } from "antd";
+import { Modal, Button, Carousel, Checkbox } from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { useState } from "react";
 import { RoleCard } from "../../Components/RoleCard";
@@ -123,8 +123,13 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
   };
 
   return (
-    <div className="game-room">
-      <p style={{color: "white", marginBottom:"5vmin"}}>Room: {roomCode}</p>
+<div className="game-room" style={{ position: "relative", height: "100%" }}>
+  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "5vmin" }}>
+    <p style={{ color: "white", margin: "0", flex: 1, textAlign: "center" }}>Room: {roomCode}</p>
+    {nobles.length > 0 && gameStarted && (
+      <Button onClick={showNobles} style={{ marginRight: "10px", position: "absolute", right: 0 }}>See Nobles</Button>
+    )}
+  </div>
       <div className="PlayersIconsHolder">
         {users.map((user, index) => (
           <PlayerInGame key={index} user={user} />
@@ -148,20 +153,10 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
       : gameStarted ? (
         <>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2vmin", marginTop: "4vmin" }}>
-          <div style={{ flex: 1 }}> {/* Empty div for spacing */} </div>
-
           <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
             <Button onClick={showRole}>See My Role</Button>
             {!isRevealed && <Button onClick={revealRoleModal}>Reveal Role</Button>}
           </div>
-          {nobles.length > 0 && (
-            <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-              <Button onClick={showNobles}>See Nobles</Button>
-            </div>
-          )}
-          {nobles.length === 0 && (
-            <div style={{ flex: 1 }}> {/* Empty div for spacing if nobles is null */} </div>
-          )}
         </div>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           {isCultLeader && (
@@ -178,7 +173,9 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           <Button onClick={openRolesPoolSelectionModal} style={{marginRight:"1.5vmin"}}>Select Roles</Button>
           <Button onClick={startGame} style={{marginRight:"1.5vmin"}}>Start Game</Button>
-          <Button onClick={leaveRoom} style={{marginLeft:"1.5vmin"}}>Leave Room</Button>
+        </div>
+        <div style={{ marginTop: 'auto', width: '100%', textAlign: 'center' }}>
+          <Button onClick={leaveRoom}>Leave Room</Button>
         </div>
         </>
       )}
@@ -245,12 +242,28 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
     </Modal>
 
     <Modal
-      title="Choose Your Role"
+      title="Select Your Role"
       open={isRoleChoiceModalOpen}
       closable={false}
       onOk={handleRoleChoice}
       onCancel={closeRoleChoiceModal}
       centered
+      footer={[
+        <Button 
+          key="cancel" 
+          onClick={closeRoleChoiceModal}
+        >
+          Cancel
+        </Button>,
+        <Button 
+          key="submit" 
+          type="primary" 
+          onClick={handleRoleChoice}
+          disabled={!selectedRole} // Disable button if selectedRole is null or undefined
+        >
+          OK
+        </Button>
+      ]}
     >
       <Carousel
         autoplay={false}
@@ -262,11 +275,12 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
         {potentialRoles.map((role, index) => (
           <div key={index} className="carousel-item">
             <RoleCard key={role.name} role={role}/>
-            <Radio
-              className="radio-button"
-              checked={selectedRole === role}
-              onChange={() => setSelectedRole(role)}
-            />
+            <Button
+              onClick={() => setSelectedRole(role)}
+              className={selectedRole === role ? "selected-role-button" : "role-select-button"}
+            >
+              {selectedRole === role ? "Selected" : "Select"}
+            </Button>
           </div>
         ))}
       </Carousel>
