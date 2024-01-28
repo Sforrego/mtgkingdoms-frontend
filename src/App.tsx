@@ -201,9 +201,9 @@ function App() {
           setIsInRoom(true);
           setUsersInRoom(usersInRoom);
           setGameStarted(activeGame);
-          setIsRevealed(team[0].isRevealed);
           setTeam(team);
           const myUser: User = usersInRoom.find((u: User) => u.userId === user.localAccountId);
+          setIsRevealed(myUser.isRevealed);
           setSelectingRole(!myUser.hasSelectedRole)
           setPotentialRoles(myUser.potentialRoles);
         }

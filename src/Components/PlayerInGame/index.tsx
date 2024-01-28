@@ -11,7 +11,7 @@ type PlayerProps = {
 export const PlayerInGame = ({ user }: PlayerProps) => {
   const [open, setOpen] = useState(false);
 
-  if (!user?.role)
+  if (!user?.role || !user.isRevealed)
     return (
       <div className="PlayerInGame">
         <p>{user?.username}</p>

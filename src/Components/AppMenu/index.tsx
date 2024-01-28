@@ -74,7 +74,12 @@ export const AppMenu = ({ handleLogout, handleShowRoles, handleProfile, isLogged
         style={{ 
           maxHeight:"85vh",
         }}
-        bodyStyle={{ overflowY: 'auto', maxHeight: '75vh' }}  
+        styles={{
+          body: {
+            overflowY: 'auto',
+            maxHeight: '75vh'
+          }
+        }}
       >
         <p className={styles.rules}>The Monarch begins the game with 50 life points and is the first player to take a turn.</p>
         <p className={styles.rules}>Bandits win if the Monarch is defeated while at least one Bandit remains alive.</p>
