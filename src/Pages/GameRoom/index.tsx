@@ -1,129 +1,44 @@
 import { PlayerInGame } from "../../Components/PlayerInGame";
-import { User } from "../../Types/User";
-import { Modal, Button, Carousel, Checkbox } from "antd";
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
-import { useState } from "react";
-import { RoleCard } from "../../Components/RoleCard";
-import { Role } from "../../Types/Role";
+import { RolesPoolSelectionModal } from "../../Components/Modals/RolesPoolSelectionModal";
+import { RoleSelectionModal } from "../../Components/Modals/RoleSelectionModal";
+import { TeamOverviewModal } from "../../Components/Modals/TeamOverviewModal";
+import { NoblesModal } from "../../Components/Modals/NoblesModal";
+import { GameRoomProps } from "../../Types/GameRoomTypes";
+import { ValidateRolesBeforeStart } from "../../Utils/ValidateRoles";
+import { Button, Modal } from "antd";
+import { UseModal } from '../../Hooks/UseModal';
 import "./index.css";
 
-type GameRoomProps = {
-  roomCode: string;
-  users: User[];
-  roles: Role[];
-  selectedRolesPool: Role[];
-  gameStarted: boolean;
-  selectedRole: Role | null;
-  team: User[];
-  nobles: Role[];
-  isRevealed: boolean;
-  potentialRoles: Role[];
-  selectingRole: boolean;
-  setSelectingRole: (selectingRole: boolean) => void;
-  startGame: () => void;
-  leaveRoom: () => void;
-  revealRole: () => void;
-  updateRolesPool: (selectedRoles: Role[]) => void;
-  selectRole: () => void;
-  endGame: () => void; 
-  setSelectedRole: (roles: Role) => void; 
-  setSelectedRolesPool: (roles: Role[]) => void; 
-  selectCultists: () => void;
-  chosenOneDecision: () => void;
-};
-
 export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRole, selectingRole, gameStarted, isRevealed, team, nobles, potentialRoles, setSelectingRole, startGame, leaveRoom, revealRole, updateRolesPool, selectRole, endGame, setSelectedRole, setSelectedRolesPool, selectCultists, chosenOneDecision }: GameRoomProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isNoblesModalOpen, setIsNoblesModalOpen] = useState(false);
-  const [isRevealRoleModalOpen, setIsRevealRoleModalOpen] = useState(false);
-  const [isRoleChoiceModalOpen, setIsRoleChoiceModalOpen] = useState(false);
-  const [isRolesPoolSelectionModalOpen, setIsRolesPoolSelectionModalOpen] = useState(false);
+  const revealRoleModal = UseModal();
+  const rolesPoolSelectionModal = UseModal();
+  const roleSelectionModal = UseModal();
+  const noblesModal = UseModal();
+  const teamOverviewModal = UseModal();
   const userRoleName = team.length > 0 ? users.find(u => u.userId === team[0].userId)?.role?.name || "" : "";
   const isCultLeader = ["Cult Leader", "Cultist"].includes(userRoleName) && isRevealed;
   const isChosenOne = userRoleName === "Chosen One" && isRevealed;
 
-  const openRoleChoiceModal = () => {
-    setIsRoleChoiceModalOpen(true);
-  };
-
-  const closeRoleChoiceModal = () => {
-    setIsRoleChoiceModalOpen(false);
-  };
-
-  const handleRoleChoice = () => {
+  const confirmRoleSelection = () => {
     setSelectingRole(false);
-    setIsRoleChoiceModalOpen(false);
+    roleSelectionModal.close();
     selectRole();
   };
 
-  const openRolesPoolSelectionModal = () => {
-    setIsRolesPoolSelectionModalOpen(true);
-  };
-  
-  const closeRoleSelectionModal = () => {
-    setIsRolesPoolSelectionModalOpen(false);
-  };
-
-  const validateRolesBeforeStart = () => {
-    const monarchCount = selectedRolesPool.filter(role => role.type === "Monarch").length;
-    const knightCount = selectedRolesPool.filter(role => role.type === "Knight").length;
-    const banditCount = selectedRolesPool.filter(role => role.type === "Bandit").length;
-    const renegadeCount = selectedRolesPool.filter(role => role.type === "Renegade").length;
-    const nobleCount = selectedRolesPool.filter(role => role.type === "Noble").length;
-
-    if(monarchCount < 2) {
-        alert('You must have at least 2 Monarchs');
-        return false;
-    } else if(knightCount < 2) {
-        alert('You must have at least 2 Knights');
-        return false;
-    } else if(banditCount < 4) {
-        alert('You must have at least 4 Bandits');
-        return false;
-    } else if(renegadeCount < 2) {
-        alert('You must have at least 2 Renegades');
-        return false;
-    } else if(nobleCount < 2) {
-        alert('You must have at least 2 Nobles');
-        return false;
-    }
-
-    return true;
-}
-  const handleRoleSelection = () => {
-    if(validateRolesBeforeStart()){
+  const confirmRolesPoolSelection = () => {
+    if(ValidateRolesBeforeStart(selectedRolesPool)){
       updateRolesPool(selectedRolesPool);
-      closeRoleSelectionModal();
+      rolesPoolSelectionModal.close();
     }
-  };
-
-  const openConfirmModal = () => {
-    setIsRevealRoleModalOpen(true);
-  };
-
-  const closeConfirmModal = () => {
-    setIsRevealRoleModalOpen(false);
   };
 
   const confirmRevealRole = () => {
     revealRole()
-    closeConfirmModal();
-  };
-
-  const revealRoleModal = () => {
-    openConfirmModal();
-  };
-
-  const showRole = () => {
-    setIsModalOpen(true);
-  };
-
-  const showNobles = () => {
-    setIsNoblesModalOpen(true);
+    revealRoleModal.close();
   };
 
   return (
-<div className="game-room" style={{ position: "relative", height: "100%" }}>
+<div className="game-room">
   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "5vmin" }}>
     <p style={{ color: "white", margin: "0", flex: 1, textAlign: "center" }}>Room: {roomCode}</p>
   </div>
@@ -135,7 +50,7 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
       {!gameStarted && users.some(user => !user.hasSelectedRole) && potentialRoles.length > 0? (
         <>
         {selectingRole && (
-          <Button onClick={openRoleChoiceModal} style={{ marginLeft: "1.5vmin", marginTop: "2.5vmin"}}>Select Role</Button>
+          <Button onClick={roleSelectionModal.open} style={{ marginLeft: "1.5vmin", marginTop: "2.5vmin"}}>Select Role</Button>
         )}        
         <p style={{color: "white"}}>Players selecting role:</p>
         <ul style={{ paddingLeft: '20px' }}> {/* Adjust padding as needed */}
@@ -151,8 +66,8 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
         <>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2vmin", marginTop: "4vmin" }}>
           <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-            <Button onClick={showRole}>See My Role</Button>
-            {!isRevealed && <Button onClick={revealRoleModal}>Reveal Role</Button>}
+            <Button onClick={teamOverviewModal.open}>See My Role</Button>
+            {!isRevealed && <Button onClick={revealRoleModal.open}>Reveal Role</Button>}
           </div>
         </div>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
@@ -165,7 +80,7 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
         </div>
         <div style={{marginBottom:"4vmin"}}>
           {nobles.length > 0 && gameStarted && (
-            <Button onClick={showNobles}>See Nobles</Button>
+            <Button onClick={noblesModal.open}>See Nobles</Button>
           )}
         </div>
         <div>
@@ -175,7 +90,7 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
       ) : (
         <>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
-          <Button onClick={openRolesPoolSelectionModal} style={{marginRight:"1.5vmin"}}>Select Roles</Button>
+          <Button onClick={rolesPoolSelectionModal.open} style={{marginRight:"1.5vmin"}}>Select Roles</Button>
           <Button onClick={startGame} style={{marginRight:"1.5vmin"}}>Start Game</Button>
         </div>
         <div style={{ marginTop: 'auto', width: '100%', textAlign: 'center' }}>
@@ -184,131 +99,46 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
         </>
       )}
       
+    <RolesPoolSelectionModal
+      isOpen={rolesPoolSelectionModal.isOpen}
+      roles={roles}
+      selectedRolesPool={selectedRolesPool}
+      setSelectedRolesPool={setSelectedRolesPool}
+      onOk={confirmRolesPoolSelection}
+      onCancel={rolesPoolSelectionModal.close}
+    />
+
+    <RoleSelectionModal
+      isOpen={roleSelectionModal.isOpen}
+      potentialRoles={potentialRoles}
+      selectedRole={selectedRole}
+      setSelectedRole={setSelectedRole} 
+      onOk={confirmRoleSelection}
+      onCancel={roleSelectionModal.close}
+    />
+
+    <TeamOverviewModal
+      isOpen={teamOverviewModal.isOpen}
+      team={team}
+      onOk={teamOverviewModal.close}
+      onCancel={teamOverviewModal.close}
+    />
+
+    <NoblesModal
+      isOpen={noblesModal.isOpen}
+      nobles={nobles}
+      onOk={noblesModal.close}
+      onCancel={noblesModal.close}
+    />
+
     <Modal
       title="Do you want to reveal your role?"
-      open={isRevealRoleModalOpen}
+      open={revealRoleModal.isOpen}
       onOk={confirmRevealRole}
-      onCancel={closeConfirmModal}
+      onCancel={revealRoleModal.close}
       centered
     >
       <p style={{color:"white"}}>Once you reveal your role, all players in the room will see it.</p>
-    </Modal>
-
-    <Modal
-      title="Select Roles Pool"
-      open={isRolesPoolSelectionModalOpen}
-      onOk={handleRoleSelection}
-      onCancel={closeRoleSelectionModal}
-      centered
-    >
-      <div className="role-selection-container" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-        {
-        roles
-          .filter(role => role.type !== "SubRole")
-          .map((role, index) => (
-            <Checkbox
-              key={index}
-              checked={selectedRolesPool.find((r) => r.name === role.name) !== undefined}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setSelectedRolesPool([...selectedRolesPool, role]);
-                } else {
-                  setSelectedRolesPool(selectedRolesPool.filter((r) => r.name !== role.name));
-                }
-              }}
-            >
-              {role.name}
-            </Checkbox>
-        ))}
-      </div>
-    </Modal>
-
-    <Modal
-      title="Starting Roles"
-      open={isModalOpen}
-      onOk={() => setIsModalOpen(false)}
-      onCancel={() => setIsModalOpen(false)}
-      centered
-      >
-        <Carousel
-      autoplay
-      arrows
-      nextArrow={<ArrowRightOutlined/>}
-      prevArrow={<ArrowLeftOutlined/>}
-    >
-      {team.map((user: User, index: number) => (
-        <div key={index}>
-        <h1 style={{ marginBottom: '10px', marginTop: '0', color: "white", textAlign: "center" }}> {user.username}</h1>
-        <RoleCard key={user.role?.name} role={user.role} />
-        </div>
-      ))}
-    </Carousel>
-    </Modal>
-
-    <Modal
-      title="Select Your Role"
-      open={isRoleChoiceModalOpen}
-      closable={false}
-      onOk={handleRoleChoice}
-      onCancel={closeRoleChoiceModal}
-      centered
-      footer={[
-        <Button 
-          key="cancel" 
-          onClick={closeRoleChoiceModal}
-        >
-          Cancel
-        </Button>,
-        <Button 
-          key="submit" 
-          type="primary" 
-          onClick={handleRoleChoice}
-          disabled={!selectedRole} // Disable button if selectedRole is null or undefined
-        >
-          OK
-        </Button>
-      ]}
-    >
-      <Carousel
-        autoplay={false}
-        arrows
-        dots={false}
-        nextArrow={<ArrowRightOutlined />}
-        prevArrow={<ArrowLeftOutlined />}
-      >
-        {potentialRoles.map((role, index) => (
-          <div key={index} className="carousel-item">
-            <RoleCard key={role.name} role={role}/>
-            <Button
-              onClick={() => setSelectedRole(role)}
-              className={selectedRole === role ? "selected-role-button" : "role-select-button"}
-            >
-              {selectedRole === role ? "Selected" : "Select"}
-            </Button>
-          </div>
-        ))}
-      </Carousel>
-    </Modal>
-
-    <Modal
-      title="Nobles Roles"
-      open={isNoblesModalOpen}
-      onOk={() => setIsNoblesModalOpen(false)}
-      onCancel={() => setIsNoblesModalOpen(false)}
-      centered
-      >
-        <Carousel
-      autoplay
-      arrows
-      nextArrow={<ArrowRightOutlined/>}
-      prevArrow={<ArrowLeftOutlined/>}
-    >
-      {nobles.map((noble: Role, index: number) => (
-        <div key={index}>
-        <RoleCard key={noble.name} role={noble} />
-        </div>
-      ))}
-    </Carousel>
     </Modal>
     </div>
   );

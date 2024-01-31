@@ -33,3 +33,8 @@
   background-color: #555; /* Change to your preferred blue color */
   color: white; /* Text color for better contrast */
 }
+
+.game-room {
+  position: "relative"; 
+  height: "100%";
+}
