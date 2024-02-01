@@ -20,11 +20,9 @@ export const useAuth = () => {
         await handleLogin(setUser, setIsLoggedIn)
     };
 
-    const logoutHandler = () => {
+    const logoutHandler = async (user: AccountInfo | null, socket: Socket, roomCode: string) => {
         console.log("logging out")
-        return async (user: AccountInfo | null, socket: Socket, roomCode: string) => {
-            await handleLogout(setIsLoggedIn, () => leaveRoom(user, socket, roomCode))
-        }
+        await handleLogout(setIsLoggedIn, () => leaveRoom(user, socket, roomCode))
     };
 
     return { isLoggedIn, user, loginHandler, logoutHandler };

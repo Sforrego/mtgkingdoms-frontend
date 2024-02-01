@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useContext, useCallback } from "react";
 import { ConfigProvider, theme } from "antd";
 import { If, IfElse, OnFalse, OnTrue } from "conditional-jsx";
 
@@ -7,12 +7,12 @@ import RolesModal from './Components/Modals/RolesModal';
 import ProfileModal from './Components/Modals/ProfileModal';
 import { GameRoom } from "./Pages/GameRoom";
 import { Landing } from "./Pages/Landing";
-import { useSocket } from './useSocket';
-import { useAuth } from './useAuth';
+import { AppContext, AppContextType } from './AppContext';
 
 import { Role } from "./Types/Role";
 import { User } from "./Types/User";
 import { UserData } from "./Types/UserData";
+import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent, GameUpdatedEvent, ReconnectedToRoomEvent, RolesPoolUpdatedEvent, SelectRoleEvent, ErrorEvent } from './Types/SocketEvents';
 
 import { 
   createRoom, 
@@ -29,32 +29,25 @@ import {
 
 import "./App.css";
 
-const SERVER = process.env.REACT_APP_SERVER as string;
-
 function App() {
-  const [isConnected, setIsConnected] = useState(false);
-  const [isInRoom, setIsInRoom] = useState(false);
-  const { socket } = useSocket(SERVER, setIsConnected, setIsInRoom);
-  const { isLoggedIn, user, loginHandler, logoutHandler } = useAuth();
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
-  const [roles, setRoles] = useState<Role[]>([]);
-  const [potentialRoles, setPotentialRoles] = useState<Role[]>([]);
-  const [selectedRolesPool, setSelectedRolesPool] = useState<Role[]>([]);
-  const [roomCode, setRoomCode] = useState("");
-  const [showRoles, setShowRoles] = useState(false);
-  const [profile, setProfile] = useState(false);
-  const [team, setTeam] = useState<User[]>([]);
-  const [nobles, setNobles] = useState<Role[]>([]);
-  const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [isRevealed, setIsRevealed] = useState<boolean>(false);
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const [selectingRole, setSelectingRole] = useState<boolean>(false);
+
+  const context = useContext(AppContext);
+
+  if (!context) {
+    throw new Error('App must be used within an AppProvider');
+  }
+
+  const {
+    isConnected, isInRoom, setIsInRoom, isLoggedIn, user, loginHandler, logoutHandler,
+    userData, setUserData, usersInRoom, setUsersInRoom, roles, setRoles, potentialRoles, setPotentialRoles,
+    selectedRolesPool, setSelectedRolesPool, roomCode, setRoomCode, showRoles, setShowRoles, profile, setProfile,
+    team, setTeam, nobles, setNobles, gameStarted, setGameStarted, isRevealed, setIsRevealed, selectedRole, setSelectedRole,
+    selectingRole, setSelectingRole, socket
+  } = context as AppContextType;
 
   const handleLogout = () => {
-    if (socket) {
-      const logout = logoutHandler();
-      logout(user, socket, roomCode);
+    if (socket && user) {
+      logoutHandler(user, socket, roomCode);
     }
   };
 
@@ -68,7 +61,7 @@ function App() {
         socket.off("receiveUserData");
       });
     }
-  }, [socket, user]);
+  }, [socket, user, setUserData]);
 
   useEffect(() => {
     if (isConnected && user && socket) {
@@ -92,19 +85,19 @@ function App() {
         socket && socket.emit("getRoles");
       }
 
-      socket.on("rolesData", (data) => {
+      socket.on("rolesData", (data: Role[]) => {
         setRoles(data);
         setSelectedRolesPool(data);
       });
 
-      socket.on("roomCreated", ({ roomCode, users }) => {
+      socket.on("roomCreated", ({ roomCode, users }: RoomCreatedEvent) => {
         console.log(`Room created with code: ${roomCode}`);
         setRoomCode(roomCode);
         setIsInRoom(true);
         setUsersInRoom(users);
       });
 
-      socket.on("joinedRoom", ({ roomCode, users, selectedRoles }) => {
+      socket.on("joinedRoom", ({ roomCode, users, selectedRoles }: JoinedRoomEvent) => {
         console.log(`Joined room with code: ${roomCode}`);
         setRoomCode(roomCode);
         setIsInRoom(true);
@@ -118,17 +111,17 @@ function App() {
         setRoomCode("");
       });
 
-      socket.on("userJoinedRoom", ({ users }) => {
+      socket.on("userJoinedRoom", ({ users }: UserRoomEvent) => {
         console.log(`A user joined the room. Updated users: ${users}`);
         setUsersInRoom(users);
       });
 
-      socket.on("userLeftRoom", ({ users }) => {
+      socket.on("userLeftRoom", ({ users }: UserRoomEvent) => {
         console.log(`A user left the room. Updated users: ${users}`);
         setUsersInRoom(users);
       });
 
-      socket.on("gameStarted", ({ team, nobles }) => {
+      socket.on("gameStarted", ({ team, nobles }: GameStartedEvent) => {
         console.log("Game started. Role assigned.");
         setTeam(team);
         if (nobles.length > 0){
@@ -137,19 +130,22 @@ function App() {
         setGameStarted(true);
       });
 
-      socket.on("gameUpdated", ({ usersInRoom }) => {
+      socket.on("gameUpdated", ({ usersInRoom }: GameUpdatedEvent) => {
         console.log("Game Updated.");
         setUsersInRoom(usersInRoom);
         if(user){
-          const myUser: User = usersInRoom.find((u: User) => u.userId === user.localAccountId);
-          if (myUser && myUser.isRevealed !== isRevealed){
-            setIsRevealed(myUser.isRevealed);
+          const myUser: User | undefined = usersInRoom.find((u: User) => u.userId === user.localAccountId);
+          if (myUser) {
+            if (myUser.isRevealed !== isRevealed){
+              setIsRevealed(myUser.isRevealed);
+            }
+          } else {
+            console.log("User not found in usersInRoom")
           }
         }
-
       });
 
-      socket.on("reconnectedToRoom", ({ team, usersInRoom, activeGame, roomCode }) => {
+      socket.on("reconnectedToRoom", ({ team, usersInRoom, activeGame, roomCode }: ReconnectedToRoomEvent) => {
         if(user){
           console.log("Reconnected to room");
           setRoomCode(roomCode);
@@ -157,14 +153,18 @@ function App() {
           setUsersInRoom(usersInRoom);
           setGameStarted(activeGame);
           setTeam(team);
-          const myUser: User = usersInRoom.find((u: User) => u.userId === user.localAccountId);
-          setIsRevealed(myUser.isRevealed);
-          setSelectingRole(!myUser.hasSelectedRole)
-          setPotentialRoles(myUser.potentialRoles);
+          const myUser: User | undefined = usersInRoom.find((u: User) => u.userId === user.localAccountId);
+          if (myUser) {
+            setIsRevealed(myUser.isRevealed);
+            setSelectingRole(!myUser.hasSelectedRole)
+            setPotentialRoles(myUser.potentialRoles);
+          } else {
+            console.log("User not found in usersInRoom")
+          }
         }
       });
 
-      socket.on("gameEnded", ({ users }) => {
+      socket.on("gameEnded", ({ users }: UserRoomEvent) => {
         console.log("Game Ended");
         setUsersInRoom(users);
         setNobles([]);
@@ -173,17 +173,17 @@ function App() {
         setSelectedRole(null);
       });
 
-      socket.on("rolesPoolUpdated", ({ roles }) => {
+      socket.on("rolesPoolUpdated", ({ roles }: RolesPoolUpdatedEvent) => {
         setSelectedRolesPool(roles);
       });
 
-      socket.on("selectRole", ({ potentialRoles }) =>{
+      socket.on("selectRole", ({ potentialRoles }: SelectRoleEvent) =>{
         console.log("Selecting role")
         setSelectingRole(true);
         setPotentialRoles(potentialRoles);
       })
 
-      socket.on("error", (message) => {
+      socket.on("error", (message: ErrorEvent) => {
         alert(message)
       });
 
@@ -202,8 +202,10 @@ function App() {
         socket.off("error");
       };
     }
-  }, [isRevealed, roomCode, socket, user, roles.length]);
-
+  }, [isRevealed, roomCode, socket, user, roles.length, setGameStarted, 
+    setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, 
+    setRoomCode, setSelectedRole, setSelectedRolesPool, setSelectingRole, setTeam, setUsersInRoom]);
+    
   const handleOkRoles = () => {
     setShowRoles(false);
   };
@@ -238,7 +240,7 @@ function App() {
           <RolesModal roles={roles} showRoles={showRoles} handleOk={handleOkRoles} handleCancel={handleCancelRoles} />
         </If>
         <If condition={profile}>
-          <ProfileModal user={user} userData={userData} profile={profile} handleCancel={handleCancelProfile} getUserData={getUserData} />
+          {user && <ProfileModal user={user} userData={userData} profile={profile} handleCancel={handleCancelProfile} getUserData={getUserData} />}
         </If>
         <IfElse condition={isLoggedIn}>
           <OnTrue key="loggedIn">
