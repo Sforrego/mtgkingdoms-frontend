@@ -1,41 +1,17 @@
-import { useEffect, useContext, useCallback } from "react";
 import { ConfigProvider, theme } from "antd";
-import { IfElse, OnFalse, OnTrue } from "conditional-jsx";
+import { useCallback, useEffect } from "react";
 
 import { AppMenu } from "./Components/AppMenu";
 import { ModalsComponent } from './Components/ModalsComponent';
-import { GameRoom } from "./Pages/GameRoom";
-import { Landing } from "./Pages/Landing";
-import { AppContext, AppContextType } from './AppContext';
+import { ContentComponent } from './Components/ContentComponent';
 import { SocketListener } from './SocketListener';
 
-import { UserData } from "./Types/UserData";
-
-import { 
-  createRoom, 
-  joinRoom, 
-} from "./gameService";
-
 import "./App.css";
+import { UserData } from "./Types/UserData";
+import { useAppContext } from "./AppContext";
 
 function App() {
-
-  const context = useContext(AppContext);
-
-  if (!context) {
-    throw new Error('App must be used within an AppProvider');
-  }
-
-  const {
-    isConnected, isInRoom, isLoggedIn, user, loginHandler, logoutHandler,
-    setUserData, roomCode, setRoomCode, setShowRoles, setProfile, socket
-  } = context as AppContextType;
-
-  const handleLogout = () => {
-    if (socket && user) {
-      logoutHandler(user, socket, roomCode);
-    }
-  };
+  const { isConnected, user, socket, setUserData } = useAppContext();
 
   const getUserData = useCallback(() => {
     if (socket && user) {
@@ -56,61 +32,18 @@ function App() {
     }
   }, [isConnected, user, socket, getUserData]);
 
-  const handleShowRoles = () => {
-    setShowRoles(true);
-  };
-
-  const handleProfile = () => {
-    setProfile(true);
-  };
-
   return (
     <div className="App">
-      <SocketListener/>
       <ConfigProvider
         theme={{
           algorithm: theme.darkAlgorithm,
           token: { colorBgMask: "#000000" },
         }}
-      >
-        <AppMenu handleLogout={handleLogout} handleShowRoles={handleShowRoles} handleProfile={handleProfile} isLoggedIn={isLoggedIn}/>
-        <IfElse condition={isConnected}>
-          <OnTrue key="Connected">
-            <div className="greenCircle" title="Connected to the server."/>
-          </OnTrue>
-          <OnFalse key="notConnected">
-            <div className="redCircle" title="Disconnected from the server."/>
-          </OnFalse>
-        </IfElse>
+        >
+        <SocketListener/>
+        <AppMenu/>
         <ModalsComponent/>
-        <IfElse condition={isLoggedIn}>
-          <OnTrue key="loggedIn">
-            <IfElse condition={isInRoom}>
-              <OnTrue key="inRoom">
-                <GameRoom/>
-              </OnTrue>
-              <OnFalse key="notInRoom">
-                <IfElse condition={isConnected}>
-                  <OnTrue key="Connected">
-                    <p>Welcome {user?.name}!</p>
-                    <Landing
-                      createRoom={() => createRoom(user, socket)}
-                      joinRoom={() => joinRoom(user, socket, roomCode)}
-                      roomCode={roomCode}
-                      setRoomCode={setRoomCode}
-                    />
-                  </OnTrue>
-                  <OnFalse key="notConnected">
-                  <p> Connecting to server... </p>
-                  </OnFalse>
-                </IfElse>
-              </OnFalse>
-            </IfElse>
-          </OnTrue>
-          <OnFalse key="notLoggedIn">
-            <Landing handleLogin={loginHandler} />
-          </OnFalse>
-        </IfElse>
+        <ContentComponent/>
       </ConfigProvider>
     </div>
   );

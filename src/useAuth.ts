@@ -20,11 +20,11 @@ export const useAuth = (): UseAuthReturn => {
     }, []);
 
     useEffect(() => {
-        handleRedirectEffect(setUser, setIsLoggedIn)
+        handleRedirectEffect(setUser, setIsLoggedIn);
     }, [setIsLoggedIn]);
 
     const loginHandler = async () => {
-        await handleLogin(setUser, setIsLoggedIn)
+        await handleLogin(setUser, setIsLoggedIn);
     };
 
     const logoutHandler = async (user: AccountInfo | null, socket: Socket, roomCode: string) => {
