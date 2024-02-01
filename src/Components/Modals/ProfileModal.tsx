@@ -1,23 +1,36 @@
 // ProfileModal.tsx
 import { Modal } from "antd";
+import { useCallback } from "react";
 import Profile from "../../Components/Profile";
 import { UserData } from "../../Types/UserData";
-import { AccountInfo } from "@azure/msal-browser";
+import { useAppContext } from '../../AppContext';
 
-interface ProfileModalProps {
-    user: AccountInfo | null;
-    userData: UserData | null;
-    profile: boolean;
-    handleCancel: () => void;
-    getUserData: () => void;
-}
 
-const ProfileModal: React.FC<ProfileModalProps> = ({ user, userData, profile, handleCancel, getUserData }) => {
+
+export const ProfileModal = () => {
+    const { profile, user, userData, socket, setUserData, setProfile } = useAppContext();
+    
+    const getUserData = useCallback(() => {
+        if (socket && user) {
+          console.log("RequestingUserData");
+          socket.emit("requestUserData", { userId: user.localAccountId });
+      
+          socket.on("receiveUserData", (updatedUserData: UserData) => {
+            setUserData(updatedUserData);
+            socket.off("receiveUserData");
+          });
+        }
+      }, [socket, user, setUserData]);
+    
+      const handleCancelProfile = () => {
+        setProfile(false);
+      };
+
     return (
         <Modal
             title="Profile"
             open={profile}
-            onCancel={handleCancel}
+            onCancel={handleCancelProfile}
             footer={null}
             centered
         >
@@ -25,5 +38,3 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ user, userData, profile, ha
         </Modal>
     );
 };
-
-export default ProfileModal;

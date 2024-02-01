@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, useContext, ReactNode } from 'react';
 import { AccountInfo } from '@azure/msal-browser';
 import { Socket } from 'socket.io-client';
 
@@ -20,9 +20,9 @@ export interface AppContextType {
   setIsConnected: React.Dispatch<React.SetStateAction<boolean>>;
   isInRoom: boolean;
   setIsInRoom: React.Dispatch<React.SetStateAction<boolean>>;
-  socket: any; // replace with the actual type
+  socket: Socket | null; // replace with the actual type
   isLoggedIn: boolean;
-  user: any; // replace with the actual type
+  user: AccountInfo | null; // replace with the actual type
   loginHandler: () => void; // replace with the actual type
   logoutHandler: (user: AccountInfo | null, socket: Socket, roomCode: string) => Promise<void>;
   userData: UserData | null;
@@ -66,16 +66,16 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [potentialRoles, setPotentialRoles] = useState<Role[]>([]);
-    const [selectedRolesPool, setSelectedRolesPool] = useState<Role[]>([]);
-    const [roomCode, setRoomCode] = useState("");
-    const [showRoles, setShowRoles] = useState(false);
-    const [profile, setProfile] = useState(false);
-    const [team, setTeam] = useState<User[]>([]);
-    const [nobles, setNobles] = useState<Role[]>([]);
-    const [gameStarted, setGameStarted] = useState<boolean>(false);
-    const [isRevealed, setIsRevealed] = useState<boolean>(false);
-    const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-    const [selectingRole, setSelectingRole] = useState<boolean>(false);
+  const [selectedRolesPool, setSelectedRolesPool] = useState<Role[]>([]);
+  const [roomCode, setRoomCode] = useState("");
+  const [showRoles, setShowRoles] = useState(false);
+  const [profile, setProfile] = useState(false);
+  const [team, setTeam] = useState<User[]>([]);
+  const [nobles, setNobles] = useState<Role[]>([]);
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [isRevealed, setIsRevealed] = useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const [selectingRole, setSelectingRole] = useState<boolean>(false);
 
     return (
       <AppContext.Provider value={{
@@ -120,4 +120,14 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         {children}
       </AppContext.Provider>
     );
+};
+
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+
+  if (!context) {
+    throw new Error('App must be used within an AppProvider');
+  }
+
+  return context;
 };

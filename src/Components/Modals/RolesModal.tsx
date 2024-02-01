@@ -1,22 +1,17 @@
-// RolesModal.tsx
 import { Modal } from "antd";
 import ShowRoles from "../../Components/ShowRoles";
-import { Role } from "../../Types/Role";
+import { useAppContext } from "../../AppContext";
 
-interface RolesModalProps {
-    roles: Role[];
-    showRoles: boolean;
-    handleOk: () => void;
-    handleCancel: () => void;
-}
 
-const RolesModal: React.FC<RolesModalProps> = ({ roles, showRoles, handleOk, handleCancel }) => {
+export const RolesModal = () => {
+    const { showRoles, roles, setShowRoles } = useAppContext();
+
     return (
         <Modal
             title="Roles"
             open={showRoles}
-            onOk={handleOk}
-            onCancel={handleCancel}
+            onOk={() => setShowRoles(false)}
+            onCancel={() => setShowRoles(false)}
             footer={null}
             centered
         >
@@ -24,5 +19,3 @@ const RolesModal: React.FC<RolesModalProps> = ({ roles, showRoles, handleOk, han
         </Modal>
     );
 };
-
-export default RolesModal;

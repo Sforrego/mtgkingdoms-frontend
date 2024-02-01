@@ -1,19 +1,28 @@
 import { Button, Drawer, Menu, Modal } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import { useAppContext } from '../../AppContext';
 
 import styles from "./index.module.css";
 
-type AppMenuProps = {
-  handleLogout: () => void; 
-  handleShowRoles: () => void;
-  handleProfile: () => void;
-  isLoggedIn: boolean;
-};
-
-export const AppMenu = ({ handleLogout, handleShowRoles, handleProfile, isLoggedIn }: AppMenuProps) => {
+export const AppMenu = () => {
+  const { user, socket, roomCode, isLoggedIn, setShowRoles, setProfile, logoutHandler } = useAppContext();
   const [open, setOpen] = useState(false);
   const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
+
+  const handleShowRoles = () => {
+    setShowRoles(true);
+  };
+
+  const handleProfile = () => {
+    setProfile(true);
+  };
+
+  const handleLogout = () => {
+    if (socket && user) {
+      logoutHandler(user, socket, roomCode);
+    }
+  };
 
   const items = [
     ...(isLoggedIn ? [{

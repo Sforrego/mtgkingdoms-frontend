@@ -6,8 +6,7 @@ import { NoblesModal } from "../../Components/Modals/NoblesModal";
 import { ValidateRolesBeforeStart } from "../../Utils/ValidateRoles";
 import { Button, Modal } from "antd";
 import { UseModal } from '../../Hooks/UseModal';
-import { AppContext } from '../../AppContext';
-import { useContext } from "react";
+import { useAppContext } from '../../AppContext';
 import "./index.css";
 import { 
   startGame, 
@@ -15,18 +14,11 @@ import {
   revealRole,
   updateRolesPool,
   selectRole,
-  endGame,
-  selectCultists,
-  chosenOneDecision
 } from "../../gameService";
 
+import { chosenOneDecision, endGame, selectCultists } from "../../gameServiceModals";
+
 export const GameRoom = () => {
-  const context = useContext(AppContext);
-
-  if (!context) {
-    throw new Error('App must be used within an AppProvider');
-  }
-
   const {
     roomCode,
     user,
@@ -44,7 +36,7 @@ export const GameRoom = () => {
     setSelectingRole,
     setSelectedRole,
     setSelectedRolesPool,
-  } = context;
+  } = useAppContext();
   
   const revealRoleModal = UseModal();
   const rolesPoolSelectionModal = UseModal();
@@ -108,10 +100,10 @@ export const GameRoom = () => {
         </div>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           {isCultLeader && (
-            <Button onClick={() => selectCultists(socket, user.localAccountId, users, roomCode)}>Cultification</Button>
+            <Button onClick={() => selectCultists(socket, user?.localAccountId, users, roomCode)}>Cultification</Button>
             )}
           {isChosenOne && (
-            <Button onClick={() => chosenOneDecision(socket, user.localAccountId, roomCode)}>Decision</Button>
+            <Button onClick={() => chosenOneDecision(socket, user?.localAccountId, roomCode)}>Decision</Button>
             )}
         </div>
         <div style={{marginBottom:"4vmin"}}>
