@@ -3,37 +3,73 @@ import { RolesPoolSelectionModal } from "../../Components/Modals/RolesPoolSelect
 import { RoleSelectionModal } from "../../Components/Modals/RoleSelectionModal";
 import { TeamOverviewModal } from "../../Components/Modals/TeamOverviewModal";
 import { NoblesModal } from "../../Components/Modals/NoblesModal";
-import { GameRoomProps } from "../../Types/GameRoomTypes";
 import { ValidateRolesBeforeStart } from "../../Utils/ValidateRoles";
 import { Button, Modal } from "antd";
 import { UseModal } from '../../Hooks/UseModal';
+import { AppContext } from '../../AppContext';
+import { useContext } from "react";
 import "./index.css";
+import { 
+  startGame, 
+  leaveRoom,
+  revealRole,
+  updateRolesPool,
+  selectRole,
+  endGame,
+  selectCultists,
+  chosenOneDecision
+} from "../../gameService";
 
-export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRole, selectingRole, gameStarted, isRevealed, team, nobles, potentialRoles, setSelectingRole, startGame, leaveRoom, revealRole, updateRolesPool, selectRole, endGame, setSelectedRole, setSelectedRolesPool, selectCultists, chosenOneDecision }: GameRoomProps) => {
+export const GameRoom = () => {
+  const context = useContext(AppContext);
+
+  if (!context) {
+    throw new Error('App must be used within an AppProvider');
+  }
+
+  const {
+    roomCode,
+    user,
+    socket,
+    usersInRoom: users,
+    roles,
+    selectedRolesPool,
+    selectedRole,
+    selectingRole,
+    gameStarted,
+    isRevealed,
+    team,
+    nobles,
+    potentialRoles,
+    setSelectingRole,
+    setSelectedRole,
+    setSelectedRolesPool,
+  } = context;
+  
   const revealRoleModal = UseModal();
   const rolesPoolSelectionModal = UseModal();
   const roleSelectionModal = UseModal();
   const noblesModal = UseModal();
   const teamOverviewModal = UseModal();
-  const userRoleName = team.length > 0 ? users.find(u => u.userId === team[0].userId)?.role?.name || "" : "";
+  const userRoleName = (team && team.length > 0) ? (users && users.find(u => u.userId === team[0].userId)?.role?.name) || "" : "";
   const isCultLeader = ["Cult Leader", "Cultist"].includes(userRoleName) && isRevealed;
   const isChosenOne = userRoleName === "Chosen One" && isRevealed;
 
   const confirmRoleSelection = () => {
     setSelectingRole(false);
     roleSelectionModal.close();
-    selectRole();
+    selectRole(socket, user?.localAccountId, roomCode, selectedRole);
   };
 
   const confirmRolesPoolSelection = () => {
     if(ValidateRolesBeforeStart(selectedRolesPool)){
-      updateRolesPool(selectedRolesPool);
+      updateRolesPool(selectedRolesPool, socket, roomCode);
       rolesPoolSelectionModal.close();
     }
   };
 
   const confirmRevealRole = () => {
-    revealRole()
+    revealRole(user, socket, roomCode);
     revealRoleModal.close();
   };
 
@@ -72,10 +108,10 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
         </div>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           {isCultLeader && (
-            <Button onClick={() => selectCultists()}>Cultification</Button>
+            <Button onClick={() => selectCultists(socket, user.localAccountId, users, roomCode)}>Cultification</Button>
             )}
           {isChosenOne && (
-            <Button onClick={() => chosenOneDecision()}>Decision</Button>
+            <Button onClick={() => chosenOneDecision(socket, user.localAccountId, roomCode)}>Decision</Button>
             )}
         </div>
         <div style={{marginBottom:"4vmin"}}>
@@ -84,17 +120,17 @@ export const GameRoom = ({ roomCode, users, roles, selectedRolesPool, selectedRo
           )}
         </div>
         <div>
-          <Button onClick={() => endGame()}>End Game</Button>
+          <Button onClick={() => endGame(socket, users, roomCode)}>End Game</Button>
         </div>
         </>
       ) : (
         <>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           <Button onClick={rolesPoolSelectionModal.open} style={{marginRight:"1.5vmin"}}>Select Roles</Button>
-          <Button onClick={startGame} style={{marginRight:"1.5vmin"}}>Start Game</Button>
+          <Button onClick={() => startGame(socket, roomCode)} style={{marginRight:"1.5vmin"}}>Start Game</Button>
         </div>
         <div style={{ marginTop: 'auto', width: '100%', textAlign: 'center' }}>
-          <Button onClick={leaveRoom}>Leave Room</Button>
+          <Button onClick={() => leaveRoom(user, socket, roomCode)}>Leave Room</Button>
         </div>
         </>
       )}

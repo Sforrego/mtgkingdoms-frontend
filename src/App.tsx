@@ -17,14 +17,6 @@ import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent, Gam
 import { 
   createRoom, 
   joinRoom, 
-  startGame, 
-  leaveRoom, 
-  revealRole, 
-  updateRolesPool,
-  endGame,
-  selectRole,
-  chosenOneDecision,
-  selectCultists
 } from "./gameService";
 
 import "./App.css";
@@ -39,10 +31,10 @@ function App() {
 
   const {
     isConnected, isInRoom, setIsInRoom, isLoggedIn, user, loginHandler, logoutHandler,
-    userData, setUserData, usersInRoom, setUsersInRoom, roles, setRoles, potentialRoles, setPotentialRoles,
-    selectedRolesPool, setSelectedRolesPool, roomCode, setRoomCode, showRoles, setShowRoles, profile, setProfile,
-    team, setTeam, nobles, setNobles, gameStarted, setGameStarted, isRevealed, setIsRevealed, selectedRole, setSelectedRole,
-    selectingRole, setSelectingRole, socket
+    userData, setUserData, setUsersInRoom, roles, setRoles, setPotentialRoles,
+    setSelectedRolesPool, roomCode, setRoomCode, showRoles, setShowRoles, profile, setProfile,
+    setTeam, setNobles, setGameStarted, isRevealed, setIsRevealed, setSelectedRole,
+    setSelectingRole, socket
   } = context as AppContextType;
 
   const handleLogout = () => {
@@ -205,7 +197,7 @@ function App() {
   }, [isRevealed, roomCode, socket, user, roles.length, setGameStarted, 
     setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, 
     setRoomCode, setSelectedRole, setSelectedRolesPool, setSelectingRole, setTeam, setUsersInRoom]);
-    
+
   const handleOkRoles = () => {
     setShowRoles(false);
   };
@@ -246,30 +238,7 @@ function App() {
           <OnTrue key="loggedIn">
             <IfElse condition={isInRoom}>
               <OnTrue key="inRoom">
-                <GameRoom
-                  roomCode={roomCode}
-                  users={usersInRoom}
-                  gameStarted={gameStarted}
-                  team={team}
-                  nobles={nobles}
-                  isRevealed={isRevealed}
-                  roles={roles}
-                  selectedRolesPool={selectedRolesPool}
-                  selectedRole={selectedRole}
-                  selectingRole={selectingRole}
-                  startGame={() => startGame(socket, roomCode)}
-                  leaveRoom={() => leaveRoom(user, socket, roomCode)}
-                  revealRole={() => revealRole(user, socket, roomCode)}
-                  updateRolesPool={(updatedRolesPool) => updateRolesPool(updatedRolesPool, socket, roomCode)}
-                  endGame={() => endGame(socket, usersInRoom, roomCode)}
-                  setSelectingRole={setSelectingRole}
-                  setSelectedRolesPool={setSelectedRolesPool}
-                  setSelectedRole={setSelectedRole} 
-                  selectRole={() => selectRole(socket, user?.localAccountId, roomCode, selectedRole)}
-                  chosenOneDecision={() => chosenOneDecision(socket, user?.localAccountId, roomCode)}
-                  selectCultists={() => selectCultists(socket, user?.localAccountId, usersInRoom, roomCode)}
-                  potentialRoles={potentialRoles}
-                />
+                <GameRoom/>
               </OnTrue>
               <OnFalse key="notInRoom">
                 <IfElse condition={isConnected}>
