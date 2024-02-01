@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, useContext, ReactNode } from 'react';
 import { AccountInfo } from '@azure/msal-browser';
 import { Socket } from 'socket.io-client';
 
@@ -120,4 +120,14 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         {children}
       </AppContext.Provider>
     );
+};
+
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+
+  if (!context) {
+    throw new Error('App must be used within an AppProvider');
+  }
+
+  return context;
 };
