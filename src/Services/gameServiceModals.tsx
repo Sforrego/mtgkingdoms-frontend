@@ -1,5 +1,5 @@
 import { Modal, Checkbox, Radio } from 'antd';
-import { User } from "./Types/User";
+import { User } from "../Types/User";
 import { Socket } from 'socket.io-client';
 
 export const endGame = (socket: Socket | null, users: User[] = [], roomCode: string) => {

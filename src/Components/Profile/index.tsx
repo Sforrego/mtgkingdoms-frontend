@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { UserData } from '../../Types/UserData';
 import "./index.css";
 import {FaSyncAlt, FaEdit} from 'react-icons/fa';
-import { editProfile } from '../../authService'; // Adjust the path as necessary
+import { editProfile } from '../../Services/authService'; // Adjust the path as necessary
 
 const Profile = ({ username, userData, getUserData }: { username: string | undefined, userData: UserData | null, getUserData: () => void }) => {
   const [selectedStatsPeriod, setSelectedStatsPeriod] = useState(userData?.statsPeriod);

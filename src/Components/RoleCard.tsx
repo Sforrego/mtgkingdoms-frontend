@@ -1,6 +1,6 @@
-import { Role } from "../../Types/Role";
-import { RoleType } from "../../Types/RoleType";
-import { CardColor, MagicCard } from "../MtgCard/MagicCard";
+import { Role } from "../Types/Role";
+import { RoleType } from "../Types/RoleType";
+import { CardColor, MagicCard } from "./MtgCard/MagicCard";
 
 const roleTypeToColorMap: Record<RoleType, CardColor> = {
   Monarch: "white",

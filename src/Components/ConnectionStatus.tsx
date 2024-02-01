@@ -1,4 +1,4 @@
-import { useAppContext } from '../AppContext';
+import { useAppContext } from '../Context/AppContext';
 import { IfElse, OnTrue, OnFalse } from "conditional-jsx";
 
 export const ConnectionStatus = () => {

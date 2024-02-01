@@ -3,7 +3,7 @@ import { Modal } from "antd";
 import { useCallback } from "react";
 import Profile from "../../Components/Profile";
 import { UserData } from "../../Types/UserData";
-import { useAppContext } from '../../AppContext';
+import { useAppContext } from '../../Context/AppContext';
 
 
 

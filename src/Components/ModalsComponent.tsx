@@ -1,4 +1,4 @@
-import { useAppContext } from '../AppContext';
+import { useAppContext } from '../Context/AppContext';
 import { RolesModal } from './Modals/RolesModal';
 import { ProfileModal } from './Modals/ProfileModal';
 import { If } from "conditional-jsx";

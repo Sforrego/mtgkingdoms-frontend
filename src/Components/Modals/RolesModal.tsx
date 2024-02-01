@@ -1,6 +1,6 @@
 import { Modal } from "antd";
-import ShowRoles from "../../Components/ShowRoles";
-import { useAppContext } from "../../AppContext";
+import ShowRoles from "../ShowRoles";
+import { useAppContext } from "../../Context/AppContext";
 
 
 export const RolesModal = () => {

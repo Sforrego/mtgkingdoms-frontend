@@ -6,7 +6,7 @@ import { NoblesModal } from "../../Components/Modals/NoblesModal";
 import { ValidateRolesBeforeStart } from "../../Utils/ValidateRoles";
 import { Button, Modal } from "antd";
 import { UseModal } from '../../Hooks/UseModal';
-import { useAppContext } from '../../AppContext';
+import { useAppContext } from '../../Context/AppContext';
 import "./index.css";
 import { 
   startGame, 
@@ -14,9 +14,9 @@ import {
   revealRole,
   updateRolesPool,
   selectRole,
-} from "../../gameService";
+} from "../../Services/gameService";
 
-import { chosenOneDecision, endGame, selectCultists } from "../../gameServiceModals";
+import { chosenOneDecision, endGame, selectCultists } from "../../Services/gameServiceModals";
 
 export const GameRoom = () => {
   const {

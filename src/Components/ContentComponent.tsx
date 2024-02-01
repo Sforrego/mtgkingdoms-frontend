@@ -1,11 +1,11 @@
-import { useAppContext } from '../AppContext';
+import { useAppContext } from '../Context/AppContext';
 import { GameRoom } from '../Pages/GameRoom';
 import { Landing } from '../Pages/Landing';
 import { IfElse, OnTrue, OnFalse } from "conditional-jsx";
 import { 
     createRoom, 
     joinRoom, 
-  } from "../gameService";
+  } from "../Services/gameService";
 
 export const ContentComponent = () => {
   const { isLoggedIn, isInRoom, isConnected, user, socket, roomCode, setRoomCode, loginHandler } = useAppContext();

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Carousel, Input } from 'antd';
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
-import { RoleCard } from "../../Components/RoleCard";
-import { Role } from "../../Types/Role";
+import { RoleCard } from "./RoleCard";
+import { Role } from "../Types/Role";
 
 type ShowRolesProps = {
     roles: Role[];

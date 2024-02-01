@@ -1,5 +1,5 @@
 import { AccountInfo } from "@azure/msal-browser";
-import { Role } from "./Types/Role";
+import { Role } from "../Types/Role";
 import { Socket } from "socket.io-client";
 
 export const createRoom = (user: AccountInfo | null, socket: Socket | null) => {

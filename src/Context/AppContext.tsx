@@ -2,12 +2,12 @@ import { createContext, useState, useContext, ReactNode } from 'react';
 import { AccountInfo } from '@azure/msal-browser';
 import { Socket } from 'socket.io-client';
 
-import { useSocket } from './useSocket';
-import { useAuth } from './useAuth';
+import { useSocket } from '../Hooks/useSocket';
+import { useAuth } from '../Hooks/useAuth';
 
-import { Role } from "./Types/Role";
-import { User } from "./Types/User";
-import { UserData } from "./Types/UserData";
+import { Role } from "../Types/Role";
+import { User } from "../Types/User";
+import { UserData } from "../Types/UserData";
 
 const SERVER = process.env.REACT_APP_SERVER as string;
 

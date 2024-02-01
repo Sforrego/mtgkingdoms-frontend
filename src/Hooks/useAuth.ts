@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { AccountInfo } from "@azure/msal-browser";
 import { Socket } from "socket.io-client";
-import { handleRedirectEffect, handleAADB2C90091ErrorEffect, handleLogin, handleLogout } from "./authService";
-import { leaveRoom } from "./gameService";
+import { handleRedirectEffect, handleAADB2C90091ErrorEffect, handleLogin, handleLogout } from "../Services/authService";
+import { leaveRoom } from "../Services/gameService";
 
 interface UseAuthReturn {
     isLoggedIn: boolean;

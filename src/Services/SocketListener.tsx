@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
-import { useAppContext } from './AppContext';
+import { useAppContext } from '../Context/AppContext';
 
-import { Role } from "./Types/Role";
-import { User } from "./Types/User";
-import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent, GameUpdatedEvent, ReconnectedToRoomEvent, RolesPoolUpdatedEvent, SelectRoleEvent, ErrorEvent } from './Types/SocketEvents';
+import { Role } from "../Types/Role";
+import { User } from "../Types/User";
+import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent, GameUpdatedEvent, ReconnectedToRoomEvent, RolesPoolUpdatedEvent, SelectRoleEvent, ErrorEvent } from '../Types/SocketEvents';
 
 export const SocketListener = () => {
     const { socket, roles, roomCode, setGameStarted, user, isRevealed, setIsRevealed, setSelectingRole, setPotentialRoles, setSelectedRole, setIsInRoom, setNobles, setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom } = useAppContext();

@@ -4,11 +4,11 @@ import { useCallback, useEffect } from "react";
 import { AppMenu } from "./Components/AppMenu";
 import { ModalsComponent } from './Components/ModalsComponent';
 import { ContentComponent } from './Components/ContentComponent';
-import { SocketListener } from './SocketListener';
+import { SocketListener } from './Services/SocketListener';
 
 import "./App.css";
 import { UserData } from "./Types/UserData";
-import { useAppContext } from "./AppContext";
+import { useAppContext } from "./Context/AppContext";
 
 function App() {
   const { isConnected, user, socket, setUserData } = useAppContext();
