@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
-import { Modal, ConfigProvider, theme } from "antd";
+import { ConfigProvider, theme } from "antd";
 import { If, IfElse, OnFalse, OnTrue } from "conditional-jsx";
 
 import { AppMenu } from "./Components/AppMenu";
-import ShowRoles from "./Components/ShowRoles";
-import Profile from "./Components/Profile";
+import RolesModal from './Components/Modals/RolesModal';
+import ProfileModal from './Components/Modals/ProfileModal';
 import { GameRoom } from "./Pages/GameRoom";
 import { Landing } from "./Pages/Landing";
 import { useSocket } from './useSocket';
@@ -97,7 +97,6 @@ function App() {
         setSelectedRolesPool(data);
       });
 
-      // Listen for 'roomCreated' event from the server
       socket.on("roomCreated", ({ roomCode, users }) => {
         console.log(`Room created with code: ${roomCode}`);
         setRoomCode(roomCode);
@@ -105,7 +104,6 @@ function App() {
         setUsersInRoom(users);
       });
 
-      // Listen for 'joinedRoom' event from the server
       socket.on("joinedRoom", ({ roomCode, users, selectedRoles }) => {
         console.log(`Joined room with code: ${roomCode}`);
         setRoomCode(roomCode);
@@ -114,7 +112,6 @@ function App() {
         setSelectedRolesPool(selectedRoles);
       });
 
-      // Listen for 'leftRoom' event from the server
       socket.on("leftRoom", () => {
         console.log(`Left room: ${roomCode}`);
         setIsInRoom(false);
@@ -186,13 +183,10 @@ function App() {
         setPotentialRoles(potentialRoles);
       })
 
-      // Listen for 'error' event from the server
       socket.on("error", (message) => {
         alert(message)
       });
 
-
-      // Cleanup when component unmounts
       return () => {
         socket.off("rolesData");
         socket.off("roomCreated");
@@ -241,27 +235,10 @@ function App() {
         </IfElse>
 
         <If condition={showRoles}>
-          <Modal
-            title="Roles"
-            open={showRoles}
-            onOk={handleOkRoles}
-            onCancel={handleCancelRoles}
-            footer={null}
-            centered
-          >
-          <ShowRoles roles={roles}></ShowRoles>
-          </Modal>
+          <RolesModal roles={roles} showRoles={showRoles} handleOk={handleOkRoles} handleCancel={handleCancelRoles} />
         </If>
         <If condition={profile}>
-          <Modal
-            title="Profile"
-            open={profile}
-            onCancel={handleCancelProfile}
-            footer={null}
-            centered
-          >
-          <Profile username={user?.name} userData={userData} getUserData={getUserData}></Profile>
-          </Modal>
+          <ProfileModal user={user} userData={userData} profile={profile} handleCancel={handleCancelProfile} getUserData={getUserData} />
         </If>
         <IfElse condition={isLoggedIn}>
           <OnTrue key="loggedIn">
