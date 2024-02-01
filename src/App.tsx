@@ -1,45 +1,47 @@
 import { useEffect, useState, useCallback } from "react";
-import { io, Socket } from "socket.io-client";
 import { AccountInfo } from "@azure/msal-browser";
-import {
-  Modal,
-  ConfigProvider,
-  theme,
-} from "antd";
-import { Role } from "./Types/Role";
-import { User } from "./Types/User";
-import { UserData } from "./Types/UserData";
-import { GameRoom } from "./Pages/GameRoom";
-import { Landing } from "./Pages/Landing";
-import "./App.css";
+import { Modal, ConfigProvider, theme } from "antd";
 import { If, IfElse, OnFalse, OnTrue } from "conditional-jsx";
+
 import { AppMenu } from "./Components/AppMenu";
 import ShowRoles from "./Components/ShowRoles";
 import Profile from "./Components/Profile";
+import { GameRoom } from "./Pages/GameRoom";
+import { Landing } from "./Pages/Landing";
+import { useSocket } from './useSocket';
+
+import { Role } from "./Types/Role";
+import { User } from "./Types/User";
+import { UserData } from "./Types/UserData";
+
+import { 
+  createRoom, 
+  joinRoom, 
+  startGame, 
+  leaveRoom, 
+  revealRole, 
+  updateRolesPool,
+  endGame,
+  selectRole,
+  chosenOneDecision,
+  selectCultists
+} from "./gameService";
 
 import { 
   handleRedirectEffect,
   handleAADB2C90091ErrorEffect,
   handleLogin,
-  handleLogout} from "./authService";
-import { 
-    createRoom, 
-    joinRoom, 
-    startGame, 
-    leaveRoom, 
-    revealRole, 
-    updateRolesPool,
-    endGame,
-    selectRole,
-    chosenOneDecision,
-    selectCultists
-  } from "./gameService";
+  handleLogout
+} from "./authService";
+
+import "./App.css";
 
 const SERVER = process.env.REACT_APP_SERVER as string;
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
   const [isInRoom, setIsInRoom] = useState(false);
+  const { socket } = useSocket(SERVER, setIsConnected, setIsInRoom);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<AccountInfo | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -48,7 +50,6 @@ function App() {
   const [potentialRoles, setPotentialRoles] = useState<Role[]>([]);
   const [selectedRolesPool, setSelectedRolesPool] = useState<Role[]>([]);
   const [roomCode, setRoomCode] = useState("");
-  const [socket, setSocket] = useState<Socket | null>(null);
   const [showRoles, setShowRoles] = useState(false);
   const [profile, setProfile] = useState(false);
   const [team, setTeam] = useState<User[]>([]);
@@ -57,31 +58,6 @@ function App() {
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectingRole, setSelectingRole] = useState<boolean>(false);
-
-  useEffect(() => {
-    const newSocket = io(SERVER);
-    setSocket(newSocket);
-
-    newSocket.on("connect", () => {
-      setIsConnected(true);
-    });
-
-    newSocket.on("disconnect", () => {
-      setIsConnected(false);
-      setIsInRoom(false);
-    });
-
-    newSocket.on("connect_error", (error) => {
-      console.log("Connection error:", error);
-      setTimeout(() => {
-        newSocket.connect();
-      }, 1000);
-    });
-
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
 
   const getUserData = useCallback(() => {
     if (socket && user) {
