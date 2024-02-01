@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from "react";
-import { AccountInfo } from "@azure/msal-browser";
 import { Modal, ConfigProvider, theme } from "antd";
 import { If, IfElse, OnFalse, OnTrue } from "conditional-jsx";
 
@@ -9,6 +8,7 @@ import Profile from "./Components/Profile";
 import { GameRoom } from "./Pages/GameRoom";
 import { Landing } from "./Pages/Landing";
 import { useSocket } from './useSocket';
+import { useAuth } from './useAuth';
 
 import { Role } from "./Types/Role";
 import { User } from "./Types/User";
@@ -27,13 +27,6 @@ import {
   selectCultists
 } from "./gameService";
 
-import { 
-  handleRedirectEffect,
-  handleAADB2C90091ErrorEffect,
-  handleLogin,
-  handleLogout
-} from "./authService";
-
 import "./App.css";
 
 const SERVER = process.env.REACT_APP_SERVER as string;
@@ -42,8 +35,7 @@ function App() {
   const [isConnected, setIsConnected] = useState(false);
   const [isInRoom, setIsInRoom] = useState(false);
   const { socket } = useSocket(SERVER, setIsConnected, setIsInRoom);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<AccountInfo | null>(null);
+  const { isLoggedIn, user, loginHandler, logoutHandler } = useAuth();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -58,6 +50,13 @@ function App() {
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectingRole, setSelectingRole] = useState<boolean>(false);
+
+  const handleLogout = () => {
+    if (socket) {
+      const logout = logoutHandler();
+      logout(user, socket, roomCode);
+    }
+  };
 
   const getUserData = useCallback(() => {
     if (socket && user) {
@@ -77,23 +76,6 @@ function App() {
       getUserData();
     }
   }, [isConnected, user, socket, getUserData]);
-
-  useEffect(() => {
-    handleAADB2C90091ErrorEffect();
-  }, []);
-
-  useEffect(() => {
-    handleRedirectEffect(setUser, setIsLoggedIn)
-  }, [setIsLoggedIn]);
-
-  const loginHandler = async () => {
-    await handleLogin(setUser, setIsLoggedIn)
-  };
-
-  // Finally, you can use the leaveRoom() function when handling logout
-  const logoutHandler = async () => {
-    await handleLogout(setIsLoggedIn, () => leaveRoom(user, socket, roomCode))
-  };
 
   const handleShowRoles = () => {
     setShowRoles(true);
@@ -248,7 +230,7 @@ function App() {
           token: { colorBgMask: "#000000" },
         }}
       >
-        <AppMenu handleLogout={logoutHandler} handleShowRoles={handleShowRoles} handleProfile={handleProfile} isLoggedIn={isLoggedIn}/>
+        <AppMenu handleLogout={handleLogout} handleShowRoles={handleShowRoles} handleProfile={handleProfile} isLoggedIn={isLoggedIn}/>
         <IfElse condition={isConnected}>
           <OnTrue key="Connected">
             <div className="greenCircle" title="Connected to the server."/>
