@@ -4,7 +4,14 @@ import { Socket } from "socket.io-client";
 import { handleRedirectEffect, handleAADB2C90091ErrorEffect, handleLogin, handleLogout } from "./authService";
 import { leaveRoom } from "./gameService";
 
-export const useAuth = () => {
+interface UseAuthReturn {
+    isLoggedIn: boolean;
+    user: AccountInfo | null;
+    loginHandler: () => Promise<void>;
+    logoutHandler: (user: AccountInfo | null, socket: Socket, roomCode: string) => Promise<void>;
+  }
+
+export const useAuth = (): UseAuthReturn => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState<AccountInfo | null>(null);
 

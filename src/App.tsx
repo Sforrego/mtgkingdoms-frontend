@@ -1,10 +1,9 @@
 import { useEffect, useContext, useCallback } from "react";
 import { ConfigProvider, theme } from "antd";
-import { If, IfElse, OnFalse, OnTrue } from "conditional-jsx";
+import { IfElse, OnFalse, OnTrue } from "conditional-jsx";
 
 import { AppMenu } from "./Components/AppMenu";
-import RolesModal from './Components/Modals/RolesModal';
-import ProfileModal from './Components/Modals/ProfileModal';
+import { ModalsComponent } from './Components/ModalsComponent';
 import { GameRoom } from "./Pages/GameRoom";
 import { Landing } from "./Pages/Landing";
 import { AppContext, AppContextType } from './AppContext';
@@ -29,8 +28,7 @@ function App() {
 
   const {
     isConnected, isInRoom, isLoggedIn, user, loginHandler, logoutHandler,
-    userData, setUserData, roles, roomCode, setRoomCode, showRoles, 
-    setShowRoles, profile, setProfile, socket
+    setUserData, roomCode, setRoomCode, setShowRoles, setProfile, socket
   } = context as AppContextType;
 
   const handleLogout = () => {
@@ -66,18 +64,6 @@ function App() {
     setProfile(true);
   };
 
-  const handleOkRoles = () => {
-    setShowRoles(false);
-  };
-
-  const handleCancelRoles = () => {
-    setShowRoles(false);
-  };
-
-  const handleCancelProfile = () => {
-    setProfile(false);
-  };
-
   return (
     <div className="App">
       <SocketListener/>
@@ -96,13 +82,7 @@ function App() {
             <div className="redCircle" title="Disconnected from the server."/>
           </OnFalse>
         </IfElse>
-
-        <If condition={showRoles}>
-          <RolesModal roles={roles} showRoles={showRoles} handleOk={handleOkRoles} handleCancel={handleCancelRoles} />
-        </If>
-        <If condition={profile}>
-          {user && <ProfileModal user={user} userData={userData} profile={profile} handleCancel={handleCancelProfile} getUserData={getUserData} />}
-        </If>
+        <ModalsComponent/>
         <IfElse condition={isLoggedIn}>
           <OnTrue key="loggedIn">
             <IfElse condition={isInRoom}>
