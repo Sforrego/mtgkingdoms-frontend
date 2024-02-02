@@ -1,5 +1,5 @@
 import { ConfigProvider, theme } from "antd";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 
 import { AppMenu } from "./Components/AppMenu";
 import { ModalsComponent } from './Components/ModalsComponent';
@@ -7,23 +7,13 @@ import { ContentComponent } from './Components/ContentComponent';
 import { SocketListener } from './Services/SocketListener';
 
 import "./App.css";
-import { UserData } from "./Types/UserData";
 import { useAppContext } from "./Context/AppContext";
+import { useUserData } from './Hooks/useUserData';
 
 function App() {
-  const { isConnected, user, socket, setUserData } = useAppContext();
+  const { isConnected, user, socket } = useAppContext();
 
-  const getUserData = useCallback(() => {
-    if (socket && user) {
-      console.log("RequestingUserData");
-      socket.emit("requestUserData", { userId: user.localAccountId });
-  
-      socket.on("receiveUserData", (updatedUserData: UserData) => {
-        setUserData(updatedUserData);
-        socket.off("receiveUserData");
-      });
-    }
-  }, [socket, user, setUserData]);
+  const getUserData = useUserData();
 
   useEffect(() => {
     if (isConnected && user && socket) {

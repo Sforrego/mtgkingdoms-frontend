@@ -1,6 +1,6 @@
 import { Role } from "../Types/Role";
 
-export const ValidateRolesBeforeStart = (selectedRolesPool: Role[]): boolean => {
+export const validateRolesBeforeStart = (selectedRolesPool: Role[]): boolean => {
     const monarchCount = selectedRolesPool.filter(role => role.type === "Monarch").length;
     const knightCount = selectedRolesPool.filter(role => role.type === "Knight").length;
     const banditCount = selectedRolesPool.filter(role => role.type === "Bandit").length;

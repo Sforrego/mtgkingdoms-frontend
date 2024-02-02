@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { UserData } from '../../Types/UserData';
 import "./index.css";
 import {FaSyncAlt, FaEdit} from 'react-icons/fa';
-import { editProfile } from '../../Services/authService'; // Adjust the path as necessary
+import { editProfile } from '../../Services/authService';
+import { useUserData } from '../../Hooks/useUserData';
 
-const Profile = ({ username, userData, getUserData }: { username: string | undefined, userData: UserData | null, getUserData: () => void }) => {
+const Profile = ({ username, userData }: { username: string | undefined, userData: UserData | null }) => {
   const [selectedStatsPeriod, setSelectedStatsPeriod] = useState(userData?.statsPeriod);
+  const getUserData = useUserData();
 
   const calculateWinRate = (wins: number, games: number) => {
     return games > 0 ? ((wins / games) * 100).toFixed(1) : "0";

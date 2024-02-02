@@ -8,7 +8,7 @@ type ShowRolesProps = {
     roles: Role[];
   };
 
-const ShowRoles = ({ roles }: ShowRolesProps) => {
+export const ShowRoles = ({ roles }: ShowRolesProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -78,5 +78,3 @@ const ShowRoles = ({ roles }: ShowRolesProps) => {
     </div>
   );
 };
-
-export default ShowRoles;

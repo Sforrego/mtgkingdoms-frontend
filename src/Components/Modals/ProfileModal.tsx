@@ -1,26 +1,9 @@
-// ProfileModal.tsx
 import { Modal } from "antd";
-import { useCallback } from "react";
 import Profile from "../../Components/Profile";
-import { UserData } from "../../Types/UserData";
 import { useAppContext } from '../../Context/AppContext';
 
-
-
 export const ProfileModal = () => {
-    const { profile, user, userData, socket, setUserData, setProfile } = useAppContext();
-    
-    const getUserData = useCallback(() => {
-        if (socket && user) {
-          console.log("RequestingUserData");
-          socket.emit("requestUserData", { userId: user.localAccountId });
-      
-          socket.on("receiveUserData", (updatedUserData: UserData) => {
-            setUserData(updatedUserData);
-            socket.off("receiveUserData");
-          });
-        }
-      }, [socket, user, setUserData]);
+    const { profile, user, userData, setProfile } = useAppContext();
     
       const handleCancelProfile = () => {
         setProfile(false);
@@ -34,7 +17,7 @@ export const ProfileModal = () => {
             footer={null}
             centered
         >
-            <Profile username={user?.name} userData={userData} getUserData={getUserData} />
+            <Profile username={user?.name} userData={userData}/>
         </Modal>
     );
 };

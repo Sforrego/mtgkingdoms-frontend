@@ -41,7 +41,7 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
             key="submit" 
             type="primary" 
             onClick={onOk}
-            disabled={!selectedRole} // Disable button if selectedRole is null or undefined
+            disabled={!selectedRole}
             >
             OK
             </Button>

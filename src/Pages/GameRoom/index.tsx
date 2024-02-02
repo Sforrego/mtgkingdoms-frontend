@@ -1,13 +1,14 @@
+import { Button, Modal } from "antd";
+
 import { PlayerInGame } from "../../Components/PlayerInGame";
 import { RolesPoolSelectionModal } from "../../Components/Modals/RolesPoolSelectionModal";
 import { RoleSelectionModal } from "../../Components/Modals/RoleSelectionModal";
 import { TeamOverviewModal } from "../../Components/Modals/TeamOverviewModal";
 import { NoblesModal } from "../../Components/Modals/NoblesModal";
-import { ValidateRolesBeforeStart } from "../../Utils/ValidateRoles";
-import { Button, Modal } from "antd";
-import { UseModal } from '../../Hooks/UseModal';
+import { validateRolesBeforeStart } from "../../Utils/validateRoles";
+import { useModal } from '../../Hooks/useModal';
 import { useAppContext } from '../../Context/AppContext';
-import "./index.css";
+import { chosenOneDecision, endGame, selectCultists } from "../../Services/gameServiceModals";
 import { 
   startGame, 
   leaveRoom,
@@ -15,8 +16,8 @@ import {
   updateRolesPool,
   selectRole,
 } from "../../Services/gameService";
+import "./index.css";
 
-import { chosenOneDecision, endGame, selectCultists } from "../../Services/gameServiceModals";
 
 export const GameRoom = () => {
   const {
@@ -38,11 +39,11 @@ export const GameRoom = () => {
     setSelectedRolesPool,
   } = useAppContext();
   
-  const revealRoleModal = UseModal();
-  const rolesPoolSelectionModal = UseModal();
-  const roleSelectionModal = UseModal();
-  const noblesModal = UseModal();
-  const teamOverviewModal = UseModal();
+  const revealRoleModal = useModal();
+  const rolesPoolSelectionModal = useModal();
+  const roleSelectionModal = useModal();
+  const noblesModal = useModal();
+  const teamOverviewModal = useModal();
   const userRoleName = (team && team.length > 0) ? (users && users.find(u => u.userId === team[0].userId)?.role?.name) || "" : "";
   const isCultLeader = ["Cult Leader", "Cultist"].includes(userRoleName) && isRevealed;
   const isChosenOne = userRoleName === "Chosen One" && isRevealed;
@@ -54,7 +55,7 @@ export const GameRoom = () => {
   };
 
   const confirmRolesPoolSelection = () => {
-    if(ValidateRolesBeforeStart(selectedRolesPool)){
+    if(validateRolesBeforeStart(selectedRolesPool)){
       updateRolesPool(selectedRolesPool, socket, roomCode);
       rolesPoolSelectionModal.close();
     }
