@@ -36,7 +36,7 @@ const Profile = ({ username, userData }: { username: string | undefined, userDat
           <FaEdit size={20} />
         </button>
         <button onClick={getUserData} className="update-data-icon" title="Update Data">
-          <FaSyncAlt size={20} /> {/* Adjust size as needed */}
+          <FaSyncAlt size={20} />
         </button>
       </div>
       <select

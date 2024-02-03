@@ -34,9 +34,9 @@ export const GameRoom = () => {
     team,
     nobles,
     potentialRoles,
-    setSelectingRole,
-    setSelectedRole,
     setSelectedRolesPool,
+    setSelectedRole,
+    setSelectingRole,
   } = useAppContext();
   
   const revealRoleModal = useModal();
@@ -44,9 +44,10 @@ export const GameRoom = () => {
   const roleSelectionModal = useModal();
   const noblesModal = useModal();
   const teamOverviewModal = useModal();
-  const userRoleName = (team && team.length > 0) ? (users && users.find(u => u.userId === team[0].userId)?.role?.name) || "" : "";
-  const isCultLeader = ["Cult Leader", "Cultist"].includes(userRoleName) && isRevealed;
-  const isChosenOne = userRoleName === "Chosen One" && isRevealed;
+  const userRole = users && users.find(u => u.userId === team[0].userId)?.role;
+  const isCultLeader = userRole ? ["Cult Leader", "Cultist"].includes(userRole.name) && isRevealed : false;
+  const isChosenOne = userRole?.name === "Chosen One" && isRevealed;
+  const canConceal = userRole?.ability.toLowerCase().includes("conceal");
 
   const confirmRoleSelection = () => {
     setSelectingRole(false);
@@ -64,6 +65,13 @@ export const GameRoom = () => {
   const confirmRevealRole = () => {
     revealRole(user, socket, roomCode);
     revealRoleModal.close();
+  };
+
+  const concealRole = () => {
+    if (socket) {
+      console.log("Concealing role");
+      socket.emit("conceal", { userId: user?.localAccountId, roomCode });
+    }
   };
 
   return (
@@ -95,8 +103,9 @@ export const GameRoom = () => {
         <>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2vmin", marginTop: "4vmin" }}>
           <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-            <Button onClick={teamOverviewModal.open}>See My Role</Button>
+            <Button onClick={teamOverviewModal.open}>View Role(s)</Button>
             {!isRevealed && <Button onClick={revealRoleModal.open}>Reveal Role</Button>}
+            {isRevealed && canConceal && <Button onClick={concealRole}>Conceal</Button>}
           </div>
         </div>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
