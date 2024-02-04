@@ -53,6 +53,8 @@ export interface AppContextType {
   setSelectedRole: React.Dispatch<React.SetStateAction<Role | null>>;
   selectingRole: boolean;
   setSelectingRole: React.Dispatch<React.SetStateAction<boolean>>;
+  reviewingTeam: boolean;
+  setReviewingTeam: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AppContext = createContext<AppContextType | null>(null);
@@ -76,6 +78,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectingRole, setSelectingRole] = useState<boolean>(false);
+  const [reviewingTeam, setReviewingTeam] = useState<boolean>(false);
 
     return (
       <AppContext.Provider value={{
@@ -115,7 +118,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         selectedRole,
         setSelectedRole,
         selectingRole,
-        setSelectingRole
+        setSelectingRole,
+        reviewingTeam,
+        setReviewingTeam,
       }}>
         {children}
       </AppContext.Provider>

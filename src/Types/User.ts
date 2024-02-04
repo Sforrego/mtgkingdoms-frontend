@@ -7,5 +7,6 @@ export type User = {
     isRevealed: boolean;
     userId: string;
     hasSelectedRole: boolean;
+    hasReviewedTeam: boolean;
     potentialRoles: Role[];
   };

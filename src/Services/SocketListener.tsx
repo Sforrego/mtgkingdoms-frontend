@@ -4,10 +4,14 @@ import { useAppContext } from '../Context/AppContext';
 
 import { Role } from "../Types/Role";
 import { User } from "../Types/User";
-import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent, GameUpdatedEvent, ReconnectedToRoomEvent, RolesPoolUpdatedEvent, SelectRoleEvent, ErrorEvent } from '../Types/SocketEvents';
+import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent, 
+  GameUpdatedEvent, ReconnectedToRoomEvent, RolesPoolUpdatedEvent, 
+  SelectRoleEvent, ReviewTeamEvent, ErrorEvent } from '../Types/SocketEvents';
 
 export const SocketListener = () => {
-    const { socket, roles, roomCode, setGameStarted, user, isRevealed, setIsRevealed, setSelectingRole, setPotentialRoles, setSelectedRole, setIsInRoom, setNobles, setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom } = useAppContext();
+    const { socket, roles, roomCode, setGameStarted, user, isRevealed, setIsRevealed, 
+      setSelectingRole, setPotentialRoles, setSelectedRole, setIsInRoom, setNobles, 
+      setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom, setReviewingTeam } = useAppContext();
 
     useEffect(() => {
         if (socket) {
@@ -109,9 +113,15 @@ export const SocketListener = () => {
           });
     
           socket.on("selectRole", ({ potentialRoles }: SelectRoleEvent) =>{
-            console.log("Selecting role")
+            console.log("Selecting role");
             setSelectingRole(true);
             setPotentialRoles(potentialRoles);
+          })
+
+          socket.on("reviewTeam", ({ team }: ReviewTeamEvent) =>{
+            console.log("Reviewing team");
+            setReviewingTeam(true);
+            setTeam(team);
           })
     
           socket.on("error", (message: ErrorEvent) => {
@@ -129,12 +139,13 @@ export const SocketListener = () => {
             socket.off("gameUpdated");
             socket.off("reconnectedToRoom");
             socket.off("gameEnded");
-            socket.off("selectCharacter")
+            socket.off("selectRole")
+            socket.off("reviewTeam")
             socket.off("error");
           };
         }
       }, [isRevealed, roomCode, socket, user, roles.length, setGameStarted, 
-        setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, 
+        setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, setReviewingTeam,
         setRoomCode, setSelectedRole, setSelectedRolesPool, setSelectingRole, setTeam, setUsersInRoom]);
 
     return null;
