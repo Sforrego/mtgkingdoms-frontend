@@ -1,17 +1,72 @@
-import { Modal, Checkbox, Radio } from 'antd';
+import { useState } from 'react';
+import { Modal, Button, Checkbox, Radio } from 'antd';
 import { User } from "../Types/User";
 import { Socket } from 'socket.io-client';
 
-export const endGame = (socket: Socket | null, users: User[] = [], roomCode: string) => {
-    if(socket){
-      let currentWinnersIds: string[] = [];
-      const handleCheckChange = (checkedValues: any[]) => {
-        currentWinnersIds = checkedValues;
-      };
-      
-      Modal.confirm({
-        title: 'Select winners',
-        content: (
+export const EndGameModal = ({ socket, users, roomCode }: { socket: Socket | null, users: User[], roomCode: string }) => {
+  const [open, setOpen] = useState(false);
+  const [currentWinnersIds, setCurrentWinnersIds] = useState<string[]>([]);
+
+  const handleOk = () => {
+    socket && socket.emit("endGame", { roomCode, winnersIds: currentWinnersIds });
+    setOpen(false);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  const handleCheckChange = (checkedValues: any[]) => {
+    setCurrentWinnersIds(checkedValues);
+  };
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>End Game</Button>
+      <Modal
+        title="Select winners"
+        open={open}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Checkbox.Group style={{ width: '100%' }} onChange={handleCheckChange}>
+          {users.map((user) => (
+            <div key={user.userId}>
+              <Checkbox value={user.userId}>{user.username}</Checkbox>
+            </div>
+          ))}
+        </Checkbox.Group>
+      </Modal>
+    </>
+  );
+};
+  
+  export const SelectCultistsModal = ({ socket, userId, users, roomCode }: { socket: Socket | null, userId: string | undefined, users: User[], roomCode: string }) => {
+    const [open, setOpen] = useState(false);
+    const [cultistsIds, setCultistsIds] = useState<string[]>([]);
+
+    const handleOk = () => {
+      socket && socket.emit("cultification", { userId, roomCode, cultistsIds });
+      setOpen(false);
+    };
+
+    const handleCancel = () => {
+      setOpen(false);
+    };
+
+    const handleCheckChange = (checkedValues: any[]) => {
+      setCultistsIds(checkedValues);
+    };
+
+    return (
+      <>
+        <Button onClick={() => setOpen(true)}>Add members to the Cult</Button>
+        <Modal
+          title="Add members to the Cult"
+          open={open}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
           <Checkbox.Group style={{ width: '100%' }} onChange={handleCheckChange}>
             {users.map((user) => (
               <div key={user.userId}>
@@ -19,57 +74,42 @@ export const endGame = (socket: Socket | null, users: User[] = [], roomCode: str
               </div>
             ))}
           </Checkbox.Group>
-        ),
-        onOk() {
-          socket && socket.emit("endGame", { roomCode, winnersIds: currentWinnersIds });
-        },
-      });
-    }
+        </Modal>
+      </>
+    );
   };
-  
-  export const selectCultists = (socket: Socket | null, userId: string | undefined, users: User[] = [], roomCode: string) => {
-    if(socket){
-      let cultistsIds: string[] = [];
-      const handleCheckChange = (checkedValues: any[]) => {
-        cultistsIds = checkedValues;
-      };
-      
-      Modal.confirm({
-        title: 'Add members to the Cult',
-        content: (
-          <Checkbox.Group style={{ width: '100%' }} onChange={handleCheckChange}>
-            {users.map((user) => (
-              <div key={user.userId}>
-                <Checkbox value={user.userId}>{user.username}</Checkbox>
-              </div>
-            ))}
-          </Checkbox.Group>
-        ),
-        onOk() {
-          socket && socket.emit("cultification", { userId, roomCode, cultistsIds: cultistsIds });
-        },
-      });
-    }
-  };
-  
-  export const chosenOneDecision = (socket: Socket | null, userId: string | undefined, roomCode: string) => {
-    if(socket){
-      let decision: string = "";
-      const handleCheckChange = (event: any) => {
-        decision = event.target.value;
-      };
-      
-      Modal.confirm({
-        title: 'Choose your path',
-        content: (
+
+  export const ChosenOneDecisionModal = ({ socket, userId, roomCode }: { socket: Socket | null, userId: string | undefined, roomCode: string }) => {
+    const [open, setOpen] = useState(false);
+    const [decision, setDecision] = useState("");
+
+    const handleOk = () => {
+      socket && socket.emit("chosenOneDecision", { userId, roomCode, decision });
+      setOpen(false);
+    };
+
+    const handleCancel = () => {
+      setOpen(false);
+    };
+
+    const handleCheckChange = (event: any) => {
+      setDecision(event.target.value);
+    };
+
+    return (
+      <>
+        <Button onClick={() => setOpen(true)}>Choose your path</Button>
+        <Modal
+          title="Choose your path"
+          open={open}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
           <Radio.Group style={{ width: '100%' }} onChange={handleCheckChange}>
             <Radio value="Demon">Demon</Radio>
             <Radio value="Angel">Angel</Radio>
           </Radio.Group>
-        ),
-        onOk() {
-          socket && socket.emit("chosenOneDecision", { userId, roomCode, decision: decision });
-        },
-      });
-    }
+        </Modal>
+      </>
+    );
   };

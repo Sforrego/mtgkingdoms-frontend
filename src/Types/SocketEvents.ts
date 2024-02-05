@@ -45,6 +45,10 @@ export interface RoleDataEvent {
   export interface SelectRoleEvent {
     potentialRoles: Role[];
   }
+
+  export interface ReviewTeamEvent {
+    team: User[];
+  }
   
   export interface ErrorEvent {
     message: string;

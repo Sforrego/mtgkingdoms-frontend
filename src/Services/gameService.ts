@@ -58,3 +58,12 @@ export const selectRole = (socket: Socket | null, userId: string | undefined, ro
     console.log("Connection not established");
   }
 };
+
+export const confirmTeam = (socket: Socket | null, userId: string | undefined, roomCode: string | undefined) => {
+  console.log("Team confirmed")
+  if (socket) {
+    socket.emit("confirmTeam", { userId, roomCode});
+  } else {
+    console.log("Connection not established");
+  }
+};

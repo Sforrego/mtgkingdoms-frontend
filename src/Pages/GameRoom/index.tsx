@@ -3,18 +3,20 @@ import { Button, Modal } from "antd";
 import { PlayerInGame } from "../../Components/PlayerInGame";
 import { RolesPoolSelectionModal } from "../../Components/Modals/RolesPoolSelectionModal";
 import { RoleSelectionModal } from "../../Components/Modals/RoleSelectionModal";
+import { TeamReviewModal } from "../../Components/Modals/TeamReviewModal";
 import { TeamOverviewModal } from "../../Components/Modals/TeamOverviewModal";
 import { NoblesModal } from "../../Components/Modals/NoblesModal";
 import { validateRolesBeforeStart } from "../../Utils/validateRoles";
 import { useModal } from '../../Hooks/useModal';
 import { useAppContext } from '../../Context/AppContext';
-import { chosenOneDecision, endGame, selectCultists } from "../../Services/gameServiceModals";
+import { ChosenOneDecisionModal, EndGameModal, SelectCultistsModal } from "../../Services/gameServiceModals";
 import { 
   startGame, 
   leaveRoom,
   revealRole,
   updateRolesPool,
   selectRole,
+  confirmTeam,
 } from "../../Services/gameService";
 import "./index.css";
 
@@ -34,25 +36,31 @@ export const GameRoom = () => {
     team,
     nobles,
     potentialRoles,
+    reviewingTeam,
     setSelectedRolesPool,
     setSelectedRole,
-    setSelectingRole,
   } = useAppContext();
   
   const revealRoleModal = useModal();
   const rolesPoolSelectionModal = useModal();
   const roleSelectionModal = useModal();
+  const teamReviewModal = useModal();
   const noblesModal = useModal();
   const teamOverviewModal = useModal();
-  const userRole = users && users.find(u => u.userId === team[0].userId)?.role;
+  const gameUser = users?.find(u => u.userId === user?.localAccountId);
+  const userRole = users && users.length > 0 ? users.find(u => u.userId === user?.localAccountId)?.role : undefined;
   const isCultLeader = userRole ? ["Cult Leader", "Cultist"].includes(userRole.name) && isRevealed : false;
   const isChosenOne = userRole?.name === "Chosen One" && isRevealed;
   const canConceal = userRole?.ability.toLowerCase().includes("conceal");
 
   const confirmRoleSelection = () => {
-    setSelectingRole(false);
     roleSelectionModal.close();
     selectRole(socket, user?.localAccountId, roomCode, selectedRole);
+  };
+
+  const confirmTeamReview = () => {
+    teamReviewModal.close();
+    confirmTeam(socket, user?.localAccountId, roomCode);
   };
 
   const confirmRolesPoolSelection = () => {
@@ -84,21 +92,35 @@ export const GameRoom = () => {
           <PlayerInGame key={index} user={user} />
           ))}
       </div>
-      {!gameStarted && users.some(user => !user.hasSelectedRole) && potentialRoles.length > 0? (
+      {selectingRole && (users.some(user => !user.hasSelectedRole) && potentialRoles.length > 0) ? (
         <>
-        {selectingRole && (
-          <Button onClick={roleSelectionModal.open} style={{ marginLeft: "1.5vmin", marginTop: "2.5vmin"}}>Select Role</Button>
-        )}        
-        <p style={{color: "white"}}>Players selecting role:</p>
-        <ul style={{ paddingLeft: '20px' }}> {/* Adjust padding as needed */}
-          {users.filter(user => !user.hasSelectedRole).map((user, index) => (
-            <li key={index} style={{ color: "white", listStylePosition: 'inside' }}>
-              {user.username}
-            </li>
-          ))}
-        </ul>
+          {!gameUser?.hasSelectedRole && (
+            <Button onClick={roleSelectionModal.open} style={{ marginLeft: "1.5vmin", marginTop: "2.5vmin"}}>Select Role</Button>
+          )}          
+          <p style={{color: "white"}}>Players selecting role:</p>
+          <ul style={{ paddingLeft: '20px' }}> {/* Adjust padding as needed */}
+            {users.filter(user => !user.hasSelectedRole).map((user, index) => (
+              <li key={index} style={{ color: "white", listStylePosition: 'inside' }}>
+                {user.username}
+              </li>
+            ))}
+          </ul>
       </>
-      ) 
+      ) : reviewingTeam && users.some(user => !user.hasReviewedTeam) ? (
+        <>
+          {!gameUser?.hasReviewedTeam && (
+            <Button onClick={teamReviewModal.open} style={{ marginLeft: "1.5vmin", marginTop: "2.5vmin"}}>Review Team</Button>
+          )}  
+          <p style={{color: "white"}}>Players reviewing team:</p>
+          <ul style={{ paddingLeft: '20px' }}> {/* Adjust padding as needed */}
+            {users.filter(user => !user.hasReviewedTeam).map((user, index) => (
+              <li key={index} style={{ color: "white", listStylePosition: 'inside' }}>
+                {user.username}
+              </li>
+            ))}
+          </ul>
+        </>
+      )
       : gameStarted ? (
         <>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2vmin", marginTop: "4vmin" }}>
@@ -110,10 +132,10 @@ export const GameRoom = () => {
         </div>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           {isCultLeader && (
-            <Button onClick={() => selectCultists(socket, user?.localAccountId, users, roomCode)}>Cultification</Button>
+            <SelectCultistsModal socket={socket} userId={user?.localAccountId} users={users} roomCode={roomCode} />
             )}
           {isChosenOne && (
-            <Button onClick={() => chosenOneDecision(socket, user?.localAccountId, roomCode)}>Decision</Button>
+            <ChosenOneDecisionModal socket={socket} userId={user?.localAccountId} roomCode={roomCode} />
             )}
         </div>
         <div style={{marginBottom:"4vmin"}}>
@@ -122,7 +144,7 @@ export const GameRoom = () => {
           )}
         </div>
         <div>
-          <Button onClick={() => endGame(socket, users, roomCode)}>End Game</Button>
+          <EndGameModal users={users} roomCode={roomCode} socket={socket} />
         </div>
         </>
       ) : (
@@ -136,7 +158,7 @@ export const GameRoom = () => {
         </div>
         </>
       )}
-      
+    
     <RolesPoolSelectionModal
       isOpen={rolesPoolSelectionModal.isOpen}
       roles={roles}
@@ -153,6 +175,13 @@ export const GameRoom = () => {
       setSelectedRole={setSelectedRole} 
       onOk={confirmRoleSelection}
       onCancel={roleSelectionModal.close}
+    />
+
+    <TeamReviewModal
+      isOpen={teamReviewModal.isOpen}
+      team={team}
+      onOk={confirmTeamReview}
+      onCancel={teamReviewModal.close}
     />
 
     <TeamOverviewModal

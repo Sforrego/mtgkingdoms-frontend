@@ -1,16 +1,14 @@
 import React from 'react';
 import { Modal, Carousel, Button } from 'antd';
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
-import { Role } from '../../Types/Role';
+import { User } from '../../Types/User';
 import { RoleCard } from '../RoleCard';
 
-type RoleSelectionModalProps = {
+type TeamReviewModalProps = {
   isOpen: boolean;
   onOk: () => void;
   onCancel: () => void;
-  potentialRoles: Role[];
-  selectedRole: Role | null;
-  setSelectedRole: (role: Role) => void;
+  team: User[];
 };
 
 const NextArrow = ({ currentSlide, slideCount, ...props }: { currentSlide?: number, slideCount?: number, [x: string]: any }) => (
@@ -21,18 +19,16 @@ const PrevArrow = ({ currentSlide, slideCount, ...props }: { currentSlide?: numb
   <ArrowLeftOutlined {...props} />
 );
 
-export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
+export const TeamReviewModal: React.FC<TeamReviewModalProps> = ({
   isOpen,
   onOk,
   onCancel,
-  potentialRoles,
-  selectedRole,
-  setSelectedRole,
+  team,
 }) => {
 
   return (
     <Modal
-        title="Select Your Role"
+        title="Review your team"
         open={isOpen}
         closable={false}
         onOk={onOk}
@@ -49,9 +45,8 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
             key="submit" 
             type="primary" 
             onClick={onOk}
-            disabled={!selectedRole}
             >
-            OK
+            Confirm
             </Button>
         ]}
         >
@@ -59,20 +54,15 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
             autoplay={false}
             arrows
             dots={false}
-            nextArrow={<NextArrow currentSlide={0} slideCount={0}/>}
-            prevArrow={<PrevArrow currentSlide={0} slideCount={0}/>}
+            nextArrow={<NextArrow />}
+            prevArrow={<PrevArrow />}
         >
-            {potentialRoles.map((role, index) => (
-            <div key={index} className="carousel-item">
-                <RoleCard key={role.name} role={role}/>
-                <Button
-                onClick={() => setSelectedRole(role)}
-                className={selectedRole === role ? "selected-role-button" : "role-select-button"}
-                >
-                {selectedRole === role ? "Selected" : "Select"}
-                </Button>
+          {team.map((user: User, index: number) => (
+            <div key={index}>
+            <h1 style={{ marginBottom: '10px', marginTop: '0', color: "white", textAlign: "center" }}> {user.username}</h1>
+            <RoleCard key={user.role?.name} role={user.role} />
             </div>
-            ))}
+          ))}
         </Carousel>
         </Modal>
   );
