@@ -55,13 +55,32 @@ export const SocketListener = () => {
             console.log(`A user left the room. Updated users: ${users}`);
             setUsersInRoom(users);
           });
+
+              
+          socket.on("rolesPoolUpdated", ({ roles }: RolesPoolUpdatedEvent) => {
+            setSelectedRolesPool(roles);
+          });
     
-          socket.on("gameStarted", ({ team, nobles }: GameStartedEvent) => {
-            console.log("Game started. Role assigned.");
+          socket.on("selectRole", ({ potentialRoles }: SelectRoleEvent) =>{
+            console.log("Selecting role");
+            setSelectingRole(true);
+            setPotentialRoles(potentialRoles);
+          })
+
+          socket.on("reviewTeam", ({ team }: ReviewTeamEvent) =>{
+            console.log("Reviewing team");
+            setSelectingRole(false);
+            setReviewingTeam(true);
             setTeam(team);
+            console.log(team);
+          })
+    
+          socket.on("gameStarted", ({ nobles }: GameStartedEvent) => {
+            console.log("Game started. Role assigned.");
             if (nobles.length > 0){
               setNobles(nobles)
             }
+            setReviewingTeam(false);
             setGameStarted(true);
           });
     
@@ -92,6 +111,7 @@ export const SocketListener = () => {
               if (myUser) {
                 setIsRevealed(myUser.isRevealed);
                 setSelectingRole(!myUser.hasSelectedRole)
+                setReviewingTeam(!myUser.hasReviewedTeam)
                 setPotentialRoles(myUser.potentialRoles);
               } else {
                 console.log("User not found in usersInRoom")
@@ -107,23 +127,7 @@ export const SocketListener = () => {
             setPotentialRoles([]);
             setSelectedRole(null);
           });
-    
-          socket.on("rolesPoolUpdated", ({ roles }: RolesPoolUpdatedEvent) => {
-            setSelectedRolesPool(roles);
-          });
-    
-          socket.on("selectRole", ({ potentialRoles }: SelectRoleEvent) =>{
-            console.log("Selecting role");
-            setSelectingRole(true);
-            setPotentialRoles(potentialRoles);
-          })
 
-          socket.on("reviewTeam", ({ team }: ReviewTeamEvent) =>{
-            console.log("Reviewing team");
-            setReviewingTeam(true);
-            setTeam(team);
-          })
-    
           socket.on("error", (message: ErrorEvent) => {
             alert(message)
           });

@@ -13,6 +13,14 @@ type RoleSelectionModalProps = {
   setSelectedRole: (role: Role) => void;
 };
 
+const NextArrow = ({ currentSlide, slideCount, ...props }: { currentSlide?: number, slideCount?: number, [x: string]: any }) => (
+  <ArrowRightOutlined {...props} />
+);
+
+const PrevArrow = ({ currentSlide, slideCount, ...props }: { currentSlide?: number, slideCount?: number, [x: string]: any }) => (
+  <ArrowLeftOutlined {...props} />
+);
+
 export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
   isOpen,
   onOk,
@@ -51,8 +59,8 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
             autoplay={false}
             arrows
             dots={false}
-            nextArrow={<ArrowRightOutlined />}
-            prevArrow={<ArrowLeftOutlined />}
+            nextArrow={<NextArrow currentSlide={0} slideCount={0}/>}
+            prevArrow={<PrevArrow currentSlide={0} slideCount={0}/>}
         >
             {potentialRoles.map((role, index) => (
             <div key={index} className="carousel-item">

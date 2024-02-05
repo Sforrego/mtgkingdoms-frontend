@@ -11,6 +11,14 @@ type TeamReviewModalProps = {
   team: User[];
 };
 
+const NextArrow = ({ currentSlide, slideCount, ...props }: { currentSlide?: number, slideCount?: number, [x: string]: any }) => (
+  <ArrowRightOutlined {...props} />
+);
+
+const PrevArrow = ({ currentSlide, slideCount, ...props }: { currentSlide?: number, slideCount?: number, [x: string]: any }) => (
+  <ArrowLeftOutlined {...props} />
+);
+
 export const TeamReviewModal: React.FC<TeamReviewModalProps> = ({
   isOpen,
   onOk,
@@ -46,8 +54,8 @@ export const TeamReviewModal: React.FC<TeamReviewModalProps> = ({
             autoplay={false}
             arrows
             dots={false}
-            nextArrow={<ArrowRightOutlined />}
-            prevArrow={<ArrowLeftOutlined />}
+            nextArrow={<NextArrow />}
+            prevArrow={<PrevArrow />}
         >
           {team.map((user: User, index: number) => (
             <div key={index}>
