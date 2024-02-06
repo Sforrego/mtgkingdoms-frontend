@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, ReactNode } from 'react';
+import { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { AccountInfo } from '@azure/msal-browser';
 import { Socket } from 'socket.io-client';
 
@@ -22,8 +22,8 @@ export interface AppContextType {
   setIsInRoom: React.Dispatch<React.SetStateAction<boolean>>;
   socket: Socket | null; // replace with the actual type
   isLoggedIn: boolean;
-  user: AccountInfo | null; // replace with the actual type
-  loginHandler: () => void; // replace with the actual type
+  accountUser: AccountInfo | null; // replace with the actual type
+  loginHandler: (socket: Socket) => void; // replace with the actual type
   logoutHandler: (user: AccountInfo | null, socket: Socket, roomCode: string) => Promise<void>;
   userData: UserData | null;
   setUserData: React.Dispatch<React.SetStateAction<UserData | null>>;
@@ -63,7 +63,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isInRoom, setIsInRoom] = useState(false);
   const { socket } = useSocket(SERVER, setIsConnected, setIsInRoom);
-  const { isLoggedIn, user, loginHandler, logoutHandler } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, accountUser, setAccountUser, loginHandler, logoutHandler } = useAuth(socket);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [usersInRoom, setUsersInRoom] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -80,6 +80,21 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [selectingRole, setSelectingRole] = useState<boolean>(false);
   const [reviewingTeam, setReviewingTeam] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (isConnected && !isLoggedIn) {
+      console.log("helloworld")
+      const storedUser = localStorage.getItem('accountUser');
+      if (storedUser) {
+        setAccountUser(() => {
+          const updatedAccountUser = JSON.parse(storedUser);
+          socket?.emit("login", {userId: updatedAccountUser.localAccountId, username: updatedAccountUser.name});
+          return updatedAccountUser;
+        });
+        setIsLoggedIn(true);
+      }
+    }
+  }, [isConnected, isLoggedIn, socket, setIsLoggedIn, setAccountUser]);
+
     return (
       <AppContext.Provider value={{
         isConnected,
@@ -88,7 +103,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setIsInRoom,
         socket,
         isLoggedIn,
-        user,
+        accountUser,
         loginHandler,
         logoutHandler,
         userData,

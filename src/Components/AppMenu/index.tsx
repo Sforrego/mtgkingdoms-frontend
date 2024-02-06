@@ -6,7 +6,7 @@ import { useAppContext } from '../../Context/AppContext';
 import styles from "./index.module.css";
 
 export const AppMenu = () => {
-  const { user, socket, roomCode, isLoggedIn, setShowRoles, setProfile, logoutHandler } = useAppContext();
+  const { accountUser, socket, roomCode, isLoggedIn, setShowRoles, setProfile, logoutHandler } = useAppContext();
   const [open, setOpen] = useState(false);
   const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
 
@@ -19,8 +19,8 @@ export const AppMenu = () => {
   };
 
   const handleLogout = () => {
-    if (socket && user) {
-      logoutHandler(user, socket, roomCode);
+    if (socket && accountUser) {
+      logoutHandler(accountUser, socket, roomCode);
     }
   };
 

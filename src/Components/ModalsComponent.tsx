@@ -4,7 +4,7 @@ import { ProfileModal } from './Modals/ProfileModal';
 import { If } from "conditional-jsx";
 
 export const ModalsComponent = () => {
-  const { showRoles, profile, user } = useAppContext();
+  const { showRoles, profile, accountUser } = useAppContext();
 
   return (
     <>
@@ -12,7 +12,7 @@ export const ModalsComponent = () => {
         <RolesModal/>
       </If>
       <If condition={profile}>
-        {user && <ProfileModal />}
+        {accountUser && <ProfileModal />}
       </If>
     </>
   );

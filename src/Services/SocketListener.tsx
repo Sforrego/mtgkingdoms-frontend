@@ -9,7 +9,7 @@ import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent,
   SelectRoleEvent, ReviewTeamEvent, ErrorEvent } from '../Types/SocketEvents';
 
 export const SocketListener = () => {
-    const { socket, roles, roomCode, setGameStarted, user, isRevealed, setIsRevealed, 
+    const { socket, roles, roomCode, setGameStarted, accountUser, isRevealed, setIsRevealed, 
       setSelectingRole, setPotentialRoles, setSelectedRole, setIsInRoom, setNobles, 
       setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom, setReviewingTeam } = useAppContext();
 
@@ -87,8 +87,8 @@ export const SocketListener = () => {
           socket.on("gameUpdated", ({ usersInRoom }: GameUpdatedEvent) => {
             console.log("Game Updated.");
             setUsersInRoom(usersInRoom);
-            if(user){
-              const myUser: User | undefined = usersInRoom.find((u: User) => u.userId === user.localAccountId);
+            if(accountUser){
+              const myUser: User | undefined = usersInRoom.find((u: User) => u.userId === accountUser.localAccountId);
               if (myUser) {
                 if (myUser.isRevealed !== isRevealed){
                   setIsRevealed(myUser.isRevealed);
@@ -100,14 +100,15 @@ export const SocketListener = () => {
           });
     
           socket.on("reconnectedToRoom", ({ team, usersInRoom, activeGame, roomCode }: ReconnectedToRoomEvent) => {
-            if(user){
+            console.log(team);
+            if(accountUser){
               console.log("Reconnected to room");
               setRoomCode(roomCode);
               setIsInRoom(true);
               setUsersInRoom(usersInRoom);
               setGameStarted(activeGame);
               setTeam(team);
-              const myUser: User | undefined = usersInRoom.find((u: User) => u.userId === user.localAccountId);
+              const myUser: User | undefined = usersInRoom.find((u: User) => u.userId === accountUser.localAccountId);
               if (myUser) {
                 setIsRevealed(myUser.isRevealed);
                 setSelectingRole(!myUser.hasSelectedRole)
@@ -148,7 +149,7 @@ export const SocketListener = () => {
             socket.off("error");
           };
         }
-      }, [isRevealed, roomCode, socket, user, roles.length, setGameStarted, 
+      }, [isRevealed, roomCode, socket, accountUser, roles.length, setGameStarted, 
         setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, setReviewingTeam,
         setRoomCode, setSelectedRole, setSelectedRolesPool, setSelectingRole, setTeam, setUsersInRoom]);
 

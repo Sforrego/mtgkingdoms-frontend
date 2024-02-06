@@ -24,7 +24,7 @@ import "./index.css";
 export const GameRoom = () => {
   const {
     roomCode,
-    user,
+    accountUser,
     socket,
     usersInRoom: users,
     roles,
@@ -40,27 +40,26 @@ export const GameRoom = () => {
     setSelectedRolesPool,
     setSelectedRole,
   } = useAppContext();
-  
   const revealRoleModal = useModal();
   const rolesPoolSelectionModal = useModal();
   const roleSelectionModal = useModal();
   const teamReviewModal = useModal();
   const noblesModal = useModal();
   const teamOverviewModal = useModal();
-  const gameUser = users?.find(u => u.userId === user?.localAccountId);
-  const userRole = users && users.length > 0 ? users.find(u => u.userId === user?.localAccountId)?.role : undefined;
+  const gameUser = users?.find(u => u.userId === accountUser?.localAccountId);
+  const userRole = users && users.length > 0 ? users.find(u => u.userId === accountUser?.localAccountId)?.role : undefined;
   const isCultLeader = userRole ? ["Cult Leader", "Cultist"].includes(userRole.name) && isRevealed : false;
   const isChosenOne = userRole?.name === "Chosen One" && isRevealed;
   const canConceal = userRole?.ability.toLowerCase().includes("conceal");
 
   const confirmRoleSelection = () => {
     roleSelectionModal.close();
-    selectRole(socket, user?.localAccountId, roomCode, selectedRole);
+    selectRole(socket, accountUser?.localAccountId, roomCode, selectedRole);
   };
 
   const confirmTeamReview = () => {
     teamReviewModal.close();
-    confirmTeam(socket, user?.localAccountId, roomCode);
+    confirmTeam(socket, accountUser?.localAccountId, roomCode);
   };
 
   const confirmRolesPoolSelection = () => {
@@ -71,14 +70,14 @@ export const GameRoom = () => {
   };
 
   const confirmRevealRole = () => {
-    revealRole(user, socket, roomCode);
+    revealRole(accountUser, socket, roomCode);
     revealRoleModal.close();
   };
 
   const concealRole = () => {
     if (socket) {
       console.log("Concealing role");
-      socket.emit("conceal", { userId: user?.localAccountId, roomCode });
+      socket.emit("conceal", { userId: accountUser?.localAccountId, roomCode });
     }
   };
 
@@ -132,10 +131,10 @@ export const GameRoom = () => {
         </div>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           {isCultLeader && (
-            <SelectCultistsModal socket={socket} userId={user?.localAccountId} users={users} roomCode={roomCode} />
+            <SelectCultistsModal socket={socket} userId={accountUser?.localAccountId} users={users} roomCode={roomCode} />
             )}
           {isChosenOne && (
-            <ChosenOneDecisionModal socket={socket} userId={user?.localAccountId} roomCode={roomCode} />
+            <ChosenOneDecisionModal socket={socket} userId={accountUser?.localAccountId} roomCode={roomCode} />
             )}
         </div>
         <div style={{marginBottom:"4vmin"}}>
@@ -154,7 +153,7 @@ export const GameRoom = () => {
           <Button onClick={() => startGame(socket, roomCode)} style={{marginRight:"1.5vmin"}}>Start Game</Button>
         </div>
         <div style={{ marginTop: 'auto', width: '100%', textAlign: 'center' }}>
-          <Button onClick={() => leaveRoom(user, socket, roomCode)}>Leave Room</Button>
+          <Button onClick={() => leaveRoom(accountUser, socket, roomCode)}>Leave Room</Button>
         </div>
         </>
       )}

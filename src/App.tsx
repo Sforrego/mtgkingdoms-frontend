@@ -11,16 +11,15 @@ import { useAppContext } from "./Context/AppContext";
 import { useUserData } from './Hooks/useUserData';
 
 function App() {
-  const { isConnected, user, socket } = useAppContext();
+  const { isConnected, accountUser, socket } = useAppContext();
 
   const getUserData = useUserData();
 
   useEffect(() => {
-    if (isConnected && user && socket) {
-      socket.emit("login", { userId: user.localAccountId, username: user.name });
+    if (isConnected && accountUser && socket) {
       getUserData();
     }
-  }, [isConnected, user, socket, getUserData]);
+  }, [isConnected, accountUser, socket, getUserData]);
 
   return (
     <div className="App">
