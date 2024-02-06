@@ -30,8 +30,10 @@ export interface RoleDataEvent {
   export interface ReconnectedToRoomEvent {
     team: User[];
     usersInRoom: User[];
-    activeGame: boolean;
     roomCode: string;
+    activeGame: boolean;
+    selectingRole: boolean;
+    reviewingTeam: boolean;
   }
   
   export interface GameEndedEvent {

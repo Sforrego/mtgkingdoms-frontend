@@ -99,7 +99,7 @@ export const SocketListener = () => {
             }
           });
     
-          socket.on("reconnectedToRoom", ({ team, usersInRoom, activeGame, roomCode }: ReconnectedToRoomEvent) => {
+          socket.on("reconnectedToRoom", ({ team, usersInRoom, roomCode, activeGame, selectingRole, reviewingTeam }: ReconnectedToRoomEvent) => {
             console.log(team);
             if(accountUser){
               console.log("Reconnected to room");
@@ -111,9 +111,9 @@ export const SocketListener = () => {
               const myUser: User | undefined = usersInRoom.find((u: User) => u.userId === accountUser.localAccountId);
               if (myUser) {
                 setIsRevealed(myUser.isRevealed);
-                setSelectingRole(!myUser.hasSelectedRole)
-                setReviewingTeam(!myUser.hasReviewedTeam)
                 setPotentialRoles(myUser.potentialRoles);
+                setSelectingRole(selectingRole);
+                setReviewingTeam(reviewingTeam);
               } else {
                 console.log("User not found in usersInRoom")
               }
