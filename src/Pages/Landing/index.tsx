@@ -17,6 +17,7 @@ type LandingProps =
     };
 
 export const Landing = (props: LandingProps) => {
+  
   return "handleLogin" in props ? (
     <Button onClick={props?.handleLogin}>
       Get Started

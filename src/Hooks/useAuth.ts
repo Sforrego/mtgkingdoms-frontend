@@ -6,31 +6,35 @@ import { leaveRoom } from "../Services/gameService";
 
 interface UseAuthReturn {
     isLoggedIn: boolean;
-    user: AccountInfo | null;
-    loginHandler: () => Promise<void>;
+    setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+    accountUser: AccountInfo | null;
+    setAccountUser: React.Dispatch<React.SetStateAction<AccountInfo | null>>;
+    loginHandler: (socket: Socket) => Promise<void>;
     logoutHandler: (user: AccountInfo | null, socket: Socket, roomCode: string) => Promise<void>;
   }
 
-export const useAuth = (): UseAuthReturn => {
+export const useAuth = (socket: Socket | null): UseAuthReturn => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState<AccountInfo | null>(null);
+    const [accountUser, setAccountUser] = useState<AccountInfo | null>(null);
 
     useEffect(() => {
         handleAADB2C90091ErrorEffect();
     }, []);
 
     useEffect(() => {
-        handleRedirectEffect(setUser, setIsLoggedIn);
-    }, [setIsLoggedIn]);
+        if(socket){
+            handleRedirectEffect(setAccountUser, setIsLoggedIn, socket);
+        }
+    }, [setIsLoggedIn, socket]);
 
-    const loginHandler = async () => {
-        await handleLogin(setUser, setIsLoggedIn);
+    const loginHandler = async (socket: Socket) => {
+        await handleLogin(setAccountUser, setIsLoggedIn, socket);
     };
 
     const logoutHandler = async (user: AccountInfo | null, socket: Socket, roomCode: string) => {
         console.log("logging out")
-        await handleLogout(setIsLoggedIn, () => leaveRoom(user, socket, roomCode))
+        await handleLogout(setIsLoggedIn, () => leaveRoom(user, socket, roomCode), setAccountUser);
     };
 
-    return { isLoggedIn, user, loginHandler, logoutHandler };
+    return { isLoggedIn, setIsLoggedIn, accountUser, setAccountUser, loginHandler, logoutHandler };
 };

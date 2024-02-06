@@ -40,16 +40,6 @@ export const getAllAccounts = () => {
 
 const SERVER = process.env.REACT_APP_SERVER as string;
 
-export const handleLoginEffect = async (
-  isConnected: boolean,
-  user: AccountInfo | null,
-  socket: Socket | null
-) => {
-  if (isConnected && user && socket) {
-    socket.emit("login", { userId: user.localAccountId, username: user.name });
-  }
-};
-
 export const handleAADB2C90091ErrorEffect = () => {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.has("error")) {
@@ -66,19 +56,25 @@ export const handleAADB2C90091ErrorEffect = () => {
 };
 
 export const handleRedirectEffect = async (
-  setUser: (account: AccountInfo | null) => void,
-  setIsLoggedIn: (loggedIn: boolean) => void
+  setAccountUser: (account: AccountInfo | null) => void,
+  setIsLoggedIn: (loggedIn: boolean) => void,
+  socket: Socket
 ) => {
   try {
     await handleRedirectPromise();
     const accounts = getAllAccounts();
     if (accounts.length !== 0) {
+      let accountUser: AccountInfo | null = null;
       if(accounts.length > 1 && accounts[1].homeAccountId.includes("profileediting")){
-        setUser(accounts[1]);
+        accountUser = accounts[1];
       } else {
-        setUser(accounts[0])
+        accountUser = accounts[0];
       }
+
+      setAccountUser(accountUser);
+      localStorage.setItem('accountUser', JSON.stringify(accountUser)); 
       setIsLoggedIn(true);
+      socket.emit("login", { userId: accountUser.localAccountId, username: accountUser.name });
     }
   } catch (error) {
     if (
@@ -116,15 +112,18 @@ export const initSocketEffect = (setSocket: (socket: Socket | null) => void, set
   };
 };
 
-export const handleLogin = async (setUser: Dispatch<SetStateAction<AccountInfo | null>>, setIsLoggedIn: Dispatch<SetStateAction<boolean>>) => {
+export const handleLogin = async (setUser: Dispatch<SetStateAction<AccountInfo | null>>, setIsLoggedIn: Dispatch<SetStateAction<boolean>>, socket: Socket) => {
   try {
     await handleRedirectPromise();
     const accounts = getAllAccounts();
     if (accounts.length === 0) {
       await login();
     } else {
-      setUser(accounts[0]);
+      let accountUser = accounts[0]
+      setUser(accountUser);
       setIsLoggedIn(true);
+      localStorage.setItem('accountUser', JSON.stringify(accountUser));
+      socket.emit("login", { userId: accountUser.localAccountId, username: accountUser.name });
     }
   } catch (err) {
     console.log(err);
@@ -140,11 +139,14 @@ export const handleLogin = async (setUser: Dispatch<SetStateAction<AccountInfo |
   }
 };
 
-export const handleLogout = async (setIsLoggedIn: Dispatch<SetStateAction<boolean>>, leaveRoom: () => void) => {
+export const handleLogout = async (setIsLoggedIn: Dispatch<SetStateAction<boolean>>, leaveRoom: () => void, setAccountUser: (acountUser: AccountInfo | null) => void) => {
   if (window.confirm("Do you really want to sign out?")) {
-    leaveRoom(); // Leave the room before logging out
-    await logout();
+    console.log("Actually Logging out")
+    leaveRoom();
+    localStorage.removeItem('accountUser'); 
+    setAccountUser(null); 
     setIsLoggedIn(false);
+    await logout();
   }
 };
 

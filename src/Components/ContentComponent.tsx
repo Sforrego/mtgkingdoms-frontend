@@ -8,7 +8,7 @@ import {
   } from "../Services/gameService";
 
 export const ContentComponent = () => {
-  const { isLoggedIn, isInRoom, isConnected, user, socket, roomCode, setRoomCode, loginHandler } = useAppContext();
+  const { isLoggedIn, isInRoom, isConnected, accountUser, socket, roomCode, setRoomCode, loginHandler } = useAppContext();
 
   return (
     <IfElse condition={isLoggedIn}>
@@ -20,10 +20,10 @@ export const ContentComponent = () => {
           <OnFalse key="notInRoom">
             <IfElse condition={isConnected}>
               <OnTrue key="Connected">
-                <p>Welcome {user?.name}!</p>
+                <p>Welcome {accountUser?.name}!</p>
                 <Landing
-                  createRoom={() => createRoom(user, socket)}
-                  joinRoom={() => joinRoom(user, socket, roomCode)}
+                  createRoom={() => createRoom(accountUser, socket)}
+                  joinRoom={() => joinRoom(accountUser, socket, roomCode)}
                   roomCode={roomCode}
                   setRoomCode={setRoomCode}
                 />
@@ -36,7 +36,7 @@ export const ContentComponent = () => {
         </IfElse>
       </OnTrue>
       <OnFalse key="notLoggedIn">
-        <Landing handleLogin={loginHandler} />
+        <Landing handleLogin={() => socket && loginHandler(socket)} />
       </OnFalse>
     </IfElse>
   );
