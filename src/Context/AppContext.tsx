@@ -81,8 +81,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [reviewingTeam, setReviewingTeam] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isConnected && !isLoggedIn) {
-      console.log("helloworld")
+    if (isConnected) {
       const storedUser = localStorage.getItem('accountUser');
       if (storedUser) {
         setAccountUser(() => {

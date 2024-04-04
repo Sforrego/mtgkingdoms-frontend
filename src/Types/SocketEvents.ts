@@ -15,7 +15,7 @@ export interface RoleDataEvent {
   }
   
   export interface UserRoomEvent {
-    users: User[];
+    usersInRoom: User[];
   }
   
   export interface GameStartedEvent {

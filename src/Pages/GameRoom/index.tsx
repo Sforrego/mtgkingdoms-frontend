@@ -26,7 +26,7 @@ export const GameRoom = () => {
     roomCode,
     accountUser,
     socket,
-    usersInRoom: users,
+    usersInRoom,
     roles,
     selectedRolesPool,
     selectedRole,
@@ -46,8 +46,8 @@ export const GameRoom = () => {
   const teamReviewModal = useModal();
   const noblesModal = useModal();
   const teamOverviewModal = useModal();
-  const gameUser = users?.find(u => u.userId === accountUser?.localAccountId);
-  const userRole = users && users.length > 0 ? users.find(u => u.userId === accountUser?.localAccountId)?.role : undefined;
+  const gameUser = usersInRoom?.find(u => u.userId === accountUser?.localAccountId);
+  const userRole = usersInRoom && usersInRoom.length > 0 ? usersInRoom.find(u => u.userId === accountUser?.localAccountId)?.role : undefined;
   const isCultLeader = userRole ? ["Cult Leader", "Cultist"].includes(userRole.name) && isRevealed : false;
   const isChosenOne = userRole?.name === "Chosen One" && isRevealed;
   const canConceal = userRole?.ability.toLowerCase().includes("conceal");
@@ -87,32 +87,32 @@ export const GameRoom = () => {
     <p style={{ color: "white", margin: "0", flex: 1, textAlign: "center" }}>Room: {roomCode}</p>
   </div>
       <div className="PlayersIconsHolder">
-        {users.map((user, index) => (
+        {usersInRoom.map((user, index) => (
           <PlayerInGame key={index} user={user} />
           ))}
       </div>
-      {selectingRole && (users.some(user => !user.hasSelectedRole) && potentialRoles.length > 0) ? (
+      {selectingRole && (usersInRoom.some(user => !user.hasSelectedRole) && potentialRoles?.length > 0) ? (
         <>
           {!gameUser?.hasSelectedRole && (
             <Button onClick={roleSelectionModal.open} style={{ marginLeft: "1.5vmin", marginTop: "2.5vmin"}}>Select Role</Button>
           )}          
           <p style={{color: "white"}}>Players selecting role:</p>
           <ul style={{ paddingLeft: '20px' }}> {/* Adjust padding as needed */}
-            {users.filter(user => !user.hasSelectedRole).map((user, index) => (
+            {usersInRoom.filter(user => !user.hasSelectedRole).map((user, index) => (
               <li key={index} style={{ color: "white", listStylePosition: 'inside' }}>
                 {user.username}
               </li>
             ))}
           </ul>
       </>
-      ) : reviewingTeam && users.some(user => !user.hasReviewedTeam) ? (
+      ) : reviewingTeam && usersInRoom.some(user => !user.hasReviewedTeam) ? (
         <>
           {!gameUser?.hasReviewedTeam && (
             <Button onClick={teamReviewModal.open} style={{ marginLeft: "1.5vmin", marginTop: "2.5vmin"}}>Review Team</Button>
           )}  
           <p style={{color: "white"}}>Players reviewing team:</p>
           <ul style={{ paddingLeft: '20px' }}> {/* Adjust padding as needed */}
-            {users.filter(user => !user.hasReviewedTeam).map((user, index) => (
+            {usersInRoom.filter(user => !user.hasReviewedTeam).map((user, index) => (
               <li key={index} style={{ color: "white", listStylePosition: 'inside' }}>
                 {user.username}
               </li>
@@ -131,19 +131,19 @@ export const GameRoom = () => {
         </div>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           {isCultLeader && (
-            <SelectCultistsModal socket={socket} userId={accountUser?.localAccountId} users={users} roomCode={roomCode} />
+            <SelectCultistsModal socket={socket} userId={accountUser?.localAccountId} usersInRoom={usersInRoom} roomCode={roomCode} />
             )}
           {isChosenOne && (
             <ChosenOneDecisionModal socket={socket} userId={accountUser?.localAccountId} roomCode={roomCode} />
             )}
         </div>
         <div style={{marginBottom:"4vmin"}}>
-          {nobles.length > 0 && gameStarted && (
+          {nobles?.length > 0 && gameStarted && (
             <Button onClick={noblesModal.open}>See Nobles</Button>
           )}
         </div>
         <div>
-          <EndGameModal users={users} roomCode={roomCode} socket={socket} />
+          <EndGameModal usersInRoom={usersInRoom} roomCode={roomCode} socket={socket} />
         </div>
         </>
       ) : (

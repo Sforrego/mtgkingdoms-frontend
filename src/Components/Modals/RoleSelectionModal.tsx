@@ -62,7 +62,7 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
             nextArrow={<NextArrow currentSlide={0} slideCount={0}/>}
             prevArrow={<PrevArrow currentSlide={0} slideCount={0}/>}
         >
-            {potentialRoles.map((role, index) => (
+            {potentialRoles?.map((role, index) => (
             <div key={index} className="carousel-item">
                 <RoleCard key={role.name} role={role}/>
                 <Button

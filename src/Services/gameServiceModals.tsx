@@ -3,7 +3,7 @@ import { Modal, Button, Checkbox, Radio } from 'antd';
 import { User } from "../Types/User";
 import { Socket } from 'socket.io-client';
 
-export const EndGameModal = ({ socket, users, roomCode }: { socket: Socket | null, users: User[], roomCode: string }) => {
+export const EndGameModal = ({ socket, usersInRoom, roomCode }: { socket: Socket | null, usersInRoom: User[], roomCode: string }) => {
   const [open, setOpen] = useState(false);
   const [currentWinnersIds, setCurrentWinnersIds] = useState<string[]>([]);
 
@@ -30,7 +30,7 @@ export const EndGameModal = ({ socket, users, roomCode }: { socket: Socket | nul
         onCancel={handleCancel}
       >
         <Checkbox.Group style={{ width: '100%' }} onChange={handleCheckChange}>
-          {users.map((user) => (
+          {usersInRoom.map((user) => (
             <div key={user.userId}>
               <Checkbox value={user.userId}>{user.username}</Checkbox>
             </div>
@@ -41,7 +41,7 @@ export const EndGameModal = ({ socket, users, roomCode }: { socket: Socket | nul
   );
 };
   
-  export const SelectCultistsModal = ({ socket, userId, users, roomCode }: { socket: Socket | null, userId: string | undefined, users: User[], roomCode: string }) => {
+  export const SelectCultistsModal = ({ socket, userId, usersInRoom, roomCode }: { socket: Socket | null, userId: string | undefined, usersInRoom: User[], roomCode: string }) => {
     const [open, setOpen] = useState(false);
     const [cultistsIds, setCultistsIds] = useState<string[]>([]);
 
@@ -68,7 +68,7 @@ export const EndGameModal = ({ socket, users, roomCode }: { socket: Socket | nul
           onCancel={handleCancel}
         >
           <Checkbox.Group style={{ width: '100%' }} onChange={handleCheckChange}>
-            {users.map((user) => (
+            {usersInRoom.map((user) => (
               <div key={user.userId}>
                 <Checkbox value={user.userId}>{user.username}</Checkbox>
               </div>

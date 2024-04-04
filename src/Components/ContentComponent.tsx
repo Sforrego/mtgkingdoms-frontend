@@ -13,13 +13,13 @@ export const ContentComponent = () => {
   return (
     <IfElse condition={isLoggedIn}>
       <OnTrue key="loggedIn">
-        <IfElse condition={isInRoom}>
-          <OnTrue key="inRoom">
-            <GameRoom/>
-          </OnTrue>
-          <OnFalse key="notInRoom">
-            <IfElse condition={isConnected}>
-              <OnTrue key="Connected">
+        <IfElse condition={isConnected}>
+          <OnTrue key="Connected">
+            <IfElse condition={isInRoom}>
+              <OnTrue key="inRoom">
+                <GameRoom/>
+              </OnTrue>
+              <OnFalse key="notInRoom">
                 <p>Welcome {accountUser?.name}!</p>
                 <Landing
                   createRoom={() => createRoom(accountUser, socket)}
@@ -27,11 +27,11 @@ export const ContentComponent = () => {
                   roomCode={roomCode}
                   setRoomCode={setRoomCode}
                 />
-              </OnTrue>
-              <OnFalse key="notConnected">
-                <p> Connecting to server... </p>
               </OnFalse>
             </IfElse>
+          </OnTrue>
+          <OnFalse key="notConnected">
+            <p> Connecting to server... </p>
           </OnFalse>
         </IfElse>
       </OnTrue>
@@ -41,3 +41,4 @@ export const ContentComponent = () => {
     </IfElse>
   );
 };
+  

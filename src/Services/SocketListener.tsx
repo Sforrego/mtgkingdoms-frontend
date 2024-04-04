@@ -19,19 +19,40 @@ export const SocketListener = () => {
           if (roles.length===0){
             socket && socket.emit("getRoles");
           }
-    
+
           socket.on("rolesData", (data: Role[]) => {
             setRoles(data);
             setSelectedRolesPool(data);
           });
-    
+
+          socket.on("loginStatus", (event) => {
+            console.log(`Received login status update`);
+            console.log(event);
+            const { roomCode, usersInRoom, team, activeGame, selectingRole, reviewingTeam, potentialRoles, isRevealed } = event;
+            if (roomCode) {
+              setRoomCode(roomCode);
+              setIsInRoom(true);
+            } else {
+              // Adjust according to your needs if a user is not in any room
+              setIsInRoom(false);
+              setRoomCode("");
+            }
+            setUsersInRoom(usersInRoom || []);
+            setTeam(team || []);
+            setGameStarted(activeGame);
+            setSelectingRole(selectingRole);
+            setReviewingTeam(reviewingTeam);
+            setPotentialRoles(potentialRoles);
+            setIsRevealed(isRevealed);
+          });
+
           socket.on("roomCreated", ({ roomCode, users }: RoomCreatedEvent) => {
             console.log(`Room created with code: ${roomCode}`);
             setRoomCode(roomCode);
             setIsInRoom(true);
             setUsersInRoom(users);
           });
-    
+
           socket.on("joinedRoom", ({ roomCode, users, selectedRoles }: JoinedRoomEvent) => {
             console.log(`Joined room with code: ${roomCode}`);
             setRoomCode(roomCode);
@@ -43,17 +64,21 @@ export const SocketListener = () => {
           socket.on("leftRoom", () => {
             console.log(`Left room: ${roomCode}`);
             setIsInRoom(false);
+            setUsersInRoom([]);
+            setSelectingRole(false);
+            setReviewingTeam(false);
+            setGameStarted(false);
             setRoomCode("");
           });
     
-          socket.on("userJoinedRoom", ({ users }: UserRoomEvent) => {
-            console.log(`A user joined the room. Updated users: ${users}`);
-            setUsersInRoom(users);
+          socket.on("userJoinedRoom", ({ usersInRoom }: UserRoomEvent) => {
+            console.log("A user joined the room. Updated users:", usersInRoom);
+            setUsersInRoom(usersInRoom);
           });
     
-          socket.on("userLeftRoom", ({ users }: UserRoomEvent) => {
-            console.log(`A user left the room. Updated users: ${users}`);
-            setUsersInRoom(users);
+          socket.on("userLeftRoom", ({ usersInRoom }: UserRoomEvent) => {
+            console.log("A user left the room. Updated users:", usersInRoom);
+            setUsersInRoom(usersInRoom);
           });
 
               
@@ -120,9 +145,9 @@ export const SocketListener = () => {
             }
           });
     
-          socket.on("gameEnded", ({ users }: UserRoomEvent) => {
+          socket.on("gameEnded", ({ usersInRoom }: UserRoomEvent) => {
             console.log("Game Ended");
-            setUsersInRoom(users);
+            setUsersInRoom(usersInRoom);
             setNobles([]);
             setGameStarted(false);
             setPotentialRoles([]);
@@ -135,14 +160,14 @@ export const SocketListener = () => {
     
           return () => {
             socket.off("rolesData");
-            socket.off("roomCreated");
+            socket.off("loginStatus");
             socket.off("joinedRoom");
+            socket.off("roomCreated");
             socket.off("leftRoom");
             socket.off("userJoinedRoom");
             socket.off("userLeftRoom");
             socket.off("gameStarted");
             socket.off("gameUpdated");
-            socket.off("reconnectedToRoom");
             socket.off("gameEnded");
             socket.off("selectRole")
             socket.off("reviewTeam")

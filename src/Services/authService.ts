@@ -1,5 +1,5 @@
 import { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { Dispatch, SetStateAction } from "react";
 
 const clientId = process.env.REACT_APP_MTGKINGDOMS_CLIENT_ID as string;
@@ -37,8 +37,6 @@ export const handleRedirectPromise = async () => {
 export const getAllAccounts = () => {
   return myMSALObj.getAllAccounts();
 };
-
-const SERVER = process.env.REACT_APP_SERVER as string;
 
 export const handleAADB2C90091ErrorEffect = () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -86,30 +84,6 @@ export const handleRedirectEffect = async (
       window.location.href = "/"; 
     }
   }
-};
-
-export const initSocketEffect = (setSocket: (socket: Socket | null) => void, setIsConnected: (connected: boolean) => void) => {
-  const newSocket = io(SERVER);
-  setSocket(newSocket);
-
-  newSocket.on("connect", () => {
-    setIsConnected(true);
-  });
-
-  newSocket.on("disconnect", () => {
-    setIsConnected(false);
-  });
-
-  newSocket.on("connect_error", (error) => {
-    console.log("Connection error:", error);
-    setTimeout(() => {
-      newSocket.connect();
-    }, 1000);
-  });
-
-  return () => {
-    newSocket.disconnect();
-  };
 };
 
 export const handleLogin = async (setUser: Dispatch<SetStateAction<AccountInfo | null>>, setIsLoggedIn: Dispatch<SetStateAction<boolean>>, socket: Socket) => {
