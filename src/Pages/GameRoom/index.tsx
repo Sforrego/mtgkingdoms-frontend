@@ -142,9 +142,6 @@ export const GameRoom = () => {
             <Button onClick={noblesModal.open}>See Nobles</Button>
           )}
         </div>
-        <div>
-          <EndGameModal usersInRoom={usersInRoom} roomCode={roomCode} socket={socket} />
-        </div>
         </>
       ) : (
         <>
@@ -158,6 +155,11 @@ export const GameRoom = () => {
         </>
       )}
     
+    {gameStarted && (
+      <div className="end-game-button-container">
+        <EndGameModal usersInRoom={usersInRoom} roomCode={roomCode} socket={socket} />
+      </div>
+    )}
     <RolesPoolSelectionModal
       isOpen={rolesPoolSelectionModal.isOpen}
       roles={roles}

@@ -9,7 +9,7 @@ import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent,
   SelectRoleEvent, ReviewTeamEvent, ErrorEvent } from '../Types/SocketEvents';
 
 export const SocketListener = () => {
-    const { socket, roles, roomCode, setGameStarted, accountUser, isRevealed, setIsRevealed, 
+    const { socket, roles, roomCode, gameStarted, setGameStarted, accountUser, isRevealed, setIsRevealed, 
       setSelectingRole, setPotentialRoles, setSelectedRole, setIsInRoom, setNobles, 
       setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom, setReviewingTeam } = useAppContext();
 
@@ -88,6 +88,7 @@ export const SocketListener = () => {
     
           socket.on("selectRole", ({ potentialRoles }: SelectRoleEvent) =>{
             console.log("Selecting role");
+            setGameStarted(true);
             setSelectingRole(true);
             setPotentialRoles(potentialRoles);
           })
@@ -106,7 +107,9 @@ export const SocketListener = () => {
               setNobles(nobles)
             }
             setReviewingTeam(false);
-            setGameStarted(true);
+            if(!gameStarted){
+              setGameStarted(true);
+            }
           });
     
           socket.on("gameUpdated", ({ usersInRoom }: GameUpdatedEvent) => {
@@ -150,6 +153,8 @@ export const SocketListener = () => {
             setUsersInRoom(usersInRoom);
             setNobles([]);
             setGameStarted(false);
+            setReviewingTeam(false);
+            setSelectingRole(false);
             setPotentialRoles([]);
             setSelectedRole(null);
           });
@@ -174,7 +179,7 @@ export const SocketListener = () => {
             socket.off("error");
           };
         }
-      }, [isRevealed, roomCode, socket, accountUser, roles.length, setGameStarted, 
+      }, [isRevealed, roomCode, socket, accountUser, roles.length, gameStarted, setGameStarted, 
         setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, setReviewingTeam,
         setRoomCode, setSelectedRole, setSelectedRolesPool, setSelectingRole, setTeam, setUsersInRoom]);
 

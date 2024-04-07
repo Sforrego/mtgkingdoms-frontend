@@ -35,6 +35,14 @@
 }
 
 .game-room {
-  position: "relative"; 
-  height: "100%";
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+  justify-content: center;
+  align-items: center; /* Ensures the container takes up at least the full height of the viewport */
+}
+
+.end-game-button-container {
+  margin-top: auto; /* Pushes the container to the bottom */
 }
