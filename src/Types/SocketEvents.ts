@@ -8,6 +8,7 @@ export interface RoleDataEvent {
   export interface RoomCreatedEvent {
     roomCode: string;
     users: User[];
+    selectedRoles: Role[];
   }
   
   export interface JoinedRoomEvent extends RoomCreatedEvent {

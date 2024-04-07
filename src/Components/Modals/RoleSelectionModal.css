@@ -1,0 +1,21 @@
+.role-type-header h3 {
+    font-size: 18px; /* Adjust size as needed */
+    font-weight: bold;
+    color: #ffffff; /* Or any color that matches your design */
+    background-color: #333333; /* Or any color that matches your design */
+    padding: 8px 16px; /* Adjust padding as needed */
+    margin-top: 20px; /* Adds spacing above the section header */
+    border-radius: 10px; /* Rounded corners, adjust as needed */
+    margin-bottom: 10px; /* Adds spacing below the section header */
+  }
+  
+  .role-item {
+    display: flex;
+    align-items: center;
+    padding: 4px 0; /* Adjust padding as needed */
+  }
+  
+  .details-icon-button {
+    margin-left: auto;
+    margin-right: 8px; /* Adjust spacing as needed */
+  }  

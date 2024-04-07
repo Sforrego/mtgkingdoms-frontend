@@ -22,7 +22,6 @@ export const SocketListener = () => {
 
           socket.on("rolesData", (data: Role[]) => {
             setRoles(data);
-            setSelectedRolesPool(data);
           });
 
           socket.on("loginStatus", (event) => {
@@ -46,11 +45,12 @@ export const SocketListener = () => {
             setIsRevealed(isRevealed);
           });
 
-          socket.on("roomCreated", ({ roomCode, users }: RoomCreatedEvent) => {
+          socket.on("roomCreated", ({ roomCode, users, selectedRoles }: RoomCreatedEvent) => {
             console.log(`Room created with code: ${roomCode}`);
             setRoomCode(roomCode);
             setIsInRoom(true);
             setUsersInRoom(users);
+            setSelectedRolesPool(selectedRoles)
           });
 
           socket.on("joinedRoom", ({ roomCode, users, selectedRoles }: JoinedRoomEvent) => {
