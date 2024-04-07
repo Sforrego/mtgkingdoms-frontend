@@ -11,10 +11,10 @@ export const ContentComponent = () => {
   const { isLoggedIn, isInRoom, isConnected, accountUser, socket, roomCode, setRoomCode, loginHandler } = useAppContext();
 
   return (
-    <IfElse condition={isLoggedIn}>
-      <OnTrue key="loggedIn">
-        <IfElse condition={isConnected}>
-          <OnTrue key="Connected">
+    <IfElse condition={isConnected}>
+      <OnTrue key="Connected">
+        <IfElse condition={isLoggedIn}>
+          <OnTrue key="loggedIn">
             <IfElse condition={isInRoom}>
               <OnTrue key="inRoom">
                 <GameRoom/>
@@ -30,13 +30,13 @@ export const ContentComponent = () => {
               </OnFalse>
             </IfElse>
           </OnTrue>
-          <OnFalse key="notConnected">
-            <p> Connecting to server... </p>
+          <OnFalse key="notLoggedIn">
+            <Landing handleLogin={() => socket && loginHandler(socket)} />
           </OnFalse>
         </IfElse>
       </OnTrue>
-      <OnFalse key="notLoggedIn">
-        <Landing handleLogin={() => socket && loginHandler(socket)} />
+      <OnFalse key="notConnected">
+        <p> Connecting to server... </p>
       </OnFalse>
     </IfElse>
   );
