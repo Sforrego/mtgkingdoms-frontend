@@ -55,6 +55,8 @@ export interface AppContextType {
   setSelectingRole: React.Dispatch<React.SetStateAction<boolean>>;
   reviewingTeam: boolean;
   setReviewingTeam: React.Dispatch<React.SetStateAction<boolean>>;
+  previousRoomCode: string | null;
+  setPreviousRoomCode: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export const AppContext = createContext<AppContextType | null>(null);
@@ -79,6 +81,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectingRole, setSelectingRole] = useState<boolean>(false);
   const [reviewingTeam, setReviewingTeam] = useState<boolean>(false);
+  const [previousRoomCode, setPreviousRoomCode] = useState<string | null>(null);
 
   useEffect(() => {
     if (isConnected) {
@@ -93,6 +96,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       }
     }
   }, [isConnected, isLoggedIn, socket, setIsLoggedIn, setAccountUser]);
+
+  useEffect(() => {
+    const storedRoomCode = localStorage.getItem('previousRoomCode');
+    if(storedRoomCode){
+      setPreviousRoomCode(storedRoomCode);
+    }
+  }, [previousRoomCode, setPreviousRoomCode])
 
     return (
       <AppContext.Provider value={{
@@ -135,6 +145,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setSelectingRole,
         reviewingTeam,
         setReviewingTeam,
+        previousRoomCode,
+        setPreviousRoomCode
       }}>
         {children}
       </AppContext.Provider>

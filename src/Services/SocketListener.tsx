@@ -11,7 +11,7 @@ import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent,
 export const SocketListener = () => {
     const { socket, roles, roomCode, gameStarted, setGameStarted, accountUser, isRevealed, setIsRevealed, 
       setSelectingRole, setPotentialRoles, setSelectedRole, setIsInRoom, setNobles, 
-      setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom, setReviewingTeam } = useAppContext();
+      setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom, setReviewingTeam, setPreviousRoomCode } = useAppContext();
 
     useEffect(() => {
         if (socket) {
@@ -51,14 +51,18 @@ export const SocketListener = () => {
             setIsInRoom(true);
             setUsersInRoom(users);
             setSelectedRolesPool(selectedRoles)
+            setPreviousRoomCode(roomCode);
+            localStorage.setItem('previousRoomCode', roomCode);
           });
-
+          
           socket.on("joinedRoom", ({ roomCode, users, selectedRoles }: JoinedRoomEvent) => {
             console.log(`Joined room with code: ${roomCode}`);
             setRoomCode(roomCode);
             setIsInRoom(true);
             setUsersInRoom(users);
             setSelectedRolesPool(selectedRoles);
+            setPreviousRoomCode(roomCode);
+            localStorage.setItem('previousRoomCode', roomCode);
           });
     
           socket.on("leftRoom", () => {
@@ -181,7 +185,7 @@ export const SocketListener = () => {
         }
       }, [isRevealed, roomCode, socket, accountUser, roles.length, gameStarted, setGameStarted, 
         setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, setReviewingTeam,
-        setRoomCode, setSelectedRole, setSelectedRolesPool, setSelectingRole, setTeam, setUsersInRoom]);
+        setRoomCode, setSelectedRole, setSelectedRolesPool, setSelectingRole, setTeam, setUsersInRoom, setPreviousRoomCode]);
 
     return null;
 }

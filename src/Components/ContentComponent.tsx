@@ -23,7 +23,7 @@ export const ContentComponent = () => {
                 <p>Welcome {accountUser?.name}!</p>
                 <Landing
                   createRoom={() => createRoom(accountUser, socket)}
-                  joinRoom={() => joinRoom(accountUser, socket, roomCode)}
+                  joinRoom={(roomCode: string) => joinRoom(accountUser, socket, roomCode)}
                   roomCode={roomCode}
                   setRoomCode={setRoomCode}
                 />
