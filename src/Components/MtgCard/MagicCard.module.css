@@ -203,8 +203,7 @@ div {
 .frame-header,
 .frame-type-line,
 .frame-text-box {
-    overflow: auto;
-    /* TODO Revisit this */
+    overflow: hidden;
 }
 
 
@@ -307,7 +306,7 @@ div {
 
 .frame-art {
     height: 45%;
-    margin: 0 4vw;
+    margin: 0 5%;
     background-color: #171314;
 }
 
@@ -319,6 +318,7 @@ div {
 
 .set-icon {
     display: flex;
+    margin-right: 10px;
     /* position: relative; */
 }
 
@@ -327,9 +327,10 @@ div {
     top: 50%; */
     /* margin-top: 2px; */
     align-self: center;
-    width: 30px;
+    width: 100%;
+    height: 100%;
     size: 10px;
-    font-size: 4vmin;
+    font-size: 5vmin;
     /* transform: translateY(-50%); */
     /* position: absolute; */
 }
@@ -351,15 +352,28 @@ div {
 .frame-text-box {
     margin: 0 10px;
     background: #d3ded6;
-    background-image: url(https://image.ibb.co/dFcNx7/tile_bg_2.jpg);
+    background-image: url('https://image.ibb.co/dFcNx7/tile_bg_2.jpg');
     display: flex;
     flex-direction: column;
-    /* justify-content: space-around; */
     padding: 1vh 1vw;
-    /* max-height: 20vh; */
-    height: 10px;
-    font-size: 3vmin;
+    min-height: 20vh; /* Instead of a fixed height, use min-height */
+    font-size: calc(0.4em + 1vmin); /* Use calc() for a combination of fixed and dynamic sizing */
     width: 68vw;
+}
+
+/* Media query for larger screens */
+@media (min-width: 768px) {
+    .frame-text-box {
+        margin: 0 auto; /* Center the box */
+        padding: 2vh 2vw;
+        width: 90%; /* Adjust the width for larger screens */
+        font-size: calc(0.4em + 1vmin); /* Slightly smaller font-size on larger screens */
+    }
+    .frame-art {
+        height: 45%;
+        margin: 0 2vw;
+        background-color: #171314;
+    }
 }
 
 .frame-text-box i {
