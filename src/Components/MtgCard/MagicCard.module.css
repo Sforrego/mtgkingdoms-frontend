@@ -201,9 +201,14 @@ div {
     ----------------------
 */
 .frame-header,
-.frame-type-line,
+.frame-type-line {
+    overflow: hidden
+}
+
 .frame-text-box {
-    overflow: hidden;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #b8a57d #d3ded6;
 }
 
 
