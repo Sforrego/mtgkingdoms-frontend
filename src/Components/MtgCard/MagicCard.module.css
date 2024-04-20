@@ -35,6 +35,8 @@ div {
     border-bottom-right-radius: 3vmin;
     display: flex;
     background-position: center;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;
     /* background-clip: border-box; */
     /* z-index: 0; */
 }
@@ -219,9 +221,7 @@ div {
     /* height: 648px; */
     height: 100%;
     max-width: 97%;
-    left: 1%;
-    top: 0.5%;
-    left: 1.2%;
+    top: 1.5%;
     display: flex;
     flex-direction: column;
 }
@@ -234,7 +234,6 @@ div {
         linear-gradient(0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3)),
         url(https://image.ibb.co/jKByZn/tile_bg_1.jpg);
     display: flex;
-    margin-top: 1vh;
     margin-left: 1.5vw;
     margin-right: 1.5vw;
     display: flex;
@@ -344,8 +343,7 @@ div {
 .frame-type-line {
     margin-top: 0;
     font-family: 'Beleren';
-    max-height: 2.2vh;
-    height: 100%;
+    height: auto;
     font-size: 15px;
     position: relative;
 }
@@ -361,6 +359,7 @@ div {
     /* max-height: 20vh; */
     height: 10px;
     font-size: 3vmin;
+    width: 68vw;
 }
 
 .frame-text-box i {
