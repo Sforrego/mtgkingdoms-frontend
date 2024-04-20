@@ -27,15 +27,15 @@ export const SocketListener = () => {
           socket.on("loginStatus", (event) => {
             console.log(`Received login status update`);
             console.log(event);
-            const { roomCode, usersInRoom, team, activeGame, selectingRole, reviewingTeam, potentialRoles, isRevealed } = event;
+            const { roomCode, usersInRoom, team, activeGame, selectedRolesPool, selectingRole, reviewingTeam, potentialRoles, isRevealed } = event;
             if (roomCode) {
               setRoomCode(roomCode);
               setIsInRoom(true);
             } else {
-              // Adjust according to your needs if a user is not in any room
               setIsInRoom(false);
               setRoomCode("");
             }
+
             setUsersInRoom(usersInRoom || []);
             setTeam(team || []);
             setGameStarted(activeGame);
@@ -43,6 +43,7 @@ export const SocketListener = () => {
             setReviewingTeam(reviewingTeam);
             setPotentialRoles(potentialRoles);
             setIsRevealed(isRevealed);
+            setSelectedRolesPool(selectedRolesPool);
           });
 
           socket.on("roomCreated", ({ roomCode, users, selectedRoles }: RoomCreatedEvent) => {
