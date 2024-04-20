@@ -5,7 +5,7 @@ import { useAppContext } from '../Context/AppContext';
 import { Role } from "../Types/Role";
 import { User } from "../Types/User";
 import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent, 
-  GameUpdatedEvent, ReconnectedToRoomEvent, RolesPoolUpdatedEvent, 
+  GameUpdatedEvent, RolesPoolUpdatedEvent, 
   SelectRoleEvent, ReviewTeamEvent, ErrorEvent } from '../Types/SocketEvents';
 
 export const SocketListener = () => {
@@ -126,27 +126,6 @@ export const SocketListener = () => {
                 if (myUser.isRevealed !== isRevealed){
                   setIsRevealed(myUser.isRevealed);
                 }
-              } else {
-                console.log("User not found in usersInRoom")
-              }
-            }
-          });
-    
-          socket.on("reconnectedToRoom", ({ team, usersInRoom, roomCode, activeGame, selectingRole, reviewingTeam }: ReconnectedToRoomEvent) => {
-            console.log(team);
-            if(accountUser){
-              console.log("Reconnected to room");
-              setRoomCode(roomCode);
-              setIsInRoom(true);
-              setUsersInRoom(usersInRoom);
-              setGameStarted(activeGame);
-              setTeam(team);
-              const myUser: User | undefined = usersInRoom.find((u: User) => u.userId === accountUser.localAccountId);
-              if (myUser) {
-                setIsRevealed(myUser.isRevealed);
-                setPotentialRoles(myUser.potentialRoles);
-                setSelectingRole(selectingRole);
-                setReviewingTeam(reviewingTeam);
               } else {
                 console.log("User not found in usersInRoom")
               }

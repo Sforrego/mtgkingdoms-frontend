@@ -28,15 +28,6 @@ export interface RoleDataEvent {
     usersInRoom: User[];
   }
   
-  export interface ReconnectedToRoomEvent {
-    team: User[];
-    usersInRoom: User[];
-    roomCode: string;
-    activeGame: boolean;
-    selectingRole: boolean;
-    reviewingTeam: boolean;
-  }
-  
   export interface GameEndedEvent {
     users: User[];
   }
