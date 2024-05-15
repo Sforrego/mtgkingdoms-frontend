@@ -1,453 +1,85 @@
-.card-container * {
+.imageContainer {
+    width: 95%;
+    position: relative;
+  }
+  
+  .imageContainer img {
+    display: block;
+    border-radius: 20px;
+    width: 100%;
+    opacity: .7;
+  }
+  
+  .green-background {
+    border: 1.5px solid rgba(0, 255, 0, 0.65);
+  }
+  
+  .red-background {
+    border: 1.5px solid rgba(255, 0, 0, 0.65);
+  }
+  
+  .blue-background {
+    border: 1.5px solid rgba(0, 0, 255, 0.65);
+  }
+  
+  .white-background {
+    border: 1.5px solid rgba(255, 255, 255, 0.65);
+  }
+  
+  .black-background {
+    border: 1.5px solid rgba(0, 0, 0, 0.65);
+  }
+  
+  .colorless-background {
+    border: 1.5px solid rgba(125, 125, 125, 0.65);
+  }
+  
+  .titleBox {
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 50%;
+    background-color: rgba(0, 0, 0, 0.65);
+    padding: 10px;
     box-sizing: border-box;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 20px;
+    margin-top: 3%;
+  }
+  
+  .titleBox p {
     margin: 0;
-    padding: 0;
-    text-align: left;
-    /* color: #171314; */
-}
-
-.card-container p,
-div {
-    color: #171314;
-}
-
-.card-container {
-    border: 1px solid black;
-    width: 100%;
-    /* max-width: 500px; */
-    /* width: 40vw; */
-    /* width: 500px; */
-    aspect-ratio: 9/14;
-    /* height: 700px; */
-    border-radius: 5vmin;
-    box-sizing: border-box;
-    /* box-shadow: -8px 9px 16px -3px gray; */
-    background: #171314;
-}
-
-.card-background {
-    height: 95%;
-    margin: 3vmin;
-    /* margin: 3vmin 3vmin 0 3vmin; */
-    border-top-left-radius: 3vmin;
-    border-top-right-radius: 3vmin;
-    border-bottom-left-radius: 3vmin;
-    border-bottom-right-radius: 3vmin;
-    display: flex;
-    background-position: center;
-    justify-content: center; /* Centers horizontally */
-    align-items: center;
-    /* background-clip: border-box; */
-    /* z-index: 0; */
-}
-
-.white-background {
-    background-image: url(https://cdn.midjourney.com/16f41794-c5fc-4c2c-a58d-d8d97ac8750c/0_3.png);
-    background-repeat: unset;
-    background-size: cover;
-}
-
-.blue-background {
-    background-image: url(https://cdn.midjourney.com/d8eef5aa-633c-436a-8205-d2104cd1d1bb/0_0.png);
-    background-repeat: unset;
-    background-size: cover;
-}
-
-.black-background {
-    background-image: url(https://cdn.midjourney.com/f942b1e4-e8b0-4597-9d46-a451d9fccc58/0_3.png);
-    background-repeat: unset;
-    background-size: cover;
-}
-
-.red-background {
-    background-image: url(https://cdn.midjourney.com/f2768fe2-4d97-449a-9e02-29f988d0ec60/0_1.png);
-    background-repeat: unset;
-    background-size: cover;
-}
-
-.green-background {
-    background-image: url(https://cdn.midjourney.com/59994b61-4657-46f4-9463-ccf07aee3f2e/0_0.png);
-    background-repeat: unset;
-    background-size: cover;
-}
-
-.uncolor-background {
-    background-image: url(https://cdn.midjourney.com/0ca7d379-602c-4cfa-9758-cad64c46d24e/0_0.png);
-    background-repeat: unset;
-    background-size: cover;
-}
-
-/*
-    -------------------------
-    -------------------------
-            BORDERS
-    -------------------------
-    -------------------------
-*/
-.frame-header,
-.frame-type-line {
-    /* border-bottom: 4px solid #a9a9a9;
-    border-left: 2px solid #a9a9a9; */
-    border-top: 1px solid #fff;
-    border-right: 1px solid #fff;
-}
-
-.frame-header,
-.frame-art,
-.frame-type-line {
-    margin-bottom: 7px;
-}
-
-.green-frame>.frame-header,
-.green-frame>.frame-art,
-.green-frame>.frame-type-line {
-    box-shadow:
-        0 0 0 2px #171314,
-        0 0 0 5px #26714A,
-        -3px 3px 2px 5px #171314;
-}
-
-.blue-frame>.frame-header,
-.blue-frame>.frame-art,
-.blue-frame>.frame-type-line {
-    box-shadow:
-        0 0 0 2px #171314,
-        0 0 0 5px #3172ce,
-        -3px 3px 2px 5px #171314;
-}
-
-.red-frame>.frame-header,
-.red-frame>.frame-art,
-.red-frame>.frame-type-line {
-    box-shadow:
-        0 0 0 2px #171314,
-        0 0 0 5px #ce4e41,
-        -3px 3px 2px 5px #171314;
-}
-
-.black-frame>.frame-header,
-.black-frame>.frame-art,
-.black-frame>.frame-type-line {
-    box-shadow:
-        0 0 0 2px #171314,
-        0 0 0 5px #2b2821,
-        -3px 3px 2px 5px #171314;
-}
-
-.white-frame>.frame-header,
-.white-frame>.frame-art,
-.white-frame>.frame-type-line {
-    box-shadow:
-        0 0 0 2px #171314,
-        0 0 0 5px #f7f7f5,
-        -3px 3px 2px 5px #171314;
-}
-
-.uncolor-frame>.frame-header,
-.uncolor-frame>.frame-art,
-.uncolor-frame>.frame-type-line {
-    box-shadow:
-        0 0 0 2px #171314,
-        0 0 0 5px #9099a3,
-        -3px 3px 2px 5px #171314;
-}
-
-.frame-text-box {
-    flex-grow: 1;
-    font-family: "M Plantin";
-}
-
-.green-frame>.frame-text-box {
-    box-shadow:
-        0 0 0 5px #26714A,
-        -3px 3px 2px 5px #171314;
-}
-
-.blue-frame>.frame-text-box {
-    box-shadow:
-        0 0 0 5px #3172ce,
-        -3px 3px 2px 5px #171314;
-}
-
-.red-frame>.frame-text-box {
-    box-shadow:
-        0 0 0 5px #ce4e41,
-        -3px 3px 2px 5px #171314;
-}
-
-.black-frame>.frame-text-box {
-    box-shadow:
-        0 0 0 5px #2b2821,
-        -3px 3px 2px 5px #171314;
-}
-
-.white-frame>.frame-text-box {
-    box-shadow:
-        0 0 0 5px #f7f7f5,
-        -3px 3px 2px 5px #171314;
-}
-
-.uncolor-frame>.frame-text-box {
-    box-shadow:
-        0 0 0 5px #9099a3,
-        -3px 3px 2px 5px #171314;
-}
-
-/*
-    ----------------------
-    ----------------------
-            OVERFLOW
-    ----------------------
-    ----------------------
-*/
-.frame-header,
-.frame-type-line {
-    overflow: hidden
-}
-
-.frame-text-box {
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #b8a57d #d3ded6;
-}
-
-
-/*
-  ----------------------------------------
-  ----------------------------------------
-            CARD FRAME
-  ----------------------------------------
-  ----------------------------------------
-*/
-.card-frame {
-    z-index: 1;
-    position: relative;
-    /* height: 648px; */
-    height: 100%;
-    max-width: 97%;
-    top: 1.5%;
-    display: flex;
-    flex-direction: column;
-}
-
-
-
-.frame-header,
-.frame-type-line {
-    background:
-        linear-gradient(0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3)),
-        url(https://image.ibb.co/jKByZn/tile_bg_1.jpg);
-    display: flex;
-    margin-left: 1.5vw;
-    margin-right: 1.5vw;
-    display: flex;
-    border-radius: 18px/40px;
-}
-
-/*
-  Tue 27/3
-*/
-.name,
-.type {
-    display: flex;
-    align-items: center;
-    font-size: 1.6vh;
-    margin-left: 2vw;
-    font-weight: 600;
-    font-family: 'Beleren';
-    margin-right: auto;
-}
-
-.mana-costs {
-    margin-right: 5px;
-    display: flex;
-}
-
-.mana-icon {
-    align-self: center;
-    margin-left: 4px;
-    text-align: center;
-    font-size: 18px;
-    display: inline-block;
-}
-
-.mana-icon>i {
-    align-self: center;
-    text-align: center;
-}
-
-.green-mana {
-    background: #ADD3AC;
-    padding-top: 2px;
+  }
+  
+  .title {
     font-size: 20px;
-}
-
-.black-mana {
-    padding-top: 2px;
-    font-size: 20px;
-}
-
-.blue-mana {
-    background: #a9d0f1;
-    padding-top: 2px;
-    font-size: 20px;
-}
-
-.red-mana {
-    background: #f5a688;
-    padding-top: 2px;
-    font-size: 20px;
-}
-
-.white-mana {
-    background: #faf8e1;
-    padding-top: 2px;
-    font-size: 20px;
-}
-
-.frame-header {
-    min-height: 2.3vh;
-}
-
-.frame-art {
-    height: 45%;
-    margin: 0 5%;
-    background-color: #171314;
-}
-
-.frame-art>img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-}
-
-.set-icon {
-    display: flex;
-    margin-right: 10px;
-    /* position: relative; */
-}
-
-.set-icon>i {
-    /* right: -5px;
-    top: 50%; */
-    /* margin-top: 2px; */
-    align-self: center;
-    width: 100%;
-    height: 100%;
-    size: 10px;
-    font-size: 5vmin;
-    /* transform: translateY(-50%); */
-    /* position: absolute; */
-}
-
-.set-icon>img {
-    margin-right: 10px;
-    height: 100%;
-    object-fit: contain;
-}
-
-.frame-type-line {
-    margin-top: 0;
-    font-family: 'Beleren';
-    height: auto;
-    font-size: 15px;
-    position: relative;
-}
-
-.frame-text-box {
-    margin: 0 10px;
-    background: #d3ded6;
-    background-image: url('https://image.ibb.co/dFcNx7/tile_bg_2.jpg');
-    display: flex;
-    flex-direction: column;
-    padding: 1vh 1vw;
-    min-height: 20vh; /* Instead of a fixed height, use min-height */
-    font-size: calc(0.4em + 1vmin); /* Use calc() for a combination of fixed and dynamic sizing */
-    width: 68vw;
-}
-
-/* Media query for larger screens */
-@media (min-width: 768px) {
-    .frame-text-box {
-        margin: 0 auto; /* Center the box */
-        padding: 2vh 2vw;
-        width: 90%; /* Adjust the width for larger screens */
-        font-size: calc(0.4em + 1vmin); /* Slightly smaller font-size on larger screens */
-    }
-    .frame-art {
-        height: 45%;
-        margin: 0 2vw;
-        background-color: #171314;
-    }
-}
-
-.frame-text-box i {
-    font-size: 2vmin;
-    margin: 0%;
-}
-
-.flavour-text {
-    font-family: 'M Plantin';
+  }
+  
+  .subtitle {
+    font-size: 12px;
     font-style: italic;
-    font-weight: normal;
-}
-
-.flavour-text-first-margin {
-    padding: 10px 0;
-}
-
-p {
-    margin-bottom: 5px;
-}
-
-.ftb-inner-margin {
-    margin: 5px 1px;
-}
-
-.frame-bottom-info {
-    color: white;
+  }
+  
+  .bodyBox {
+    position: absolute;
+    bottom: 0;
+    left: 5%;
+    width: 90%;
+    background-color: rgba(0, 0, 0, 0.65);
+    padding: 10px;
+    box-sizing: border-box;
+    color: #ffffff;
+    justify-content: center;
     display: flex;
-    justify-content: space-between;
-    margin: 5px 15px 0 15px;
-    height: 2.3vh;
-}
-
-.fbi-left {
-    flex: 1;
-}
-
-.fbi-left p:first-of-type {
-    margin-bottom: 1px;
-}
-
-.fbi-left,
-.fbi-right {
-    font-size: 10px;
-    position: relative;
-    top: 6px;
-}
-
-.inner-margins {
-    margin-bottom: 10px;
-}
-
-.description {
-    font-family: 'M Plantin';
-    align-items: baseline;
-    margin-bottom: 10px;
-}
-
-.description>span * {
-    padding-left: 2px;
-}
-
-.fbi-right {
-    flex: 1;
-    text-align: right;
-}
-
-.frame-bottom-info img {
-    overflow: hidden;
-    max-width: 10px;
-    position: 'relative';
-}
+    flex-direction: column;
+    margin-bottom: 2%;
+    border-radius: 20px;
+    height: auto;
+  }
+  
+  .bodyBox p {
+    margin-left: 3px;
+    font-size: 14px;
+    margin-top: 0px;
+  }

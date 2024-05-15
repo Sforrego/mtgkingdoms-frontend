@@ -8,7 +8,7 @@ const roleTypeToColorMap: Record<RoleType, CardColor> = {
   Renegade: "black",
   Bandit: "red",
   Knight: "green",
-  SubRole: "uncolor",
+  SubRole: "colorless",
 };
 
 export const roleTypeToSetMap: Record<RoleType, string> = {
@@ -30,7 +30,7 @@ export const RoleCard = ({
     name={Name}
     cardColor={roleTypeToColorMap[Type]}
     descriptions={Ability.split(/\\+n/)}
-    type={`Role - ${Type}`}
+    type={Type}
     expansionSymbol={roleTypeToSetMap[Type]}
   />
 );
