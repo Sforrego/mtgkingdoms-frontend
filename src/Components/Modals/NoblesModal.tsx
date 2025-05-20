@@ -1,6 +1,5 @@
 import React from 'react';
-import { Modal, Carousel } from 'antd';
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { Modal, Tabs } from 'antd';
 import { Role } from '../../Types/Role';
 import { RoleCard } from '../RoleCard';
 
@@ -17,27 +16,23 @@ export const NoblesModal: React.FC<NoblesModalProps> = ({
   onCancel,
   nobles
 }) => {
-
   return (
     <Modal
-      title="Nobles Roles"
+      title="Noble Roles"
       open={isOpen}
       onOk={onOk}
       onCancel={onCancel}
       centered
-      >
-        <Carousel
-      autoplay={false}
-      arrows
-      nextArrow={<ArrowRightOutlined/>}
-      prevArrow={<ArrowLeftOutlined/>}
     >
-      {nobles.map((noble: Role, index: number) => (
-        <div key={index}>
-        <RoleCard key={noble.name} role={noble} />
-        </div>
-      ))}
-    </Carousel>
+      <Tabs centered>
+        {nobles.map((noble, index) => (
+          <Tabs.TabPane tab={noble.name} key={index}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <RoleCard role={noble} />
+            </div>
+          </Tabs.TabPane>
+        ))}
+      </Tabs>
     </Modal>
   );
 };

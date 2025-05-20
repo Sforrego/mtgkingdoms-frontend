@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Carousel, Input } from 'antd';
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { RoleCard } from "./RoleCard";
 import { Role } from "../Types/Role";
 
@@ -29,21 +28,6 @@ export const ShowRoles = ({ roles }: ShowRolesProps) => {
     role.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  interface ArrowProps extends React.HTMLAttributes<HTMLElement> {
-    currentSlide?: any;
-    slideCount?: any;
-  }
-  
-  const NextArrow = (props: ArrowProps) => {
-    const { currentSlide, slideCount, ...rest } = props;
-    return <ArrowRightOutlined {...rest} />;
-  };
-  
-  const PrevArrow = (props: ArrowProps) => {
-    const { currentSlide, slideCount, ...rest } = props;
-    return <ArrowLeftOutlined {...rest} />;
-  };
-
   return (
     <div>
       <Input 
@@ -54,11 +38,8 @@ export const ShowRoles = ({ roles }: ShowRolesProps) => {
 
       <Carousel
         ref={carouselRef}
-        arrows
         dots={false}
         beforeChange={(current, next) => setCurrentSlide(next)}
-        nextArrow={<NextArrow />}
-        prevArrow={<PrevArrow />}
       >
         {filteredRoles.map((role) => (
           <RoleCard key={role.name} role={role} />

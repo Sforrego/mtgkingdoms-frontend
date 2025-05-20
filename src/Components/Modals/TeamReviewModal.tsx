@@ -1,6 +1,5 @@
 import React from 'react';
-import { Modal, Carousel, Button } from 'antd';
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { Modal, Tabs, Button } from 'antd';
 import { User } from '../../Types/User';
 import { RoleCard } from '../RoleCard';
 
@@ -10,14 +9,6 @@ type TeamReviewModalProps = {
   onCancel: () => void;
   team: User[];
 };
-
-const NextArrow = ({ currentSlide, slideCount, ...props }: { currentSlide?: number, slideCount?: number, [x: string]: any }) => (
-  <ArrowRightOutlined {...props} />
-);
-
-const PrevArrow = ({ currentSlide, slideCount, ...props }: { currentSlide?: number, slideCount?: number, [x: string]: any }) => (
-  <ArrowLeftOutlined {...props} />
-);
 
 export const TeamReviewModal: React.FC<TeamReviewModalProps> = ({
   isOpen,
@@ -50,20 +41,15 @@ export const TeamReviewModal: React.FC<TeamReviewModalProps> = ({
             </Button>
         ]}
         >
-        <Carousel
-            autoplay={false}
-            arrows
-            dots={false}
-            nextArrow={<NextArrow />}
-            prevArrow={<PrevArrow />}
-        >
-          {team.map((user: User, index: number) => (
-            <div key={index}>
-            <h1 style={{ marginBottom: '10px', marginTop: '0', color: "white", textAlign: "center" }}> {user.username}</h1>
-            <RoleCard key={user.role?.name} role={user.role} />
-            </div>
-          ))}
-        </Carousel>
+          <Tabs defaultActiveKey="0" centered>
+            {team.map((user, index) => (
+              <Tabs.TabPane tab={user.username} key={index.toString()}>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <RoleCard role={user.role} />
+                </div>
+              </Tabs.TabPane>
+            ))}
+          </Tabs>
         </Modal>
   );
 };

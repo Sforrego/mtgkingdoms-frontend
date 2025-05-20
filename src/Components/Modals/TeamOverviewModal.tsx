@@ -1,6 +1,5 @@
 import React from 'react';
-import { Modal, Carousel } from 'antd';
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { Modal, Tabs } from 'antd';
 import { User } from '../../Types/User';
 import { RoleCard } from '../RoleCard';
 
@@ -26,19 +25,15 @@ export const TeamOverviewModal: React.FC<TeamOverviewModalProps> = ({
       onCancel={onCancel}
       centered
       >
-        <Carousel
-      autoplay={false}
-      arrows
-      nextArrow={<ArrowRightOutlined/>}
-      prevArrow={<ArrowLeftOutlined/>}
-    >
-      {team.map((user: User, index: number) => (
-        <div key={index}>
-        <h1 style={{ marginBottom: '10px', marginTop: '0', color: "white", textAlign: "center" }}> {user.username}</h1>
-        <RoleCard key={user.role?.name} role={user.role} />
-        </div>
-      ))}
-    </Carousel>
+      <Tabs defaultActiveKey="0" centered>
+        {team.map((user, index) => (
+          <Tabs.TabPane tab={user.username} key={index.toString()}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <RoleCard role={user.role} />
+            </div>
+          </Tabs.TabPane>
+        ))}
+      </Tabs>
     </Modal>
   );
 };
