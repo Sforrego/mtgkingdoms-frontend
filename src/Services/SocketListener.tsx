@@ -7,6 +7,7 @@ import { User } from "../Types/User";
 import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent, 
   GameUpdatedEvent, RolesPoolUpdatedEvent, 
   SelectRoleEvent, ReviewTeamEvent, ErrorEvent } from '../Types/SocketEvents';
+  import { preloadImage } from "../Utils/preloadImages";
 
 export const SocketListener = () => {
     const { socket, roles, roomCode, gameStarted, setGameStarted, accountUser, isRevealed, setIsRevealed, 
@@ -22,6 +23,9 @@ export const SocketListener = () => {
 
           socket.on("rolesData", (data: Role[]) => {
             setRoles(data);
+            data.forEach(role => {
+            if (role.image) preloadImage(role.image);
+            });
           });
 
           socket.on("loginStatus", (event) => {
