@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Button, Checkbox, Radio } from 'antd';
+import { Modal, Button, Checkbox } from 'antd';
 import { User } from "../Types/User";
 import { Socket } from 'socket.io-client';
 
