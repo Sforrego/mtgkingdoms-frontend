@@ -9,7 +9,7 @@ import { NoblesModal } from "../../Components/Modals/NoblesModal";
 import { validateRolesBeforeStart } from "../../Utils/validateRoles";
 import { useModal } from '../../Hooks/useModal';
 import { useAppContext } from '../../Context/AppContext';
-import { ChosenOneDecisionModal, EndGameModal, SelectCultistsModal } from "../../Services/gameServiceModals";
+import { EndGameModal, SelectCultistsModal } from "../../Services/gameServiceModals";
 import { 
   startGame, 
   leaveRoom,
@@ -49,8 +49,7 @@ export const GameRoom = () => {
   const gameUser = usersInRoom?.find(u => u.userId === accountUser?.localAccountId);
   const userRole = usersInRoom && usersInRoom.length > 0 ? usersInRoom.find(u => u.userId === accountUser?.localAccountId)?.role : undefined;
   const isCultLeader = userRole ? ["Cult Leader", "Cultist"].includes(userRole.name) && isRevealed : false;
-  const isChosenOne = userRole?.name === "Chosen One" && isRevealed;
-  const canConceal = userRole?.ability.toLowerCase().includes("conceal");
+  const canConceal = userRole?.ability?.toLowerCase().includes("conceal");
 
   const confirmRoleSelection = () => {
     roleSelectionModal.close();
@@ -132,9 +131,6 @@ export const GameRoom = () => {
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           {isCultLeader && (
             <SelectCultistsModal socket={socket} userId={accountUser?.localAccountId} usersInRoom={usersInRoom} roomCode={roomCode} />
-            )}
-          {isChosenOne && (
-            <ChosenOneDecisionModal socket={socket} userId={accountUser?.localAccountId} roomCode={roomCode} />
             )}
         </div>
         <div style={{marginBottom:"4vmin"}}>

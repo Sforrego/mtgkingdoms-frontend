@@ -78,38 +78,3 @@ export const EndGameModal = ({ socket, usersInRoom, roomCode }: { socket: Socket
       </>
     );
   };
-
-  export const ChosenOneDecisionModal = ({ socket, userId, roomCode }: { socket: Socket | null, userId: string | undefined, roomCode: string }) => {
-    const [open, setOpen] = useState(false);
-    const [decision, setDecision] = useState("");
-
-    const handleOk = () => {
-      socket && socket.emit("chosenOneDecision", { userId, roomCode, decision });
-      setOpen(false);
-    };
-
-    const handleCancel = () => {
-      setOpen(false);
-    };
-
-    const handleCheckChange = (event: any) => {
-      setDecision(event.target.value);
-    };
-
-    return (
-      <>
-        <Button onClick={() => setOpen(true)}>Choose your path</Button>
-        <Modal
-          title="Choose your path"
-          open={open}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
-          <Radio.Group style={{ width: '100%' }} onChange={handleCheckChange}>
-            <Radio value="Demon">Demon</Radio>
-            <Radio value="Angel">Angel</Radio>
-          </Radio.Group>
-        </Modal>
-      </>
-    );
-  };

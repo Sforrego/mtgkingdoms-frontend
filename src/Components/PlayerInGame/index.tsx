@@ -11,7 +11,7 @@ type PlayerProps = {
 export const PlayerInGame = ({ user }: PlayerProps) => {
   const [open, setOpen] = useState(false);
 
-  if (!user?.role || !user.isRevealed)
+  if (!user?.role) {
     return (
       <div className="PlayerInGame">
         <p>{user?.username}</p>
@@ -22,29 +22,41 @@ export const PlayerInGame = ({ user }: PlayerProps) => {
         </Button>
       </div>
     );
+  }
 
-  const logo = roleTypeToSetMap[user.role.type];
+  const logo = roleTypeToSetMap[user.role.type || ""];
 
   return (
     <div className="PlayerInGame">
       <p>{user.username}</p>
-      <p>The {user.role.name}</p>
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        destroyOnClose
-        footer
-        title
-        centered
-      >
-        <RoleCard role={user.role} />
-      </Modal>
-      <Button
-        onClick={() => setOpen(true)}
-        className={`PlayerCardButton ${user.role.type}`}
-      >
-        <i className={logo}></i>
-      </Button>
+      <p>{user.role.name ? "The " + user.role.name : "Unknown"}</p>
+
+      {user.role.type ? (
+        <>
+          <Modal
+            open={open}
+            onCancel={() => setOpen(false)}
+            destroyOnClose
+            footer={null}
+            title={null}
+            centered
+          >
+            <RoleCard role={user.role} />
+          </Modal>
+
+          <Button
+            onClick={() => setOpen(true)}
+            disabled={!user.role.name}
+            className={`PlayerCardButton ${user.role.type}`}
+          >
+            <i className={logo}></i>
+          </Button>
+        </>
+      ) : (
+        <Button disabled className="PlayerCardButton Unknown">
+          <i className="ss ss-bcore ss-mythic ss-grad"></i>
+        </Button>
+      )}
     </div>
   );
 };

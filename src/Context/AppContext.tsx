@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { AccountInfo } from '@azure/msal-browser';
 import { Socket } from 'socket.io-client';
-
 import { useSocket } from '../Hooks/useSocket';
 import { useAuth } from '../Hooks/useAuth';
 

@@ -26,7 +26,7 @@ export const ShowRoles = ({ roles }: ShowRolesProps) => {
   }
   
   const filteredRoles = roles.filter(role => 
-    role.name.toLowerCase().includes(searchTerm.toLowerCase())
+    role.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   interface ArrowProps extends React.HTMLAttributes<HTMLElement> {
