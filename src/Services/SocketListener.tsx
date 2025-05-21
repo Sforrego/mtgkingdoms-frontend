@@ -192,7 +192,7 @@ export const SocketListener = () => {
           };
         }
       }, [isRevealed, roomCode, socket, accountUser, roles.length, gameStarted, isLoggedIn, setGameStarted, setAccountUser,
-        setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, setReviewingTeam, setIsLoggedIn,
+        setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, setReviewingTeam, setIsLoggedIn, setWithRevealedRoles,
         setRoomCode, setSelectedRole, setSelectedRolesPool, setSelectingRole, setTeam, setUsersInRoom, setPreviousRoomCode]);
 
     return null;

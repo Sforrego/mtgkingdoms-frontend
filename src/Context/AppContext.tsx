@@ -106,13 +106,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     if(storedRoomCode){
       setPreviousRoomCode(storedRoomCode);
     }
-  }, [previousRoomCode, setPreviousRoomCode])
+  })
 
   useEffect(() => {
-    if (withRevealedRoles==undefined){
+    if (withRevealedRoles===undefined){
       setWithRevealedRoles(false);
     }
-  })
+  }, [withRevealedRoles, setWithRevealedRoles]);
 
     return (
       <AppContext.Provider value={{

@@ -1,4 +1,4 @@
-import { Button, Modal, Switch } from "antd";
+import { Button, Modal } from "antd";
 
 import { PlayerInGame } from "../../Components/PlayerInGame";
 import { RolesPoolSelectionModal } from "../../Components/Modals/RolesPoolSelectionModal";
