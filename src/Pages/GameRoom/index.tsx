@@ -1,4 +1,4 @@
-import { Button, Modal } from "antd";
+import { Button, Modal, Switch } from "antd";
 
 import { PlayerInGame } from "../../Components/PlayerInGame";
 import { RolesPoolSelectionModal } from "../../Components/Modals/RolesPoolSelectionModal";
@@ -17,6 +17,7 @@ import {
   updateRolesPool,
   selectRole,
   confirmTeam,
+  toggleRevealedRoles,
 } from "../../Services/gameService";
 import "./index.css";
 
@@ -37,6 +38,7 @@ export const GameRoom = () => {
     nobles,
     potentialRoles,
     reviewingTeam,
+    withRevealedRoles,
     setSelectedRolesPool,
     setSelectedRole,
   } = useAppContext();
@@ -143,6 +145,20 @@ export const GameRoom = () => {
         <>
         <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
           <Button onClick={rolesPoolSelectionModal.open} style={{marginRight:"1.5vmin"}}>Select Roles</Button>
+          <Button
+            onClick={() => toggleRevealedRoles(socket, roomCode, !withRevealedRoles)}
+            style={{
+              backgroundColor: withRevealedRoles ? "#ff9800" : "#1e1e1e",
+              border: `1px solid ${withRevealedRoles ? "#ff9800" : "#555"}`,
+              color: withRevealedRoles ? "black" : "white",
+              marginLeft: "1vmin",
+              minWidth: "100px"
+            }}
+          >
+          {withRevealedRoles ? "Revealed Factions" : "Hidden Factions"}
+          </Button>
+        </div>
+        <div>
           <Button onClick={() => startGame(socket, roomCode)} style={{marginRight:"1.5vmin"}}>Start Game</Button>
         </div>
         <div style={{ marginTop: 'auto', width: '100%', textAlign: 'center' }}>

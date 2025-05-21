@@ -5,13 +5,13 @@ import { useAppContext } from '../Context/AppContext';
 import { Role } from "../Types/Role";
 import { User } from "../Types/User";
 import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent, 
-  GameUpdatedEvent, RolesPoolUpdatedEvent, 
+  GameUpdatedEvent, RolesPoolUpdatedEvent, WithRevealedRolesUpdatedEvent,
   SelectRoleEvent, ReviewTeamEvent, ErrorEvent } from '../Types/SocketEvents';
   import { preloadImage } from "../Utils/preloadImages";
 import { AccountInfo } from "@azure/msal-browser";
 
 export const SocketListener = () => {
-    const { socket, roles, roomCode, gameStarted, isLoggedIn, accountUser, isRevealed,setGameStarted, setIsRevealed, 
+    const { socket, roles, roomCode, gameStarted, isLoggedIn, accountUser, isRevealed,setGameStarted, setIsRevealed, setWithRevealedRoles,
       setSelectingRole, setPotentialRoles, setSelectedRole, setIsInRoom, setNobles, setIsLoggedIn, setAccountUser,
       setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom, setReviewingTeam, setPreviousRoomCode } = useAppContext();
 
@@ -115,6 +115,10 @@ export const SocketListener = () => {
             setSelectedRolesPool(roles);
           });
     
+          socket.on("updateRevealedRolesSetting", ({ withRevealedRoles }: WithRevealedRolesUpdatedEvent) => {
+            setWithRevealedRoles(withRevealedRoles);
+          });
+
           socket.on("selectRole", ({ potentialRoles }: SelectRoleEvent) =>{
             console.log("Selecting role");
             setGameStarted(true);

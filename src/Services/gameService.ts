@@ -26,6 +26,16 @@ export const startGame = (socket: Socket | null, roomCode: string) => {
   }
 };
 
+export const toggleRevealedRoles = (socket: Socket | null, roomCode: string, withRevealedRoles: boolean) => {
+  console.log(withRevealedRoles);
+  console.log(roomCode)
+  if (socket) {
+    socket.emit("toggleRevealedRoles", { roomCode, withRevealedRoles });
+  } else {
+    console.log("Connection not established");
+  }
+};
+
 export const leaveRoom = (user: AccountInfo | null, socket: Socket | null, roomCode: string) => {
   if (user && socket) {
     socket.emit("leaveRoom", { userId: user.localAccountId, username: user.name, roomCode });

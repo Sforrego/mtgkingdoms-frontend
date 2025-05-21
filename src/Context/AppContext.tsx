@@ -56,6 +56,8 @@ export interface AppContextType {
   setSelectingRole: React.Dispatch<React.SetStateAction<boolean>>;
   reviewingTeam: boolean;
   setReviewingTeam: React.Dispatch<React.SetStateAction<boolean>>;
+  withRevealedRoles: boolean;
+  setWithRevealedRoles: React.Dispatch<React.SetStateAction<boolean>>;
   previousRoomCode: string | null;
   setPreviousRoomCode: React.Dispatch<React.SetStateAction<string | null>>;
 }
@@ -82,6 +84,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectingRole, setSelectingRole] = useState<boolean>(false);
   const [reviewingTeam, setReviewingTeam] = useState<boolean>(false);
+  const [withRevealedRoles, setWithRevealedRoles] = useState<boolean>(false);
   const [previousRoomCode, setPreviousRoomCode] = useState<string | null>(null);
 
   useEffect(() => {
@@ -104,6 +107,12 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       setPreviousRoomCode(storedRoomCode);
     }
   }, [previousRoomCode, setPreviousRoomCode])
+
+  useEffect(() => {
+    if (withRevealedRoles==undefined){
+      setWithRevealedRoles(false);
+    }
+  })
 
     return (
       <AppContext.Provider value={{
@@ -148,6 +157,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setSelectingRole,
         reviewingTeam,
         setReviewingTeam,
+        withRevealedRoles,
+        setWithRevealedRoles,
         previousRoomCode,
         setPreviousRoomCode
       }}>

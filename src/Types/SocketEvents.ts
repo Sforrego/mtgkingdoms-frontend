@@ -36,6 +36,10 @@ export interface RoleDataEvent {
     roles: Role[];
   }
   
+  export interface WithRevealedRolesUpdatedEvent {
+    withRevealedRoles: boolean;
+  }
+
   export interface SelectRoleEvent {
     potentialRoles: Role[];
   }
