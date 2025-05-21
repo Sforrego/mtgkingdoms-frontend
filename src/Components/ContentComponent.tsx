@@ -31,7 +31,8 @@ export const ContentComponent = () => {
             </IfElse>
           </OnTrue>
           <OnFalse key="notLoggedIn">
-            <Landing handleLogin={() => socket && loginHandler(socket)} />
+            <Landing handleLogin={() => socket && loginHandler(socket)} 
+              handleGuestLogin={(username) => socket && socket.emit("guestLogin", username)}/>
           </OnFalse>
         </IfElse>
       </OnTrue>

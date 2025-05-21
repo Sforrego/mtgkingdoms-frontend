@@ -21,7 +21,9 @@ export interface AppContextType {
   setIsInRoom: React.Dispatch<React.SetStateAction<boolean>>;
   socket: Socket | null; // replace with the actual type
   isLoggedIn: boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   accountUser: AccountInfo | null; // replace with the actual type
+  setAccountUser: React.Dispatch<React.SetStateAction<AccountInfo | null>>;
   loginHandler: (socket: Socket) => void; // replace with the actual type
   logoutHandler: (user: AccountInfo | null, socket: Socket, roomCode: string) => Promise<void>;
   userData: UserData | null;
@@ -111,7 +113,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setIsInRoom,
         socket,
         isLoggedIn,
+        setIsLoggedIn,
         accountUser,
+        setAccountUser,
         loginHandler,
         logoutHandler,
         userData,

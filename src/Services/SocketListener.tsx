@@ -8,10 +8,11 @@ import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent,
   GameUpdatedEvent, RolesPoolUpdatedEvent, 
   SelectRoleEvent, ReviewTeamEvent, ErrorEvent } from '../Types/SocketEvents';
   import { preloadImage } from "../Utils/preloadImages";
+import { AccountInfo } from "@azure/msal-browser";
 
 export const SocketListener = () => {
-    const { socket, roles, roomCode, gameStarted, setGameStarted, accountUser, isRevealed, setIsRevealed, 
-      setSelectingRole, setPotentialRoles, setSelectedRole, setIsInRoom, setNobles, 
+    const { socket, roles, roomCode, gameStarted, isLoggedIn, accountUser, isRevealed,setGameStarted, setIsRevealed, 
+      setSelectingRole, setPotentialRoles, setSelectedRole, setIsInRoom, setNobles, setIsLoggedIn, setAccountUser,
       setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom, setReviewingTeam, setPreviousRoomCode } = useAppContext();
 
     useEffect(() => {
@@ -31,7 +32,26 @@ export const SocketListener = () => {
           socket.on("loginStatus", (event) => {
             console.log(`Received login status update`);
             console.log(event);
-            const { roomCode, usersInRoom, team, activeGame, selectedRolesPool, selectingRole, reviewingTeam, potentialRoles, isRevealed } = event;
+            const { userId, username, roomCode, usersInRoom, team, activeGame, selectedRolesPool, selectingRole, reviewingTeam, potentialRoles, isRevealed } = event;
+            if (!isLoggedIn){
+              setIsLoggedIn(true);
+              // Set the user data in the context if no user data
+              if (!accountUser) {
+                const guestAccountUser: AccountInfo = {
+                  homeAccountId: userId,
+                  localAccountId: userId,
+                  name: username,
+                  username: username,
+                  environment: "",
+                  tenantId: "",
+                  idToken: "",
+                  idTokenClaims: {},
+                };
+                setAccountUser(guestAccountUser);
+                localStorage.setItem('accountUser', JSON.stringify(guestAccountUser));
+              }
+            }
+
             if (roomCode) {
               setRoomCode(roomCode);
               setIsInRoom(true);
@@ -167,8 +187,8 @@ export const SocketListener = () => {
             socket.off("error");
           };
         }
-      }, [isRevealed, roomCode, socket, accountUser, roles.length, gameStarted, setGameStarted, 
-        setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, setReviewingTeam,
+      }, [isRevealed, roomCode, socket, accountUser, roles.length, gameStarted, isLoggedIn, setGameStarted, setAccountUser,
+        setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, setReviewingTeam, setIsLoggedIn,
         setRoomCode, setSelectedRole, setSelectedRolesPool, setSelectingRole, setTeam, setUsersInRoom, setPreviousRoomCode]);
 
     return null;
