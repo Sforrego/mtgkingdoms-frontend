@@ -32,7 +32,8 @@ export const SocketListener = () => {
           socket.on("loginStatus", (event) => {
             console.log(`Received login status update`);
             console.log(event);
-            const { userId, username, roomCode, usersInRoom, team, activeGame, selectedRolesPool, selectingRole, reviewingTeam, potentialRoles, isRevealed } = event;
+            const { userId, username, roomCode, usersInRoom, team, activeGame, selectedRolesPool, 
+              selectingRole, reviewingTeam, potentialRoles, isRevealed, withRevealedRoles } = event;
             if (!isLoggedIn){
               setIsLoggedIn(true);
               // Set the user data in the context if no user data
@@ -68,6 +69,7 @@ export const SocketListener = () => {
             setPotentialRoles(potentialRoles);
             setIsRevealed(isRevealed);
             setSelectedRolesPool(selectedRolesPool);
+            setWithRevealedRoles(withRevealedRoles);
           });
 
           socket.on("roomCreated", ({ roomCode, users, selectedRoles }: RoomCreatedEvent) => {

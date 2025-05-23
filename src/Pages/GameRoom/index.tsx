@@ -20,6 +20,7 @@ import {
   toggleRevealedRoles,
 } from "../../Services/gameService";
 import "./index.css";
+import { Role } from "../../Types/Role";
 
 
 export const GameRoom = () => {
@@ -53,9 +54,9 @@ export const GameRoom = () => {
   const isCultLeader = userRole ? ["Cult Leader", "Cultist"].includes(userRole.name) && isRevealed : false;
   const canConceal = userRole?.ability?.toLowerCase().includes("conceal");
 
-  const confirmRoleSelection = () => {
+  const confirmRoleSelection = (role: Role) => {
     roleSelectionModal.close();
-    selectRole(socket, accountUser?.localAccountId, roomCode, selectedRole);
+    selectRole(socket, accountUser?.localAccountId, roomCode, role);
   };
 
   const confirmTeamReview = () => {
@@ -185,8 +186,14 @@ export const GameRoom = () => {
       isOpen={roleSelectionModal.isOpen}
       potentialRoles={potentialRoles}
       selectedRole={selectedRole}
-      setSelectedRole={setSelectedRole} 
-      onOk={confirmRoleSelection}
+      setSelectedRole={setSelectedRole}
+      onOk={(role) => {
+        if (!role) {
+          console.error("No role passed to onOk!");
+          return;
+        }
+        confirmRoleSelection(role);
+      }}
       onCancel={roleSelectionModal.close}
     />
 

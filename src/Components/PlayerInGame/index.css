@@ -31,19 +31,19 @@
 }
 
 .Noble {
-    background-color: #a9d0f1;
+    background-color: #a9d0f1 !important;
 }
 
 .Renegade {
-    background-color: #2f2b2a;
+    background-color: #2f2b2a !important;
 }
 
 .Bandit {
-    background-color: #f5a688;
+    background-color: #f5a688 !important;
 }
 
 .Knight {
-    background-color: #ADD3AC;
+    background-color: #ADD3AC !important;
 }
 
 .SubRole {

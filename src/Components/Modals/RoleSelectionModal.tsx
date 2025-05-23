@@ -5,7 +5,7 @@ import { RoleCard } from '../RoleCard';
 
 type RoleSelectionModalProps = {
   isOpen: boolean;
-  onOk: () => void;
+  onOk: (selected: Role) => void;
   onCancel: () => void;
   potentialRoles: Role[];
   selectedRole: Role | null;
@@ -20,27 +20,19 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
   selectedRole,
   setSelectedRole,
 }) => {
+  const handleSelect = (role: Role) => {
+    // Emit role and then update local state
+    onOk(role);
+    setSelectedRole(role);
+  };
+
   return (
     <Modal
       title="Select Your Role"
       open={isOpen}
       closable={false}
-      onOk={onOk}
-      onCancel={onCancel}
+      footer={null} // no OK/Cancel buttons
       centered
-      footer={[
-        <Button key="cancel" onClick={onCancel}>
-          Cancel
-        </Button>,
-        <Button
-          key="submit"
-          type="primary"
-          onClick={onOk}
-          disabled={!selectedRole}
-        >
-          OK
-        </Button>,
-      ]}
     >
       <Tabs centered>
         {potentialRoles.map((role, index) => (
@@ -48,11 +40,11 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <RoleCard role={role} />
               <Button
-                onClick={() => setSelectedRole(role)}
-                type={selectedRole === role ? 'primary' : 'default'}
+                onClick={() => handleSelect(role)}
+                type={selectedRole?.name === role.name ? 'primary' : 'default'}
                 style={{ marginTop: '1rem' }}
               >
-                {selectedRole === role ? 'Selected' : 'Select'}
+                {selectedRole?.name === role.name ? 'Selected' : 'Select'}
               </Button>
             </div>
           </Tabs.TabPane>
