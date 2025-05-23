@@ -13,6 +13,7 @@ export interface RoleDataEvent {
   
   export interface JoinedRoomEvent extends RoomCreatedEvent {
     selectedRoles: Role[];
+    withRevealedRoles: boolean;
   }
   
   export interface UserRoomEvent {

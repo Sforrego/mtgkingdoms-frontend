@@ -13,4 +13,7 @@ nvm use 16
 npm install
 npm start
 
+Run to make sure the github action won't fail.
+npx eslint src --ext .ts,.tsx
+
 Pushing to master will begin github actions that will deploy to production, use pull requests to attempt changes at master.

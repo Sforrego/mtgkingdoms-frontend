@@ -80,13 +80,14 @@ export const SocketListener = () => {
             localStorage.setItem('previousRoomCode', roomCode);
           });
           
-          socket.on("joinedRoom", ({ roomCode, users, selectedRoles }: JoinedRoomEvent) => {
+          socket.on("joinedRoom", ({ roomCode, users, selectedRoles, withRevealedRoles }: JoinedRoomEvent) => {
             console.log(`Joined room with code: ${roomCode}`);
             setRoomCode(roomCode);
             setIsInRoom(true);
             setUsersInRoom(users);
             setSelectedRolesPool(selectedRoles);
             setPreviousRoomCode(roomCode);
+            setWithRevealedRoles(withRevealedRoles);
             localStorage.setItem('previousRoomCode', roomCode);
           });
     
