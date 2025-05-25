@@ -11,41 +11,41 @@
   }
   
   .green-background {
-    border: 1.5px solid rgba(0, 255, 0, 0.65);
+    border: 1px solid rgba(0, 255, 0, 0.65);
   }
   
   .red-background {
-    border: 1.5px solid rgba(255, 0, 0, 0.65);
+    border: 1px solid rgba(255, 0, 0, 0.65);
   }
   
   .blue-background {
-    border: 1.5px solid rgba(0, 0, 255, 0.65);
+    border: 1px solid rgba(0, 0, 255, 0.65);
   }
   
   .white-background {
-    border: 1.5px solid rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.65);
   }
   
   .black-background {
-    border: 1.5px solid rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(0, 0, 0, 0.65);
   }
   
   .colorless-background {
-    border: 1.5px solid rgba(125, 125, 125, 0.65);
+    border: 1px solid rgba(125, 125, 125, 0.65);
   }
   
   .titleBox {
     position: absolute;
-    top: 0;
-    left: 30%;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 40%;
-    background-color: rgba(0, 0, 0, 0.65);
-    padding: 3px;
+    background-color: rgba(0, 0, 0, 0.5);
     box-sizing: border-box;
     color: #ffffff;
     text-align: center;
-    border-radius: 20px;
-    margin-top: 3%;
+    border-radius: 10px;
+    margin-top: 1%;
   }
   
   .titleBox p {
@@ -53,7 +53,8 @@
   }
   
   .title {
-    font-size: 20px;
+    font-size: 17px;
+    line-height: 1;
   }
   
   .subtitle {
@@ -78,10 +79,10 @@
     height: auto;
   }
   
-  .bodyBox p {
-    margin-left: 3px;
-    font-size: 14px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    display: block;
-  }
+.bodyBox p {
+  font-size: 11px;
+  margin: 0.2em 0;        /* Adjust this to control spacing */
+  line-height: 1;       /* Adjust this to control internal spacing within each <p> */
+  margin-left: 3px;
+  white-space: pre-line;  /* Ensures \n inside text works */
+}

@@ -62,27 +62,24 @@ const MagicCard = ({
         <p className={styles.subtitle}>{type}</p>
       </div>
       <div className={`${styles.bodyBox} ${backgroundClass}`}>
-        {descriptions?.map((text, index) => {
-          const textWithManaCosts = text.replaceAll(
-            manaCostMatcher,
-            (match: string) => {
-              const cost = match.slice(1, -1);
-              return /*html*/ `
-                                    <span style="font-size: 14px;">
-                                        <i style="padding-left: 2px;" class="${`${manaIcons[cost] ||
-                                          `ms ms-${cost} ms-cost`
-                }`}"></i>
-                                    </span>
-                                `;
-            }
-          );
-          return (
-            <p
-              key={index}
-              dangerouslySetInnerHTML={{ __html: textWithManaCosts }}
-            />
-          );
-        })}
+        {descriptions?.map((text, index) => (
+          <p key={index} className={styles.bodyText}>
+            {text.split(manaCostMatcher).map((part, i) => {
+              // If it's an odd index, it's a mana cost
+              if (i % 2 === 1) {
+                const cost = part;
+                const iconClass = manaIcons[cost] || `ms ms-${cost} ms-cost`;
+                return (
+                  <span key={i}>
+                    <i className={iconClass}></i>
+                  </span>
+                );
+              }
+              // Otherwise, it's plain text
+              return <span key={i}>{part}</span>;
+            })}
+          </p>
+        ))}
       </div>
     </div>)
 }
