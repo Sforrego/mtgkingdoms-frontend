@@ -25,15 +25,19 @@ export const TeamOverviewModal: React.FC<TeamOverviewModalProps> = ({
       onCancel={onCancel}
       centered
       >
-      <Tabs defaultActiveKey="0" centered>
-        {team.map((user, index) => (
-          <Tabs.TabPane tab={user.username} key={index.toString()}>
+      <Tabs
+        defaultActiveKey="0"
+        centered
+        items={team.map((user, index) => ({
+          label: user.username,
+          key: String(index),
+          children: (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <RoleCard role={user.role} />
             </div>
-          </Tabs.TabPane>
-        ))}
-      </Tabs>
+          ),
+        }))}
+      />
     </Modal>
   );
 };

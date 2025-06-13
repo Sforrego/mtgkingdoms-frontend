@@ -6,7 +6,7 @@ import { Role } from "../Types/Role";
 import { User } from "../Types/User";
 import { RoomCreatedEvent, JoinedRoomEvent, UserRoomEvent, GameStartedEvent, 
   GameUpdatedEvent, RolesPoolUpdatedEvent, WithRevealedRolesUpdatedEvent,
-  SelectRoleEvent, ReviewTeamEvent, ErrorEvent } from '../Types/SocketEvents';
+  SelectRoleEvent, ErrorEvent } from '../Types/SocketEvents';
   import { preloadImage } from "../Utils/preloadImages";
 import { AccountInfo } from "@azure/msal-browser";
 
@@ -128,21 +128,13 @@ export const SocketListener = () => {
             setSelectingRole(true);
             setPotentialRoles(potentialRoles);
           })
-
-          socket.on("reviewTeam", ({ team }: ReviewTeamEvent) =>{
-            console.log("Reviewing team");
-            setSelectingRole(false);
-            setReviewingTeam(true);
-            setTeam(team);
-            console.log(team);
-          })
     
-          socket.on("gameStarted", ({ nobles }: GameStartedEvent) => {
-            console.log("Game started. Role assigned.");
+          socket.on("gameStarted", ({ team, nobles }: GameStartedEvent) => {
+            console.log("Game started.");
+            setTeam(team);
             if (nobles.length > 0){
               setNobles(nobles)
             }
-            setReviewingTeam(false);
             if(!gameStarted){
               setGameStarted(true);
             }

@@ -9,7 +9,7 @@ import { NoblesModal } from "../../Components/Modals/NoblesModal";
 import { validateRolesBeforeStart } from "../../Utils/validateRoles";
 import { useModal } from '../../Hooks/useModal';
 import { useAppContext } from '../../Context/AppContext';
-import { EndGameModal, SelectCultistsModal } from "../../Services/gameServiceModals";
+import { EndGameModal } from "../../Services/gameServiceModals";
 import { 
   startGame, 
   leaveRoom,
@@ -51,7 +51,6 @@ export const GameRoom = () => {
   const teamOverviewModal = useModal();
   const gameUser = usersInRoom?.find(u => u.userId === accountUser?.localAccountId);
   const userRole = usersInRoom && usersInRoom.length > 0 ? usersInRoom.find(u => u.userId === accountUser?.localAccountId)?.role : undefined;
-  const isCultLeader = userRole ? ["Cult Leader", "Cultist"].includes(userRole.name) && isRevealed : false;
   const canConceal = userRole?.ability?.toLowerCase().includes("conceal");
 
   const confirmRoleSelection = (role: Role) => {
@@ -126,15 +125,10 @@ export const GameRoom = () => {
         <>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2vmin", marginTop: "4vmin" }}>
           <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-            <Button onClick={teamOverviewModal.open}>View Role(s)</Button>
+            <Button onClick={teamOverviewModal.open}>View Team</Button>
             {!isRevealed && <Button onClick={revealRoleModal.open}>Reveal Role</Button>}
             {isRevealed && canConceal && <Button onClick={concealRole}>Conceal</Button>}
           </div>
-        </div>
-        <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
-          {isCultLeader && (
-            <SelectCultistsModal socket={socket} userId={accountUser?.localAccountId} usersInRoom={usersInRoom} roomCode={roomCode} />
-            )}
         </div>
         <div style={{marginBottom:"4vmin"}}>
           {nobles?.length > 0 && gameStarted && (
@@ -144,25 +138,18 @@ export const GameRoom = () => {
         </>
       ) : (
         <>
-        <div style={{marginBottom:"2vmin", marginTop:"4vmin"}}>
-          <Button onClick={rolesPoolSelectionModal.open} style={{marginRight:"1.5vmin"}}>Select Roles</Button>
+        <div style={{ display: "flex", justifyContent: "center", gap: "1.5vmin", marginBottom:"2vmin", marginTop:"4vmin" }}>
+          <Button onClick={rolesPoolSelectionModal.open}>Select Roles</Button>
           <Button
             onClick={() => toggleRevealedRoles(socket, roomCode, !withRevealedRoles)}
-            style={{
-              backgroundColor: withRevealedRoles ? "#ff9800" : "#1e1e1e",
-              border: `1px solid ${withRevealedRoles ? "#ff9800" : "#555"}`,
-              color: withRevealedRoles ? "black" : "white",
-              marginLeft: "1vmin",
-              minWidth: "100px"
-            }}
+            className={`custom-role-toggle-button ${withRevealedRoles ? 'active' : ''}`}
           >
-          {withRevealedRoles ? "Revealed Factions" : "Hidden Factions"}
+            {withRevealedRoles ? "Revealed Factions" : "Hidden Factions"}
           </Button>
         </div>
-        <div>
-          <Button onClick={() => startGame(socket, roomCode)} style={{marginRight:"1.5vmin"}}>Start Game</Button>
-        </div>
-        <div style={{ marginTop: 'auto', width: '100%', textAlign: 'center' }}>
+
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5vmin" }}>
+          <Button onClick={() => startGame(socket, roomCode)}>Start Game</Button>
           <Button onClick={() => leaveRoom(accountUser, socket, roomCode)}>Leave Room</Button>
         </div>
         </>

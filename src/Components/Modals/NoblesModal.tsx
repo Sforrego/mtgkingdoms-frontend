@@ -24,15 +24,17 @@ export const NoblesModal: React.FC<NoblesModalProps> = ({
       onCancel={onCancel}
       centered
     >
-      <Tabs centered>
-        {nobles.map((noble, index) => (
-          <Tabs.TabPane tab={noble.name} key={index}>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <RoleCard role={noble} />
-            </div>
-          </Tabs.TabPane>
-        ))}
-      </Tabs>
+    <Tabs centered
+      items={nobles.map((noble, index) => ({
+        label: noble.name,
+        key: String(index),
+        children: (
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <RoleCard role={noble} />
+          </div>
+        ),
+      }))}
+    />
     </Modal>
   );
 };

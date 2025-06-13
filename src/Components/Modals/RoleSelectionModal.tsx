@@ -34,9 +34,12 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
       footer={null} // no OK/Cancel buttons
       centered
     >
-      <Tabs centered>
-        {potentialRoles.map((role, index) => (
-          <Tabs.TabPane tab={role.name} key={index}>
+      <Tabs
+        centered
+        items={potentialRoles.map((role, index) => ({
+          label: role.name,
+          key: String(index),
+          children: (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <RoleCard role={role} />
               <Button
@@ -47,9 +50,9 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
                 {selectedRole?.name === role.name ? 'Selected' : 'Select'}
               </Button>
             </div>
-          </Tabs.TabPane>
-        ))}
-      </Tabs>
+          ),
+        }))}
+      />
     </Modal>
   );
 };

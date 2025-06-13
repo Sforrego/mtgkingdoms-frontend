@@ -46,3 +46,26 @@
 .end-game-button-container {
   margin-top: auto; /* Pushes the container to the bottom */
 }
+
+.custom-role-toggle-button {
+  background-color: #1e1e1e;
+  border: 1px solid #555;
+  color: white;
+  min-width: 100px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.custom-role-toggle-button:hover {
+  background-color: #333;
+  border-color: #888;
+}
+.custom-role-toggle-button.active {
+  background-color: #ff9800;
+  border-color: #ff9800;
+  color: black;
+}
+.custom-role-toggle-button.active:hover {
+  background-color: #ffa726;
+  border-color: #ffa726;
+}
