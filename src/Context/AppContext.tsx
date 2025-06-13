@@ -81,7 +81,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isRevealed, setIsRevealed] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectingRole, setSelectingRole] = useState<boolean>(false);
-  const [withRevealedRoles, setWithRevealedRoles] = useState<boolean>(false);
+  const [withRevealedRoles, setWithRevealedRoles] = useState<boolean>(true);
   const [previousRoomCode, setPreviousRoomCode] = useState<string | null>(null);
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   useEffect(() => {
     if (withRevealedRoles===undefined){
-      setWithRevealedRoles(false);
+      setWithRevealedRoles(true);
     }
   }, [withRevealedRoles, setWithRevealedRoles]);
 
