@@ -105,12 +105,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     }
   }, [setPreviousRoomCode]);
 
-  useEffect(() => {
-    if (withRevealedRoles===undefined){
-      setWithRevealedRoles(true);
-    }
-  }, [withRevealedRoles, setWithRevealedRoles]);
-
     return (
       <AppContext.Provider value={{
         isConnected,
