@@ -38,7 +38,6 @@ export const GameRoom = () => {
     team,
     nobles,
     potentialRoles,
-    reviewingTeam,
     withRevealedRoles,
     setSelectedRolesPool,
     setSelectedRole,
@@ -106,22 +105,7 @@ export const GameRoom = () => {
             ))}
           </ul>
       </>
-      ) : reviewingTeam && usersInRoom.some(user => !user.hasReviewedTeam) ? (
-        <>
-          {!gameUser?.hasReviewedTeam && (
-            <Button onClick={teamReviewModal.open} style={{ marginLeft: "1.5vmin", marginTop: "2.5vmin"}}>Review Team</Button>
-          )}  
-          <p style={{color: "white"}}>Players reviewing team:</p>
-          <ul style={{ paddingLeft: '20px' }}> {/* Adjust padding as needed */}
-            {usersInRoom.filter(user => !user.hasReviewedTeam).map((user, index) => (
-              <li key={index} style={{ color: "white", listStylePosition: 'inside' }}>
-                {user.username}
-              </li>
-            ))}
-          </ul>
-        </>
-      )
-      : gameStarted ? (
+      ) : gameStarted ? (
         <>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2vmin", marginTop: "4vmin" }}>
           <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>

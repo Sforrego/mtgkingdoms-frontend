@@ -13,7 +13,7 @@ import { AccountInfo } from "@azure/msal-browser";
 export const SocketListener = () => {
     const { socket, roles, roomCode, gameStarted, isLoggedIn, accountUser, isRevealed,setGameStarted, setIsRevealed, setWithRevealedRoles,
       setSelectingRole, setPotentialRoles, setSelectedRole, setIsInRoom, setNobles, setIsLoggedIn, setAccountUser,
-      setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom, setReviewingTeam, setPreviousRoomCode } = useAppContext();
+      setRoles, setRoomCode, setSelectedRolesPool, setTeam, setUsersInRoom, setPreviousRoomCode } = useAppContext();
 
     useEffect(() => {
         if (socket) {
@@ -33,7 +33,7 @@ export const SocketListener = () => {
             console.log(`Received login status update`);
             console.log(event);
             const { userId, username, roomCode, usersInRoom, team, activeGame, selectedRolesPool, 
-              selectingRole, reviewingTeam, potentialRoles, isRevealed, withRevealedRoles } = event;
+              selectingRole, potentialRoles, isRevealed, withRevealedRoles } = event;
             if (!isLoggedIn){
               setIsLoggedIn(true);
               // Set the user data in the context if no user data
@@ -65,7 +65,6 @@ export const SocketListener = () => {
             setTeam(team || []);
             setGameStarted(activeGame);
             setSelectingRole(selectingRole);
-            setReviewingTeam(reviewingTeam);
             setPotentialRoles(potentialRoles);
             setIsRevealed(isRevealed);
             setSelectedRolesPool(selectedRolesPool);
@@ -98,7 +97,6 @@ export const SocketListener = () => {
             setIsInRoom(false);
             setUsersInRoom([]);
             setSelectingRole(false);
-            setReviewingTeam(false);
             setGameStarted(false);
             setRoomCode("");
           });
@@ -160,7 +158,6 @@ export const SocketListener = () => {
             setUsersInRoom(usersInRoom);
             setNobles([]);
             setGameStarted(false);
-            setReviewingTeam(false);
             setSelectingRole(false);
             setPotentialRoles([]);
             setSelectedRole(null);
@@ -187,7 +184,7 @@ export const SocketListener = () => {
           };
         }
       }, [isRevealed, roomCode, socket, accountUser, roles.length, gameStarted, isLoggedIn, setGameStarted, setAccountUser,
-        setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, setReviewingTeam, setIsLoggedIn, setWithRevealedRoles,
+        setIsInRoom, setIsRevealed, setNobles, setPotentialRoles, setRoles, setIsLoggedIn, setWithRevealedRoles,
         setRoomCode, setSelectedRole, setSelectedRolesPool, setSelectingRole, setTeam, setUsersInRoom, setPreviousRoomCode]);
 
     return null;
